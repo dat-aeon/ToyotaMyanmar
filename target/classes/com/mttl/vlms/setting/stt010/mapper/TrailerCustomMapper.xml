@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mttl.vlms.setting.stt010.mapper.TrailerCustomMapper">
+
+	<select id="getTrailerList" parameterType="map"
+		resultType="com.mttl.vlms.setting.stt010.dto.TrailerDto">
+		SELECT
+			ID,
+			LICENSE_NO,
+			TRAILER_TYPE,
+			DESCRIPTION,
+			DISABLED,
+			TRAILER_CODE,
+			BARCODE_ID,
+			PHOTO_NAME
+		FROM
+			TRAILER
+		WHERE
+			DELETE_FLG = '0'
+		<foreach collection="filters" index="key" item="value" open=" and " separator=" and " close=" ">
+			<if test="key == 'globalFilter' and value != '' and value != null"> (
+				LOWER(TRAILER_CODE) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(LICENSE_NO) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(TRAILER_TYPE) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(DESCRIPTION) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(BARCODE_ID) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(PHOTO_NAME) like LOWER('%'|| #{value} ||'%'))
+			</if>
+			<if test="key == 'trailerCode'">
+				LOWER(TRAILER_CODE) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'licenseNo'">
+				LOWER(LICENSE_NO) like LOWER('%'|| #{value} ||'%')
+			</if>
+
+			<if test="key == 'trailerType'">
+				LOWER(TRAILER_TYPE) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'description'">
+				LOWER(DESCRIPTION) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'barcodeId'">
+				LOWER(BARCODE_ID) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'photoName'">
+				LOWER(PHOTO_NAME) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'disabled'">
+				DISABLED = #{value}
+			</if>
+		</foreach>
+		group by 
+			ID
+		<if test="sortField != null and sortField != '' and sortField == 'trailerCode' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY TRAILER_CODE ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY TRAILER_CODE DESC
+		</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'licenseNo' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY LICENSE_NO ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY LICENSE_NO DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'trailerType' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY TRAILER_TYPE ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY TRAILER_TYPE DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'description' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY DESCRIPTION ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY DESCRIPTION DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'barcodeId' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY BARCODE_ID ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY BARCODE_ID DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'disabled' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY DISABLED ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY DISABLED DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'photoName' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY PHOTO_NAME ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY PHOTO_NAME DESC
+			</if>
+		</if>
+		<if test="sortField == null or sortField == ''">
+			ORDER BY TRAILER_CODE DESC
+		</if>
+		<if test="offset != null and limit != null">
+			OFFSET #{offset} LIMIT #{limit}
+		</if>
+	</select>
+
+	<select id="getMainTrailerList"
+		resultType="com.mttl.vlms.setting.stt010.dto.TrailerDto">
+		SELECT
+			ID,
+			LICENSE_NO,
+			TRAILER_TYPE,
+			DESCRIPTION,
+			DISABLED,
+			TRAILER_CODE,
+			BARCODE_ID,
+			PHOTO_NAME
+		FROM
+			TRAILER
+		WHERE
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="getTrailerListCount"
+		parameterType="com.mttl.vlms.setting.stt010.dto.TrailerSearchReqDto"
+		resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TRAILER
+		WHERE
+			DELETE_FLG = '0'
+	</select>
+
+
+	<select id="getTrailerByTrailerId"
+		parameterType="java.lang.Integer"
+		resultType="com.mttl.vlms.setting.stt010.dto.TrailerDto">
+		SELECT
+			ID,
+			LICENSE_NO,
+			TRAILER_TYPE,
+			DESCRIPTION,
+			TRAILER_CODE,
+			BARCODE_ID,
+			PHOTO_NAME
+		FROM
+			TRAILER
+		WHERE
+			ID = #{id,jdbcType=INTEGER}
+		AND
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="checkLicenseNo"
+		parameterType="com.mttl.vlms.setting.stt010.dto.TrailerDto"
+		resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TRAILER
+		WHERE
+			LOWER(LICENSE_NO) = TRIM(LOWER(#{trailerDto.licenseNo,jdbcType=VARCHAR}))
+		<if test="trailerDto.id != null">
+			AND ID != #{trailerDto.id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="checkTrailerId"
+		parameterType="com.mttl.vlms.setting.stt010.dto.TrailerDto"
+		resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TRAILER
+		WHERE
+			LOWER(TRAILER_CODE) = TRIM(LOWER(#{trailerDto.trailerCode,jdbcType=VARCHAR}))
+		<if test="trailerDto.id != null">
+			AND ID != #{trailerDto.id,jdbcType=INTEGER}
+		</if>
+		AND 
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="getNextTrailerId" resultType="java.lang.String">
+		select trailer_nextid()
+	</select>
+</mapper>

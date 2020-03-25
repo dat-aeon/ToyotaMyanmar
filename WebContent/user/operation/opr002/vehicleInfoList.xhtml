@@ -1,0 +1,655 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<style type="text/css">
+.ui-row-editor .ui-row-editor-pencil {
+	margin-left: 8px;
+}
+</style>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<f:metadata>
+					<f:viewAction action="#{VehicleInfoListBean.showMessage}" />
+				</f:metadata>
+				<h:form id="frmVehicleInfo">
+					<div>
+						<p:messages id="msgMessages" globalOnly="true" autoUpdate="#{VehicleInfoListBean.checkAutoUpdate}" closable="true" style="word-break:break-all;" />
+						<p:growl for="messages"></p:growl>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['VEHICLE_INFORMATION_TITLE']}</h1>
+						</div>
+						<div class="ui-g-12">
+							<p:accordionPanel id="aplSearch">
+								<p:tab id="tabSearch" title="#{label['SEARCH_LABEL']}">
+									<p:panelGrid columns="6"
+										columnClasses="ui-g-12 ui-md-6 ui-lg-2, ui-g-12 ui-md-6 ui-lg-3,ui-g-12 ui-md-6 ui-lg-2,ui-g-12 ui-md-6 ui-lg-2,ui-g-12 ui-md-6 ui-lg-1,ui-g-12 ui-md-6 ui-lg-2"
+										layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+										<p:outputLabel id="lblChassisNo" for="txtChassisNo" value="#{label['CHASSIS_NO_LABEL']}" />
+										<h:panelGroup styleClass="md-inputfield">
+											<p:autoComplete id="txtChassisNo" value="#{VehicleInfoListBean.vehicleInfoSearchDto.chassisNo}" label="#{label['CHASSIS_NO_LABEL']}" autoSelection="false"
+												completeMethod="#{VehicleInfoListBean.completeChassisNo(chassisNo)}" />
+										</h:panelGroup>
+										<p:outputLabel id="lblVesselDateFrom" for="txtVesselDateFrom" value="#{label['VESSEL_BERTHING_DATE_FROM_LABEL']}" />
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar id="txtVesselDateFrom" readonlyInput="true" value="#{VehicleInfoListBean.vehicleInfoSearchDto.fromVessel}" pattern="dd-MM-yyyy" effect="blind"
+												navigator="true"></p:calendar>
+										</h:panelGroup>
+										<h:outputLabel id="lblVesselDateTo" for="txtVesselDateTo" value="#{label['DATE_TO_LABEL']}" />
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar id="txtVesselDateTo" readonlyInput="true" value="#{VehicleInfoListBean.vehicleInfoSearchDto.toVessel}" pattern="dd-MM-yyyy" effect="blind" navigator="true"></p:calendar>
+										</h:panelGroup>
+										<p:outputLabel id="lblStatus" for="txtStatus" value="#{label['STATUS_LABEL']}" />
+										<h:panelGroup>
+											<p:selectOneMenu id="txtStatus" label="#{label['STATUS_LABEL']}" value="#{VehicleInfoListBean.vehicleInfoSearchDto.status}">
+												<f:selectItem itemLabel="" itemValue="" />
+												<f:selectItems value="#{VehicleInfoListBean.statusList}" var="status" itemLabel="#{status}" itemValue="#{status}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<p:outputLabel id="lblCarriedOut" for="txtCarriedOut" value="#{label['CARRIED_OUT_LABEL']}" />
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar id="txtCarriedOut" readonlyInput="true" value="#{VehicleInfoListBean.vehicleInfoSearchDto.fromCarried}" pattern="dd-MM-yyyy" effect="blind" navigator="true"></p:calendar>
+										</h:panelGroup>
+										<h:outputLabel id="lblCarriedOutTo" for="txtCarriedOutTo" value="#{label['DATE_TO_LABEL']}" />
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar id="txtCarriedOutTo" readonlyInput="true" value="#{VehicleInfoListBean.vehicleInfoSearchDto.toCarried}" pattern="dd-MM-yyyy" effect="blind" navigator="true"></p:calendar>
+										</h:panelGroup>
+										<p:outputLabel id="lblDealerName" for="txtDealerName" value="#{label['DEALER_NAME_LABEL']}" />
+										<h:panelGroup>
+											<p:selectOneMenu id="txtDealerName" label="#{label['DEALER_NAME_LABEL']}" value="#{VehicleInfoListBean.vehicleInfoSearchDto.dealerId}">
+												<f:selectItem itemLabel="" itemValue="" />
+												<f:selectItems value="#{VehicleInfoListBean.dealerList}" var="dealerInfo" itemLabel="#{dealerInfo.dealerName}" itemValue="#{dealerInfo.dealerId}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<p:outputLabel id="lblSrhAgentName" for="txtSrhAgentName" value="#{label['AGENT_NAME_LABEL']}" />
+										<h:panelGroup styleClass="md-inputfield">
+											<p:inputText id="txtSrhAgentName" value="#{VehicleInfoListBean.vehicleInfoSearchDto.agentName}" />
+										</h:panelGroup>
+									</p:panelGrid>
+									<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-6 ui-lg-2,ui-g-12 ui-md-6 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+										style="border:0px none; background-color:transparent;">
+										<p:commandButton id="btnSearch" value="#{label['SEARCH_LABEL']}" action="#{VehicleInfoListBean.searchVehicleInfo}" icon="ui-icon-search"
+											update=":frmVehicleInfo:tblVehicleInfo" />
+										<p:commandButton id="btnClear" value="#{label['CLEAR_LABEL']}" action="#{VehicleInfoListBean.clear}" update=":frmVehicleInfo:tblVehicleInfo" />
+									</p:panelGrid>
+								</p:tab>
+							</p:accordionPanel>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:remoteCommand name="onload" oncomplete="synchronizeRowsHeight();" autoRun="true" />
+							<p:dataTable id="tblVehicleInfo" widgetVar="vehicleInfoListWV" var="vehicleInfo" value="#{VehicleInfoListBean.vehicleInfoListLazyDataModel}" rows="10" paginator="true"
+								paginatorAlwaysVisible="#{VehicleInfoListBean.paginatorVisible}" paginatorPosition="bottom" editable="true" editMode="cell" lazy="true"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								first="#{VehicleInfoListBean.firstRowCount}" rowsPerPageTemplate="10,20,50,100" rowIndexVar="index" scrollable="true" scrollWidth="100%" frozenColumns="3">
+								<p:remoteCommand name="onload" oncomplete="synchronizeRowsHeight();" autoRun="true" />
+								<p:ajax event="sort" listener="#{VehicleInfoListBean.changeAutoUpdate}" oncomplete="synchronizeRowsHeight();" />
+								<p:ajax event="page" listener="#{VehicleInfoListBean.changeAutoUpdate}" oncomplete="synchronizeRowsHeight();" />
+								<p:ajax event="filter" listener="#{VehicleInfoListBean.changeAutoUpdate}" oncomplete="synchronizeRowsHeight();" />
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Search:" />
+										<p:inputText id="globalFilter" onkeyup="PF('vehicleInfoListWV').filter()" style="width:150px" placeholder="Enter keyword" />
+										<p:commandButton id="btnSave" rendered="#{VehicleInfoListBean.fullAccessFlag}" value="#{label['SAVE_LABEL']}" action="#{VehicleInfoListBean.changeUpdate}"
+											icon="ui-icon-save" style="width:150px;float:right;" update=":frmVehicleInfo:tblVehicleInfo" />
+										<p:commandButton id="btnAddNew" rendered="#{VehicleInfoListBean.fullAccessFlag}" value="#{label['ADD_NEW_LABEL']}" action="vehicleInfoInput" icon="ui-icon-add"
+											style="width:150px;float:right;" update="tblVehicleInfo" />
+									</p:outputPanel>
+								</f:facet>
+								<p:ajax event="cellEdit" listener="#{VehicleInfoListBean.onCellEdit}" immediate="true" update=":frmVehicleInfo:tblVehicleInfo" process="@this" />
+								<p:column styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="10">
+									<h:outputText value="#{index+1}" />
+								</p:column>
+								<p:column headerText="#{label['CHASSIS_NO_LABEL']}" sortBy="#{vehicleInfo.chassisNo}" width="160" filterBy="#{vehicleInfo.chassisNo}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.chassisNo}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtChassisNo" value="#{vehicleInfo.chassisNo}" required="true">
+												<p:ajax update="txtChassisNo" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['MODEL_LABEL']}" sortBy="#{vehicleInfo.model}" width="180" filterBy="#{vehicleInfo.model}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.model}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtModel" value="#{vehicleInfo.model}" required="true">
+												<p:ajax update="txtModel" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['COLOR_CODE_LABEL']}" sortBy="#{vehicleInfo.colorCode}" width="100" filterBy="#{vehicleInfo.colorCode}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.colorCode}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtColorCode" value="#{vehicleInfo.colorCode}" required="true">
+												<p:ajax update="txtColorCode" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['COLOR_LABEL']}" sortBy="#{vehicleInfo.color}" width="140" filterBy="#{vehicleInfo.color}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.color}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtColor" value="#{vehicleInfo.color}" required="true">
+												<p:ajax update="txtColor" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['LICENSE_NO_LABEL']}" sortBy="#{vehicleInfo.licenseNo}" width="200" filterBy="#{vehicleInfo.licenseNo}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.licenseNo}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtLicenseNo" value="#{vehicleInfo.licenseNo}" autoupdate="true">
+												<p:ajax update="txtLicenseNo" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['PORT_OF_DISCHARGE_LABEL']}" sortBy="#{vehicleInfo.shortName}" width="150" filterBy="#{vehicleInfo.shortName}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText id="otxtShortName" value="#{vehicleInfo.shortName}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:selectOneMenu id="txtDischargePort" value="#{vehicleInfo.dischargePortId}">
+												<f:selectItem itemLabel="" itemValue="" noSelectionOption="true" />
+												<f:selectItems value="#{VehicleInfoListBean.portList}" var="port" itemLabel="#{port.shortName}" itemValue="#{port.dischargePortId}" />
+												<p:ajax update="txtDischargePort" event="valueChange" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}"></p:ajax>
+											</p:selectOneMenu>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['ORDER_MONTH_LABEL']}" sortBy="#{vehicleInfo.orderMonth}" width="150" filterBy="#{vehicleInfo.orderMonth}" filterMatchMode="contains"
+									style="text-align:center">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.orderMonth}">
+												<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:calendar id="calOrderMonth" readonlyInput="true" value="#{vehicleInfo.orderMonth}" pattern="dd/MM/yyyy" effect="blind" navigator="true">
+												<p:ajax event="dateSelect" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="calOrderMonth"></p:ajax>
+											</p:calendar>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['ORDER_BY_LABEL']}" sortBy="#{vehicleInfo.orderBy}" width="120" filterBy="#{vehicleInfo.orderBy}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.orderBy}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtOrderBy" value="#{vehicleInfo.orderBy}">
+												<p:ajax update="txtOrderBy" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['1ST_VESSEL_NAME_LABEL']}" sortBy="#{vehicleInfo.firstVesselName}" width="150" filterBy="#{vehicleInfo.firstVesselName}"
+									filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.firstVesselName}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtFirstVesselName" value="#{vehicleInfo.firstVesselName}">
+												<p:ajax update="txtFirstVesselName" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['2ND_VESSEL_NAME_LABEL']}" sortBy="#{vehicleInfo.secondVesselName}" width="150" filterBy="#{vehicleInfo.secondVesselName}"
+									filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.secondVesselName}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtSecondVesselName" value="#{vehicleInfo.secondVesselName}">
+												<p:ajax update="txtSecondVesselName" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column id="colStatus" headerText="#{label['STATUS_LABEL']}" sortBy="#{vehicleInfo.status}" width="160" filterBy="#{vehicleInfo.status}" filterMatchMode="contains">
+									<h:outputText id="oxtStatus" value="#{vehicleInfo.status}" />
+								</p:column>
+								<p:column headerText="#{label['CIF_LABEL']}" sortBy="#{vehicleInfo.cif}" width="60" filterBy="#{vehicleInfo.cif}" filterMatchMode="contains" style="text-align:right">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.cif}">
+												<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtCif" value="#{vehicleInfo.cif}">
+												<p:ajax update="txtCif" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['PROD_MTH_LABEL']}" sortBy="#{vehicleInfo.prodMth}" width="100" filterBy="#{vehicleInfo.prodMth}" filterMatchMode="contains"
+									style="text-align:center">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText id="txtProdMth" value="#{vehicleInfo.prodMth}">
+												<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:calendar id="calProdMth" value="#{vehicleInfo.prodMth}" readonlyInput="true" pattern="dd/MM/yyyy" effect="blind" navigator="true" mask="true">
+												<p:ajax event="dateSelect" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="calProdMth"></p:ajax>
+											</p:calendar>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['ETD_ORIGIN_LABEL']}" sortBy="#{vehicleInfo.etdOrigin}" width="100" filterBy="#{vehicleInfo.etdOrigin}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.etdOrigin}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtEtdOrigin" value="#{vehicleInfo.etdOrigin}">
+												<p:ajax listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="txtEtdOrigin" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['ETD_ESTIMATED_DATE_LABEL']}" sortBy="#{vehicleInfo.etdEstimatedDate}" width="100" filterBy="#{vehicleInfo.etdEstimatedDate}"
+									filterMatchMode="contains" style="text-align:center">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.etdEstimatedDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:calendar id="calEtdEstimatedDate" readonlyInput="true" value="#{vehicleInfo.etdEstimatedDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true" mask="true">
+												<p:ajax event="dateSelect" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="calEtdEstimatedDate"></p:ajax>
+											</p:calendar>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['ETA_LABEL']}" sortBy="#{vehicleInfo.eta}" width="100" filterBy="#{vehicleInfo.eta}" filterMatchMode="contains" style="text-align:center">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.eta}">
+												<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:calendar id="calEta" readonlyInput="true" value="#{vehicleInfo.eta}" pattern="dd/MM/yyyy" effect="blind" navigator="true" mask="true">
+												<p:ajax event="dateSelect" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="calEta"></p:ajax>
+											</p:calendar>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['VESSEL_BERTHING_DATE_LABEL']}" sortBy="#{vehicleInfo.vesselBerthingDate}" width="180" filterBy="#{vehicleInfo.vesselBerthingDate}"
+									filterMatchMode="contains" style="text-align:center">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.vesselBerthingDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:calendar id="calVesselBerthingDate" readonlyInput="true" value="#{vehicleInfo.vesselBerthingDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true" mask="true">
+												<p:ajax event="dateSelect" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="calVesselBerthingDate"></p:ajax>
+											</p:calendar>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['AGENT_NAME_LABEL']}" sortBy="#{vehicleInfo.agentName}" width="120" filterBy="#{vehicleInfo.agentName}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.agentName}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtAgentName" value="#{vehicleInfo.agentName}">
+												<p:ajax update="txtAgentName" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['CARRIED_OUT_FROM_PORT_LABEL']}" sortBy="#{vehicleInfo.portCarriedUnit}" width="180" filterBy="#{vehicleInfo.portCarriedUnit}"
+									filterMatchMode="contains" style="text-align:right">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.portCarriedUnit}">
+												<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtPortCarriedUnit" value="#{vehicleInfo.portCarriedUnit}">
+												<p:ajax update="txtPortCarriedUnit" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['CARRIED_OUT_FROM_PORT_DATE_LABEL']}" sortBy="#{vehicleInfo.portCarriedOutDate}" width="180" filterBy="#{vehicleInfo.portCarriedOutDate}"
+									filterMatchMode="contains" style="text-align:center">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.portCarriedOutDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:calendar id="calPortCarriedOutDate" readonlyInput="true" value="#{vehicleInfo.portCarriedOutDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true" mask="true">
+												<p:ajax event="dateSelect" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="calPortCarriedOutDate"></p:ajax>
+											</p:calendar>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['CARRIED_OUT_FROM_PORT_REMARK_LABEL']}" sortBy="#{vehicleInfo.portCarriedOutRemark}" width="200"
+									filterBy="#{vehicleInfo.portCarriedOutRemark}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.portCarriedOutRemark}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtPortCarriedOutRemark" value="#{vehicleInfo.portCarriedOutRemark}">
+												<p:ajax update="txtPortCarriedOutRemark" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['DISCHARGE_PORT_PLAN_DATE_LABEL']}" sortBy="#{vehicleInfo.dischargePortPlanDate}" width="200" filterBy="#{vehicleInfo.dischargePortPlanDate}"
+									filterMatchMode="contains" style="text-align:center">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.dischargePortPlanDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:calendar id="calDischargePortPlanDate" readonlyInput="true" value="#{vehicleInfo.dischargePortPlanDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true"
+												mask="true">
+												<p:ajax event="dateSelect" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="calDischargePortPlanDate"></p:ajax>
+											</p:calendar>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['DISCHARGE_PORT_ACTUAL_DATE_LABEL']}" sortBy="#{vehicleInfo.dischargePortActualDate}" width="200"
+									filterBy="#{vehicleInfo.dischargePortActualDate}" filterMatchMode="contains" style="text-align:center">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.dischargePortActualDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:calendar id="calDischargePortActualDate" readonlyInput="true" value="#{vehicleInfo.dischargePortActualDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true"
+												mask="true">
+												<p:ajax event="dateSelect" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="calDischargePortActualDate"></p:ajax>
+											</p:calendar>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['STOCK_OF_LABEL']}" sortBy="#{vehicleInfo.stockOf}" width="80" filterBy="#{vehicleInfo.stockOf}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.stockOf}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtStockOf" value="#{vehicleInfo.stockOf}">
+												<p:ajax update="txtStockOf" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['STOCK_DATE_LABEL']}" sortBy="#{vehicleInfo.stockDate}" width="100" filterBy="#{vehicleInfo.stockDate}" filterMatchMode="contains"
+									style="text-align:center">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.stockDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:calendar id="calStockDate" readonlyInput="true" value="#{vehicleInfo.stockDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true" mask="true">
+												<p:ajax event="dateSelect" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="calStockDate"></p:ajax>
+											</p:calendar>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column id="colDealer" headerText="#{label['DEALER_NAME_LABEL']}" sortBy="#{vehicleInfo.dealerName}" width="120" filterBy="#{vehicleInfo.dealerName}"
+									filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText id="oxtDealer" value="#{vehicleInfo.dealerName}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:selectOneMenu id="txtDealer" value="#{vehicleInfo.dealerId}">
+												<p:ajax update="txtDealer" event="valueChange" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}"></p:ajax>
+												<f:selectItem itemLabel="" itemValue="null" />
+												<f:selectItems value="#{VehicleInfoListBean.dealerList}" var="dealer" itemLabel="#{dealer.dealerName}" itemValue="#{dealer.dealerId}" />
+											</p:selectOneMenu>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['CONSIGNEE_BL_LABEL']}" sortBy="#{vehicleInfo.consigneeOnBl}" width="120" filterBy="#{vehicleInfo.consigneeOnBl}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.consigneeOnBl}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtConsigneeOnBl" value="#{vehicleInfo.consigneeOnBl}">
+												<p:ajax update="txtConsigneeOnBl" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['PURCHASE_PERMIT_DATE_LABEL']}" sortBy="#{vehicleInfo.purchasePermitDate}" width="180" filterBy="#{vehicleInfo.purchasePermitDate}"
+									filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.purchasePermitDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:calendar id="calPurchasePermitDate" readonlyInput="true" value="#{vehicleInfo.purchasePermitDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true" mask="true">
+												<p:ajax event="dateSelect" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="calPurchasePermitDate"></p:ajax>
+											</p:calendar>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['AUDIO_INSTALLATION_REQUIRED_LABEL']}" sortBy="#{vehicleInfo.audioInstallRequired}" width="200" filterBy="#{vehicleInfo.audioInstallRequired}"
+									style="text-align:center" filterMatchMode="equals">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('vehicleInfoListWV').filter()" styleClass="custom-filter">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="" itemValue="" />
+											<f:selectItem itemLabel="Yes" itemValue="true" />
+											<f:selectItem itemLabel="No" itemValue="false" />
+											<f:selectItems value="#{vehicleInfo.audioInstallRequired}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.audioInstallRequired ? 'Yes' : 'No'}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:selectOneMenu id="somAudioInstallRequired" value="#{vehicleInfo.audioInstallRequired}">
+												<f:converter converterId="javax.faces.Boolean" />
+												<f:selectItem itemLabel="Yes" itemValue="true" />
+												<f:selectItem itemLabel="No" itemValue="false" />
+												<p:ajax update="somAudioInstallRequired" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:selectOneMenu>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['DELIVERED_LABEL']}" sortBy="#{vehicleInfo.delivered}" width="100" filterBy="#{vehicleInfo.delivered}" style="text-align:center"
+									filterMatchMode="equals">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('vehicleInfoListWV').filter()" styleClass="custom-filter">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="" itemValue="" />
+											<f:selectItem itemLabel="Yes" itemValue="true" />
+											<f:selectItem itemLabel="No" itemValue="false" />
+											<f:selectItems value="#{vehicleInfo.delivered}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.delivered ? 'Yes' : 'No'}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:selectOneMenu id="somDelivered" value="#{vehicleInfo.delivered}">
+												<f:converter converterId="javax.faces.Boolean" />
+												<f:selectItem itemLabel="" itemValue="" />
+												<f:selectItem itemLabel="Yes" itemValue="true" />
+												<f:selectItem itemLabel="No" itemValue="false" />
+												<p:ajax update="somDelivered" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:selectOneMenu>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['AUDIO_INSTALLATION_REQUIRED_MAILED_ON_LABEL']}" sortBy="#{vehicleInfo.audioMailDate}" width="200" filterBy="#{vehicleInfo.audioMailDate}"
+									filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.audioMailDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:calendar id="calAudioMailDate" readonlyInput="true" value="#{vehicleInfo.audioMailDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true" mask="true">
+												<p:ajax event="dateSelect" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="calAudioMailDate"></p:ajax>
+											</p:calendar>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['AUDIO_INSTALLATION_REQUIRED_INSTALLED_ON_LABEL']}" sortBy="#{vehicleInfo.audioInstallDate}" width="180"
+									filterBy="#{vehicleInfo.audioInstallDate}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.audioInstallDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+											</h:outputText>
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:calendar id="calAudioInstallDate" readonlyInput="true" value="#{vehicleInfo.audioInstallDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true" mask="true">
+												<p:ajax event="dateSelect" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" update="calAudioInstallDate"></p:ajax>
+											</p:calendar>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{label['REMARK_LABEL']}" sortBy="#{vehicleInfo.remark}" width="180" filterBy="#{vehicleInfo.remark}" filterMatchMode="contains">
+									<p:cellEditor disabled="#{!VehicleInfoListBean.fullAccessFlag}">
+										<f:facet name="output">
+											<h:outputText value="#{vehicleInfo.remark}" />
+										</f:facet>
+										<f:facet id="input" name="input">
+											<p:inputText id="txtRemark" value="#{vehicleInfo.remark}" autoupdate="true">
+												<p:ajax update="txtRemark" listener="#{VehicleInfoListBean.addTemp(vehicleInfo)}" event="change"></p:ajax>
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column rendered="#{VehicleInfoListBean.fullAccessFlag}" headerText="#{label['DISABLED_LABEL']}" style="text-align:center;" width="80" sortBy="#{vehicleInfo.disabled}"
+									filterBy="#{vehicleInfo.disabled}" filterMatchMode="equals">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('vehicleInfoListWV').filter()" styleClass="custom-filter">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="" itemValue="" />
+											<f:selectItem itemLabel="Disabled" itemValue="true" />
+											<f:selectItem itemLabel="Enabled" itemValue="false" />
+											<f:selectItems value="#{vehicleInfo.disabled}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<p:commandLink id="cmlDisabled" action="#{VehicleInfoListBean.disabledVehicleInfo(vehicleInfo)}" immediate="true" update="tblVehicleInfo"
+										oncomplete="synchronizeRowsHeight();">
+										<p:confirm header="#{label['CONFIRMATION']}" message="#{label[(vehicleInfo.disabled?'MSG_TO_ENABLED':'MSG_TO_DISABLED')]}" />
+										<h:outputText class="fa fa-fw #{vehicleInfo.disabled ? 'fa-toggle-on fa-flip-horizontal red' : 'fa-toggle-on green'} fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column rendered="#{VehicleInfoListBean.fullAccessFlag}" style="text-align:center;" width="45" headerText="#{label['DELETE_LABEL']}">
+									<p:commandLink id="delete" action="#{VehicleInfoListBean.deleteConfirmVehicleInfo(vehicleInfo)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-trash fa-lg" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					<h:outputScript target="body">
+					
+					//<![CDATA[
+
+    
+    
+    function synchronizeRowsHeight() {
+    
+    
+    	//var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+    		var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    	
+    	//window.alert("isChrome " + isChrome);
+    	
+    
+        var $leftRows = $('.ui-datatable-frozenlayout-left').find('tr');
+        var $rightRows = $('.ui-datatable-frozenlayout-right').find('tr');
+
+        $leftRows.each(function (index) {
+        
+        	var $leftRow = $(this);
+        	var $leftHeight = $leftRow.innerHeight();
+        	var $rightRow = $rightRows.eq(index);
+        	var $rightHeight = $rightRow.innerHeight();
+
+			if(isChrome) {
+				if ($rightHeight > $leftHeight) {
+                $leftRow.innerHeight($rightHeight);
+                var diff = $rightHeight - $leftRow.innerHeight();
+                if (diff != 0) 
+                       $leftRow.innerHeight($rightHeight + diff);
+         } else if ($rightHeight < $leftHeight) {
+                $rightRow.innerHeight($leftHeight);
+                var diff = $leftHeight - $rightRow.innerHeight();
+                if (diff != 0)
+                       $rightRow.innerHeight($leftHeight + diff);
+         }
+			}else {
+	            if ($rightHeight > $leftHeight) {
+	                $leftRow.innerHeight($rightRow.outerHeight());
+	            } else {
+	                $rightRow.innerHeight($leftRow.outerHeight());
+	            }
+            }
+        })
+   $(window).trigger('resize');
+}
+
+// ]]>
+					</h:outputScript>
+				</h:form>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closable="false" closeOnEscape="true">
+					<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+					<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+				</p:confirmDialog>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

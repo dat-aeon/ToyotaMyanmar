@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions" template="/templates/template.xhtml">
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<h1>#{label['Charge_INPUT_TITLE']}</h1>
+						<h:form id="frmChargeInput">
+							<div>
+								<p:messages id="msg" globalOnly="true" closable="true" />
+							</div>
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-6 ui-lg-4" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel id="lblTitle" for="txtTitle" value="#{label['Charge_Title_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtTitle" value="#{ChargesInputBean.chargesDto.title}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="50" message="{0} #{label['LENGTH_MSG']} 50" />
+									</p:inputText>
+									<p:message id="msgChargeTitle" for="txtTitle" />
+								</h:panelGroup>
+								<p:outputLabel id="lblUnitPrice" for="txtUnitPrice" value="#{label['Charge_UnitPrice_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputNumber id="txtUnitPrice" value="#{ChargesInputBean.chargesDto.unitPrice}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="50" message="{0} #{label['LENGTH_MSG']} 50" />
+									</p:inputNumber>
+									<p:message id="msgUnitprice" for="txtUnitPrice" />
+								</h:panelGroup>
+								<p:outputLabel id="lblCurrency" for="rdoCurrency" value="#{label['Charge_Currency_LABEL']}" />
+								<h:panelGroup columns="2" style="margin-bottom:10px" cellpadding="5">
+									<p:selectOneRadio id="rdoCurrency" value="#{ChargesInputBean.chargesDto.currency}" required="true" layout="responsive" columns="2">
+										<f:selectItem itemValue="MMK" itemLabel="MMK" />
+										<f:selectItem itemValue="USD" itemLabel="USD" />
+									</p:selectOneRadio>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="msgCurrency" for="rdoCurrency" />
+									</h:panelGroup>
+								</h:panelGroup>
+							</p:panelGrid>
+							<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<div />
+								<p:commandButton id="btnAdd" value="#{label['SUBMIT_LABEL']}" action="#{ChargesInputBean.inputCharges}" update="frmChargeInput" icon="ui-icon-launch" />
+								<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" action="chargeList" immediate="true" icon="ui-icon-close" />
+							</p:panelGrid>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

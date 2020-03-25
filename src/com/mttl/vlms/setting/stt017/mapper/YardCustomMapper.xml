@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mttl.vlms.setting.stt017.mapper.YardCustomMapper">
+
+	<select id="searchByYardName"
+		resultType="com.mttl.vlms.setting.stt017.dto.YardDto"
+		parameterType="java.lang.String">
+		SELECT
+			ZONE.YARD_ID as ID,
+			YARD.NAME AS NAME,
+			YARD.ADDRESS AS ADDRESS,
+			COUNT(ZONE.NAME) AS ZONE,
+			DESCRIPTION AS DESCRIPTION,
+			YARD.DISABLED AS
+			DISABLED
+		FROM
+			YARD,ZONE
+		WHERE
+			ZONE.YARD_ID=YARD.ID AND
+			ZONE.DELETE_FLG='FALSE' 
+		AND 
+			YARD.DELETE_FLG='FALSE'
+		GROUP BY
+			ZONE.YARD_ID,
+			YARD.NAME,
+			YARD.ADDRESS,
+			YARD.DISABLED,
+			YARD.DESCRIPTION
+		<if test="name!=null">
+			AND NAME ILIKE'%'||
+			TRIM(#{name,jdbcType=VARCHAR}) ||'%'
+		</if>
+		ORDER BY
+			NAME
+	</select>
+
+	<select id="getByRowColumnEachZone"
+		resultType="com.mttl.vlms.setting.stt017.dto.ZoneDto"
+		parameterType="java.lang.Integer">
+		SELECT
+			SECONDTABLE.COLUMN AS COLUMN,
+			COUNT(ROW.ID) AS ROW,
+			ZONE.NAME AS NAME
+		FROM 
+			ROW,
+			YARD,
+			ZONE,
+			(SELECT
+				MAX(FIRSTTABLE.COLUMN) AS COLUMN,
+				FIRSTTABLE.ZONE_ID AS ZONE_ID
+			FROM
+				(SELECT
+					COUNT(COL.ZONE_ID) AS COLUMN,
+					COL.ZONE_ID AS ZONE_ID
+				FROM
+					PUBLIC.COLUMN AS COL,YARD
+				WHERE
+					COL.YARD_ID=#{yardFkId,jdbcType=INTEGER} 
+				and 
+					YARD.DELETE_FLG='0'
+				GROUP BY
+					COL.YARD_ID,
+					YARD.NAME,
+					COL.ZONE_ID,
+					COL.ROW_ID
+				ORDER BY
+					COL.ZONE_ID
+				) AS
+				FIRSTTABLE
+			GROUP BY
+				FIRSTTABLE.ZONE_ID
+			) AS SECONDTABLE
+		WHERE
+			ROW.YARD_ID=YARD.ID 
+		AND 
+			ROW.DELETE_FLG='0' 
+		AND 
+			YARD.DELETE_FLG='0' 
+		AND
+			SECONDTABLE.ZONE_ID = ROW.ZONE_ID
+		AND 
+			ZONE.ID = SECONDTABLE.ZONE_ID 
+		AND
+			ZONE.ID	= ROW.ZONE_ID
+		GROUP BY
+			ROW.ZONE_ID,
+			SECONDTABLE.COLUMN,
+			YARD.NAME,
+			ZONE.NAME
+	</select>
+
+	<select id="searchByYardFkId"
+		resultType="com.mttl.vlms.setting.stt017.dto.ZoneDto"
+		parameterType="java.lang.Integer">
+		SELECT
+			ID,
+			YARD_ID,
+			NAME,
+			DISABLED
+		FROM
+			ZONE
+		WHERE
+			YARD_ID = #{yardId,jdbcType=INTEGER}
+		AND 
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="checkYardName" resultType="java.lang.Integer"
+		parameterType="com.mttl.vlms.setting.stt017.dto.YardDto">
+		SELECT
+			COUNT(*)
+		FROM
+			YARD
+		WHERE
+			LOWER(NAME) = TRIM(LOWER(#{yardDto.name,jdbcType=VARCHAR}))
+		<if test="yardDto.id != null">
+			AND ID != #{yardDto.id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<!-- <select id="checkYardCode" resultType="java.lang.Integer" parameterType="com.mttl.vlms.setting.stt017.dto.YardDto"> 
+		SELECT COUNT(*) FROM YARD WHERE LOWER(COUNTRY_CODE) = TRIM(LOWER(#{yardDto.yardCode,jdbcType=VARCHAR})) 
+		<if test="yardDto.id != null"> AND COUNTRY_ID != #{yardDto.id,jdbcType=INTEGER} 
+		</if> AND DELETE_FLG = '0' </select> -->
+
+	<select id="checkYardUsed" resultType="java.lang.Integer"
+		parameterType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			HOLIDAY
+		WHERE
+			ID = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="getYardById"
+		resultType="com.mttl.vlms.setting.stt017.dto.YardDto"
+		parameterType="java.lang.Integer">
+		SELECT
+			ID,
+			NAME,
+			ADDRESS
+		FROM
+			YARD
+		WHERE
+			ID = #{id,jdbcType=INTEGER}
+		AND 
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="getZoneById"
+		resultType="com.mttl.vlms.setting.stt017.dto.ZoneDto"
+		parameterType="java.lang.Integer">
+		SELECT
+			ID
+			NAME
+		FROM
+			ZONE
+		WHERE
+			YARD_ID = #{yardId,jdbcType=INTEGER}
+		AND 
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="countRowYardTable" resultType="java.lang.Integer"
+		parameterType="com.mttl.vlms.setting.stt017.dto.YardDto">
+		SELECT
+			MAX(ID)
+		FROM
+			YARD
+	</select>
+
+	<select id="maxIdZoneTable" resultType="java.lang.Integer">
+		SELECT
+			MAX(ID)
+		FROM
+			ZONE
+	</select>
+
+	<select id="minIdRowTable" resultType="java.lang.Integer"
+		parameterType="java.lang.Integer">
+		SELECT
+			MIN(ID)
+		FROM
+			ROW
+		WHERE
+			YARD_ID = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="searchEachRow" resultType="java.lang.Integer"
+		parameterType="java.lang.Integer">
+		SELECT
+			COUNT(NAME),ZONE_ID
+		FROM
+			ROW
+		WHERE
+			YARD_ID = #{id,jdbcType=INTEGER}
+		GROUP by 
+			ZONE_ID
+		ORDER BY 
+			ZONE_ID
+	</select>
+
+	<select id="getColumnList"
+		resultType="com.mttl.vlms.setting.stt017.dto.ColumnDto"
+		parameterType="java.lang.Integer">
+		SELECT
+			*
+		FROM
+			ZONE_COLUMN
+		WHERE
+			row_id = #{columnId,jdbcType=INTEGER}
+	</select>
+</mapper>

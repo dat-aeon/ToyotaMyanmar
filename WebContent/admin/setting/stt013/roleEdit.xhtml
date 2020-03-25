@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions" template="/templates/template.xhtml">
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{RoleEditBean.redirect}" />
+		</f:metadata>
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<h1>#{label['ROLE_EDIT_TITLE']}</h1>
+						<h:form id="frmRoleEdit">
+							<div>
+								<p:messages id="msg" globalOnly="true" closable="true" />
+							</div>
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-6 ui-lg-4" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel id="lblRoleName" for="txtRoleName" value="#{label['ROLE_NAME']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtRoleName" value="#{RoleEditBean.roleDto.roleName}" label="#{label['ROLE_NAME']}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="50" message="{0} #{label['LENGTH_MSG']} 50" />
+									</p:inputText>
+									<p:message id="msgRoleName" for="txtRoleName" />
+								</h:panelGroup>
+								
+								
+								
+								<p:outputLabel id="lblDescription" for="txaDescription" value="#{label['ROLE_DESCRIPTION']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputTextarea id="txaDescription" class="form-control" value="#{RoleEditBean.roleDto.description}" label="#{label['ROLE_DESCRIPTION']}">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="100" message="{0} #{label['LENGTH_MSG']} 100" />
+									</p:inputTextarea>
+									<p:message id="msgDescription" for="txaDescription" />
+								</h:panelGroup>
+								
+							
+								
+							</p:panelGrid>
+							<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<div />
+								<p:commandButton id="btnEdit" value="#{label['SUBMIT_LABEL']}" update="frmRoleEdit" action="#{RoleEditBean.updateRole}" icon="ui-icon-launch" />
+								<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" immediate="true" action="userInfoList" icon="ui-icon-close" />
+							</p:panelGrid>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

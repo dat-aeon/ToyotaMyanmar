@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mttl.vlms.setting.stt013.mapper.UserInfoCustomMapper">
+
+	<select id="getUserList" parameterType="map"
+		resultType="com.mttl.vlms.setting.stt013.dto.UserInfoDto">
+		SELECT
+			U.ID,
+			R.ROLE_NAME,
+			U.ROLE_ID,
+			U.STAFF_ID,
+			U.BARCODE_ID,
+			U.LOGIN_ID,
+			U.NAME,
+			U.GENDER,
+			U.DATE_OF_BIRTH,
+			U.JOIN_DATE,
+			U.NRC_NO,
+			U.PHONE_NO,
+			U.DEPARTMENT,
+			U.ADDRESS,
+			U.DISABLED,
+			U.STATUS,
+			U.DESCRIPTION
+		FROM
+			ROLE R,
+			USER_INFO U
+		WHERE
+			R.ROLE_ID = U.ROLE_ID
+		AND
+			R.DELETE_FLG = FALSE
+		AND
+			U.DELETE_FLG = FALSE
+		<foreach collection="filters" index="key" item="value" open=" and " separator=" and " close=" ">
+			<if test="key == 'globalFilter' and value != '' and value != null"> (
+				LOWER(STAFF_ID) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(BARCODE_ID) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(NAME) like LOWER ('%'|| #{value} ||'%') OR 
+				LOWER(LOGIN_ID) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(ROLE_NAME) like LOWER('%'|| #{value} ||'%') OR
+				CAST(gender AS VARCHAR) like '%'|| #{value} ||'%' OR
+				TO_CHAR(DATE_OF_BIRTH,'dd/mm/yyyy') like '%'|| #{value} ||'%' OR
+				TO_CHAR(JOIN_DATE,'dd/mm/yyyy') like '%'|| #{value} ||'%' OR
+				LOWER(NRC_NO) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(DEPARTMENT) like LOWER('%'|| #{value} ||'%') OR
+				PHONE_NO like '%'|| #{value} ||'%' OR
+				LOWER(ADDRESS) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(U.DESCRIPTION) like LOWER('%'|| #{value} ||'%') )
+			</if>
+			<if test="key == 'staffId'">
+				LOWER(STAFF_ID) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'barcodeId'">
+				LOWER(BARCODE_ID) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'name'">
+				LOWER(NAME) like LOWER ('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'loginId'">
+				LOWER(LOGIN_ID) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'roleName'">
+				LOWER(ROLE_NAME) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'gender'">
+				CAST(gender AS VARCHAR) like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'dateOfBirth'">
+				TO_CHAR(DATE_OF_BIRTH,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'joinDate'">
+				TO_CHAR(JOIN_DATE,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'nrcNo'">
+				LOWER(NRC_NO) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'department'">
+				LOWER(DEPARTMENT) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'phList'">
+				PHONE_NO like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'address'">
+				LOWER(ADDRESS) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'description'">
+				LOWER(U.DESCRIPTION) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'disabled'">
+				U.DISABLED = #{value}
+			</if>
+		</foreach>
+			GROUP BY 
+			U.ID, 
+			R.ROLE_ID
+		<if test="sortField != null and sortField != '' and sortField == 'staffId' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.STAFF_ID ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.STAFF_ID DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'barcodeId' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.BARCODE_ID ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.BARCODE_ID DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'name' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.NAME ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.NAME DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'loginId' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.LOGIN_ID ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.LOGIN_ID DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'roleName' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY R.ROLE_NAME ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY R.ROLE_NAME DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'gender' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.GENDER ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.GENDER DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'dateOfBirth' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.DATE_OF_BIRTH ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.DATE_OF_BIRTH DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'joinDate' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.JOIN_DATE ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.JOIN_DATE DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'nrcNo' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.NRC_NO ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.NRC_NO DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'department' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.DEPARTMENT ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.DEPARTMENT DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'phList' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.PHONE_NO ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.PHONE_NO DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'address' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.ADDRESS ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.ADDRESS DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'description' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.DESCRIPTION ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.DESCRIPTION DESC
+			</if>
+		</if>
+		<if test="sortField != null and sortField != '' and sortField == 'disabled' ">
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY U.DISABLED ASC
+			</if>
+			<if test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY U.DISABLED DESC
+			</if>
+		</if>
+		<if test="sortField == null or sortField == ''">
+			ORDER BY U.STAFF_ID DESC
+		</if>
+		<if test="offset != null and limit != null">
+			OFFSET ${offset} LIMIT ${limit}
+		</if>
+	</select>
+
+	<select id="getUserListCount"
+		parameterType="com.mttl.vlms.setting.stt013.dto.UserInfoSearchReqDto"
+		resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			USER_INFO
+		WHERE
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="searchByName" parameterType="java.lang.String"
+		resultType="com.mttl.vlms.setting.stt013.dto.UserInfoDto">
+		SELECT
+			UI.ID,
+			UI.ROLE_ID,
+			R.ROLE_NAME,
+			UI.LOGIN_ID,
+			UI.STAFF_ID,
+			UI.BARCODE_ID,
+			UI.NAME,
+			UI.GENDER,
+			UI.DATE_OF_BIRTH,
+			UI.JOIN_DATE,
+			UI.NRC_NO,
+			UI.PHONE_NO,
+			UI.DEPARTMENT,
+			UI.ADDRESS,
+			UI.STATUS,
+			UI.DISABLED,
+			UI.DESCRIPTION
+		FROM
+			user_info UI
+		LEFT JOIN
+			role R
+		ON
+			UI.ROLE_ID = R.ROLE_ID
+		WHERE
+			UI.DELETE_FLG = '0'
+		ORDER BY
+			UI.ID
+	</select>
+
+	<select id="checkId"
+		parameterType="com.mttl.vlms.setting.stt013.dto.UserInfoDto"
+		resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			user_info
+		WHERE
+			ID = #{userInfoDto.id,jdbcType=INTEGER}
+	</select>
+
+	<select id="getUserInfoById"
+		resultType="com.mttl.vlms.setting.stt013.dto.UserInfoDto"
+		parameterType="java.lang.Integer">
+		SELECT
+			id,
+			role_id,
+			staff_id,
+			barcode_id,
+			name,
+			gender,
+			date_of_birth,
+			join_date,
+			nrc_no,
+			phone_no,
+			department,
+			address,
+			status,
+			disabled,
+			description
+		FROM
+			user_info
+		WHERE
+			id = #{userInfoId,jdbcType=INTEGER}
+	</select>
+
+	<select id="checkLoginIdDuplicateCount" parameterType="map"
+		resultType="java.lang.Integer">
+		SELECT
+			count(UI.ID)
+		FROM
+			user_info UI
+		WHERE
+			UI.LOGIN_ID = #{loginId,jdbcType=VARCHAR}
+		<if test="id != null">
+			AND UI.ID != #{id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="checkStaffId" parameterType="map"
+		resultType="java.lang.Integer">
+		SELECT
+			count(UI.ID)
+		FROM
+			user_info UI
+		WHERE
+			UI.STAFF_ID = #{staffId,jdbcType=VARCHAR}
+		<if test="id != null">
+			AND UI.ID != #{id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="checkUserInfoCode" parameterType="map"
+		resultType="java.lang.Integer">
+		SELECT
+			count(UI.ID)
+		FROM
+			user_info UI
+		WHERE
+			UI.BARCODE_ID = #{barcodeId,jdbcType=VARCHAR}
+		<if test="id != null">
+			AND UI.ID != #{id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="checkDuplicateNrcNo" parameterType="map"
+		resultType="java.lang.Integer">
+		SELECT
+			count(UI.ID)
+		FROM
+			user_info UI
+		WHERE
+			UI.NRC_NO = #{nrcNo,jdbcType=VARCHAR}
+		<if test="id != null">
+			AND UI.ID != #{id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="checkUserInfoUsed" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			user_info
+		WHERE
+			ID = #{id,jdbcType=INTEGER}
+	</select>
+</mapper>

@@ -1,0 +1,203 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	
+	<ui:define name="breadcrumb">
+	
+	</ui:define>
+	<ui:define name="content">
+	
+		<div class="ui-fluid">
+			<f:metadata>
+				<f:viewAction action="#{UserInfoListBean.showMessage}" />
+			</f:metadata>
+			<div class="card card-w-title">
+				<h:form id="frmUserInfoList">
+					<div>
+						<p:messages id="messages" globalOnly="true" autoUpdate="#{UserInfoListBean.checkAutoUpdate}" closable="true" style="word-break:break-all;" />
+						<p:growl for="messages" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['USER_LIST_TITLE']}</h1>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
+							<p:commandButton id="addNew" value="#{label['ADD_NEW_LABEL']}" action="userInfoInput" immediate="true" icon="ui-icon-add" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:remoteCommand name="onload" oncomplete="synchronizeRowsHeight();" autoRun="true" />
+							<p:dataTable id="userInfoList" lazy="true" widgetVar="userInfoListWV" var="userInfo" value="#{UserInfoListBean.userInfoListLazyDataModel}" rows="10" paginator="true"
+								paginatorAlwaysVisible="#{UserInfoListBean.paginatorVisible}" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="10,20,50,100" rowIndexVar="index" first="#{UserInfoListBean.firstRowCount}" scrollable="true" scrollWidth="100%" frozenColumns="4">
+								<p:ajax event="sort" listener="#{UserInfoListBean.changeAutoUpdate}" oncomplete="synchronizeRowsHeight();" />
+								<p:ajax event="page" listener="#{UserInfoListBean.changeAutoUpdate}" oncomplete="synchronizeRowsHeight();" />
+								<p:ajax event="filter" listener="#{UserInfoListBean.changeAutoUpdate}" oncomplete="synchronizeRowsHeight();" />
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Search:" />
+										<p:inputText id="globalFilter" onkeyup="PF('userInfoListWV').filter()" style="width:150px" placeholder="Enter keyword" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="30">
+									<h:outputText value="#{index+1}" />
+								</p:column>
+								<p:column headerText="#{label['USER_STAFFID_LABEL']}" sortBy="#{userInfo.staffId}" width="120" filterBy="#{userInfo.staffId}" filterMatchMode="contains">
+									<h:outputText value="#{userInfo.staffId}" />
+								</p:column>
+								<p:column headerText="#{label['USER_CODE_LABEL']}" sortBy="#{userInfo.barcodeId}" width="100" filterBy="#{userInfo.barcodeId}" filterMatchMode="contains">
+									<p:commandLink id="openDialogLink" value="#{userInfo.barcodeId}" oncomplete="PF('dlg').show();" update="dlgDetail" />
+									<p:dialog id="dlgDetail" widgetVar="dlg" header="#{userInfo.name} / #{userInfo.staffId}" resizable="true" modal="true" closeOnEscape="true" fitViewport="true">
+										<p:barcode value="#{userInfo.barcodeId}" format="svg" type="code39" width="300" height="150" />
+									</p:dialog>
+								</p:column>
+								<p:column headerText="#{label['USER_NAME']}" sortBy="#{userInfo.name}" width="120" filterBy="#{userInfo.name}">
+									<h:outputText value="#{userInfo.name}" />
+								</p:column>
+								<p:column headerText="#{label['LOGIN_ID']}" sortBy="#{userInfo.loginId}" width="110" filterBy="#{userInfo.loginId}">
+									<h:outputText value="#{userInfo.loginId}" />
+								</p:column>
+								<p:column headerText="#{label['ROLE_ID']}" sortBy="#{userInfo.roleName}" width="120" filterBy="#{userInfo.roleName}" filterMatchMode="contains">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('userInfoListWV').filter()">
+											<f:selectItem itemValue="" itemLabel="" />
+											<f:selectItem itemValue="USER" itemLabel="#{label['USER_LABEL']}" />
+											<f:selectItem itemValue="MANAGER" itemLabel="#{label['MANAGER_LABEL']}" />
+											<f:selectItem itemValue="ADMIN" itemLabel="#{label['ADMIN_LABEL']}" />
+											<f:selectItem itemValue="Yard Inspector" itemLabel="#{label['YARD_INSPECTOR_LABEL']}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<h:outputText value="#{userInfo.roleName}" />
+								</p:column>
+								<p:column headerText="#{label['GENDER_LABEL']}" sortBy="#{userInfo.gender}" width="100" filterBy="#{userInfo.gender}" filterMatchMode="contains">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('userInfoListWV').filter()">
+											<f:selectItem itemValue="" itemLabel="" />
+											<f:selectItem itemValue="0" itemLabel="#{label['MALE']}" />
+											<f:selectItem itemValue="1" itemLabel="#{label['FEMALE']}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<h:outputText value="#{UserInfoListBean.genderTypeMap.get(userInfo.gender)}" />
+								</p:column>
+								<p:column headerText="#{label['USER_DATE_OF_BIRTH_LABEL']}" sortBy="#{userInfo.dateOfBirth}" width="150" filterBy="#{userInfo.dateOfBirth}" filterMatchMode="contains">
+									<h:outputText id="txtDateOfBirth" value="#{userInfo.dateOfBirth}">
+										<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['USER_JOIN_DATE_LABEL']}" sortBy="#{userInfo.joinDate}" width="150" filterBy="#{userInfo.joinDate}" filterMatchMode="contains">
+									<h:outputText id="txtJoinDate" value="#{userInfo.joinDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['USER_NRC_NO_LABEL']}" sortBy="#{userInfo.nrcNo}" width="170" filterBy="#{userInfo.nrcNo}" filterMatchMode="contains">
+									<h:outputText value="#{userInfo.nrcNo}" />
+								</p:column>
+								<p:column headerText="#{label['USER_DEPARTMENT']}" sortBy="#{userInfo.department}" width="100" filterBy="#{userInfo.department}" filterMatchMode="contains">
+									<h:outputText value="#{userInfo.department}" />
+								</p:column>
+								<p:column headerText="#{label['PHONE_NO_LABEL']}" sortBy="#{userInfo.phList}" width="200" filterBy="#{userInfo.phList}" filterMatchMode="contains">
+									<h:outputText value="#{userInfo.phList}" />
+								</p:column>
+								<p:column headerText="#{label['ADDRESS_LABEL']}" sortBy="#{userInfo.address}" width="300" filterBy="#{userInfo.address}" filterMatchMode="contains">
+									<h:outputText value="#{userInfo.address}" />
+								</p:column>
+								<p:column id="colDescription" headerText="#{label['DESCRIPTION_LABEL']}" sortBy="#{userInfo.description}" width="200" filterBy="#{userInfo.description}"
+									filterMatchMode="contains">
+									<h:outputText id="txtDescription" value="#{userInfo.description}" />
+								</p:column>
+								<p:column headerText="#{label['DISABLED_LABEL']}" style="text-align:center;" width="100" sortBy="#{userInfo.disabled}" filterBy="#{userInfo.disabled}"
+									filterMatchMode="equals">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('userInfoListWV').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemValue="" itemLabel="" />
+											<f:selectItem itemValue="false" itemLabel="#{label['ENABLE_LABEL']}" />
+											<f:selectItem itemValue="true" itemLabel="#{label['DISABLE_LABEL']}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<p:commandLink action="#{UserInfoListBean.disabledUserInfo(userInfo)}" immediate="true" update="userInfoList" oncomplete="synchronizeRowsHeight();">
+										<p:confirm header="Confirmation" message="#{label[(userInfo.disabled?'MSG_TO_ENABLED':'MSG_TO_DISABLED')]}" />
+										<h:outputText class="fa fa-fw #{userInfo.disabled  ? 'fa-toggle-on fa-flip-horizontal red' : 'fa-toggle-on green'} fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column id="colReset" headerText="#{label['RESET_PASSWORD_LABEL']}" style="text-align:center;" width="100">
+									<p:commandLink id="cmlReset" action="#{UserInfoListBean.reset(userInfo)}" immediate="true" update="frmUserInfoList" process="@this">
+										<p:confirm header="Confirmation" message="Are you sure to reset password?" />
+										<h:outputText id="txtReset" class="fa fa-fw fa-key fa-flip-vertical fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column id="colEdit" headerText="#{label['EDIT_LABEL']}" style="text-align:center;" width="30">
+									<p:commandLink id="cmlEdit" action="#{UserInfoListBean.editUserInfo(userInfo)}" immediate="true">
+										<h:outputText id="txtEdit" class="fa fa-fw fa-edit fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column id="colDelete" headerText="#{label['DELETE_LABEL']}" style="text-align:center;" width="40">
+									<p:commandLink id="cmlDelete" action="#{UserInfoListBean.deleteConfirmUserInfo(userInfo)}" immediate="true">
+										<h:outputText id="txtDelete" class="fa fa-fw fa-trash fa-lg" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+						<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+					</p:confirmDialog>
+					<h:outputScript target="body">
+					
+					//<![CDATA[
+
+    
+    
+    function synchronizeRowsHeight() {
+    
+    
+    	//var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+    	var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    	//window.alert("isChrome " + isChrome);
+    	
+    
+        var $leftRows = $('.ui-datatable-frozenlayout-left').find('tr');
+        var $rightRows = $('.ui-datatable-frozenlayout-right').find('tr');
+
+        $leftRows.each(function (index) {
+        
+        	var $leftRow = $(this);
+        	var $leftHeight = $leftRow.innerHeight();
+        	var $rightRow = $rightRows.eq(index);
+        	var $rightHeight = $rightRow.innerHeight();
+
+			if(isChrome) {
+				if ($rightHeight > $leftHeight) {
+                	$leftRow.innerHeight($rightHeight);
+                	var diff = $rightHeight - $leftRow.innerHeight();
+                	
+                	if (diff != 0)
+                       $leftRow.innerHeight($rightHeight + diff);
+                       
+         		} else if ($rightHeight < $leftHeight) {
+                	$rightRow.innerHeight($leftHeight);
+                	var diff = $leftHeight - $rightRow.innerHeight();
+                	if (diff != 0)
+                       $rightRow.innerHeight($leftHeight + diff);
+         		}
+			}else {
+	            if ($rightHeight > $leftHeight) {
+	                $leftRow.innerHeight($rightRow.outerHeight());
+	            } else {
+	                $rightRow.innerHeight($leftRow.outerHeight());
+	            }
+            }
+        })
+   $(window).trigger('resize');
+}
+
+// ]]>
+					</h:outputScript>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

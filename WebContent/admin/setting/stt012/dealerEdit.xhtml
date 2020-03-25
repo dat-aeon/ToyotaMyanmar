@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{DealerEditBean.redirect}" />
+		</f:metadata>
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<h:form id="frmEditDealer">
+					<div>
+						<p:messages id="msg" globalOnly="true" autoUpdate="true" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['EDIT_DEALER_TITLE']}</h1>
+							<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="2" columnClasses="ui-grid-col-2, ui-grid-col-4"
+								layout="grid">
+								<p:outputLabel id="lblDealerCode" for="txtDealerCode" value="#{label['DEALER_CODE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtDealerCode" value="#{DealerEditBean.dealerDtoEdit.dealerCode}" required="true" label="#{label['DEALER_CODE_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="25" message="{0} #{label['LENGTH_MSG']} 25." />
+									</p:inputText>
+									<p:message id="msgDealerCode" for="txtDealerCode" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDealerName" for="txtDealerName" value="#{label['DEALER_NAME_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtDealerName" value="#{DealerEditBean.dealerDtoEdit.dealerName}" required="true" label="#{label['DEALER_NAME_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="75" message="{0} #{label['LENGTH_MSG']} 75." />
+									</p:inputText>
+									<p:message id="msgDealerName" for="txtDealerName" />
+								</h:panelGroup>
+								<p:outputLabel id="lblAddress" for="txtAddress" value="#{label['ADDRESS_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtAddress" value="#{DealerEditBean.dealerDtoEdit.address}" required="true" label="#{label['ADDRESS_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="255" message="{0} #{label['LENGTH_MSG']} 255" />
+									</p:inputText>
+									<p:message id="msgDealerAddress" for="txtAddress" />
+								</h:panelGroup>
+								<p:outputLabel id="lblPhoneNp" for="chpPhoneNo" value="#{label['PHONE_NO_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:chips id="chpPhoneNo" value="#{DealerEditBean.dealerDtoEdit.phoneNoList}" max="5" required="true">
+										<p:keyFilter regEx="/[\d+]/" />
+										<o:validator validatorId="javax.faces.Length" maximum="80" message="{0} #{label['LENGTH_MSG']} 80." />
+									</p:chips>
+									<p:message id="msgDealerPhoneNo" for="chpPhoneNo" />
+								</h:panelGroup>
+								<p:outputLabel id="lblContactName" for="txtContactName" value="#{label['DEALER_ContactName_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtContactName" value="#{DealerEditBean.dealerDtoEdit.contactName}" required="true" label="#{label['DEALER_ContactName_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="75" message="{0} #{label['LENGTH_MSG']} 75." />
+									</p:inputText>
+									<p:message id="msgContactName" for="txtContactName" />
+								</h:panelGroup>
+								<p:outputLabel id="lblContactPosition" for="txtContactPosition" value="#{label['DEALER_ContactPosition_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtContactPosition" value="#{DealerEditBean.dealerDtoEdit.contactPosition}" required="true" label="#{label['DEALER_CODE_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="50" message="{0} #{label['LENGTH_MSG']} 50." />
+									</p:inputText>
+									<p:message id="msgContactPosition" for="txtContactPosition" />
+								</h:panelGroup>
+								<p:outputLabel id="lblContactPhoneNo" for="chpContactPhoneNo" value="#{label['DEALER_ContactPhoneNo_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:chips id="chpContactPhoneNo" value="#{DealerEditBean.dealerDtoEdit.contactPhoneNoList}" max="5" required="true">
+										<p:keyFilter regEx="/[\d+]/" />
+										<o:validator validatorId="javax.faces.Length" maximum="80" message="{0} #{label['LENGTH_MSG']} 80." />
+									</p:chips>
+									<p:message id="msgContactPhoneNo" for="chpContactPhoneNo" />
+								</h:panelGroup>
+								<p:outputLabel id="lblContactEmail" for="txtContactEmail" value="#{label['DEALER_ContactEmail_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtContactEmail" required="true" label="#{label['DEALER_ContactEmail_LABEL']}" requiredMessage="Please enter your email address."
+										validatorMessage="Invalid email format" value="#{DealerEditBean.dealerDtoEdit.contactEmail}">
+										<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+										<o:validator validatorId="javax.faces.Length" maximum="80" message="{0} #{label['LENGTH_MSG']} 80." />
+									</p:inputText>
+									<p:message id="msgtxtContactEmail" for="txtContactEmail" />
+								</h:panelGroup>
+								<p:outputLabel id="lblContractStartDate" for="calContractStartDate" value="#{label['DEALER_ContractStartDate_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="calContractStartDate" value="#{DealerEditBean.dealerDtoEdit.contractStartDate}" required="true" navigator="true" readonlyInput="true" pattern="dd/MM/yyyy">
+									</p:calendar>
+									<p:message id="msgContractStartDate" for="calContractStartDate" />
+								</h:panelGroup>
+								<p:outputLabel id="lblContractEndDate" for="calContractEndDate" value="#{label['DEALER_ContractEndDate_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="calContractEndDate" value="#{DealerEditBean.dealerDtoEdit.contractEndDate}" required="true" navigator="true" readonlyInput="true" pattern="dd/MM/yyyy">
+									</p:calendar>
+									<p:message id="msgContractEndDate" for="calContractEndDate" />
+								</h:panelGroup>
+								<p:outputLabel id="lblAccountInformation" for="txtAccountInformation" value="#{label['DEALER_AccountInformation_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtAccountInformation" value="#{DealerEditBean.dealerDtoEdit.accountInformation}" required="true" label="#{label['DEALER_AccountInformation_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="255" message="{0} #{label['LENGTH_MSG']} 255." />
+									</p:inputText>
+									<p:message id="msgAccountInformation" for="txtAccountInformation" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDisabled" for="rdoDisabled" value="#{label['DISABLED_LABEL']}" columns="2" layout="responsive" />
+								<h:panelGroup columns="2" style="margin-bottom:10px" cellpadding="5">
+									<p:selectOneRadio id="rdoDisabled" value="#{DealerEditBean.dealerDtoEdit.disabled}" columns="2" layout="responsive">
+										<f:selectItem itemValue="false" itemLabel="#{label['ENABLE_LABEL']}" />
+										<f:selectItem itemValue="true" itemLabel="#{label['DISABLE_LABEL']}" />
+									</p:selectOneRadio>
+								</h:panelGroup>
+							</p:panelGrid>
+							<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="3"
+								columnClasses="ui-g-12 ui-md-2 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2" layout="grid">
+								<div />
+								<p:commandButton id="btnSubmit" value="#{label['UPDATE_LABEL']}" update="frmEditDealer" action="#{DealerEditBean.editDealer}" icon="ui-icon-launch">
+									<p:confirm header="Confirmation" message="Are you sure to update?" />
+								</p:commandButton>
+								<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" action="dealerList" immediate="true" icon="ui-icon-close" />
+							</p:panelGrid>
+						</div>
+					</div>
+				</h:form>
+			</div>
+		</div>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+			<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

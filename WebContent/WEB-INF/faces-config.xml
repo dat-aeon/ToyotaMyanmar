@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+	version="2.2">
+	<application>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+		<action-listener>org.primefaces.application.DialogActionListener</action-listener>
+		<navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
+		<view-handler>org.primefaces.application.DialogViewHandler</view-handler>
+		<message-bundle>MESSAGES</message-bundle>
+		<resource-bundle>
+			<base-name>LANGUAGES</base-name>
+			<var>label</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>APP_CONFIG</base-name>
+			<var>appConfig</var>
+		</resource-bundle>
+		<locale-config>
+			<default-locale>en</default-locale>
+			<supported-locale>ja</supported-locale>
+		</locale-config>
+	</application>
+	<factory>
+		<exception-handler-factory>org.omnifaces.exceptionhandler.FullAjaxExceptionHandlerFactory</exception-handler-factory>
+		<exception-handler-factory>com.mttl.vlms.web.common.CustomExceptionHandlerFactory</exception-handler-factory>
+	</factory>
+	<managed-bean>
+		<managed-bean-name>currentDate</managed-bean-name>
+		<managed-bean-class>java.util.Date</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<navigation-rule>
+		<from-view-id>/*</from-view-id>
+		<navigation-case>
+			<from-outcome>login</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dashboard</from-outcome>
+			<to-view-id>/user/dashboard/dsb001/dashboard.html</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>home</from-outcome>
+			<to-view-id>/user/home.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>attendanceInput</from-outcome>
+			<to-view-id>/user/timesheet/tst002/attendanceInput.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<!-- Change Password -->
+		<navigation-case>
+			<from-outcome>changePassword</from-outcome>
+			<to-view-id>/user/mnu001/changePassword.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Port Terminal Control -->
+		<navigation-case>
+			<from-outcome>portTerminalControl</from-outcome>
+			<to-view-id>/admin/setting/stt009/portTerminalControl.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>portInput</from-outcome>
+			<to-view-id>/admin/setting/stt009/portInput.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>portEdit</from-outcome>
+			<to-view-id>/admin/setting/stt009/portEdit.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>portDeleteConfirm</from-outcome>
+			<to-view-id>/admin/setting/stt009/portDeleteConfirm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!--Task Management Control -->
+		<navigation-case>
+			<from-outcome>taskControlList</from-outcome>
+			<to-view-id>/admin/setting/stt016/taskControlList.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>taskInput</from-outcome>
+			<to-view-id>/admin/setting/stt016/taskInput.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>taskEdit</from-outcome>
+			<to-view-id>/admin/setting/stt016/taskEdit.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>taskDeleteConfirm</from-outcome>
+			<to-view-id>/admin/setting/stt016/taskDeleteConfirm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		
+		<!-- Trailer -->
+		<navigation-case>
+			<from-outcome>trailerList</from-outcome>
+			<to-view-id>/admin/setting/stt010/trailerList.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>trailerInput</from-outcome>
+			<to-view-id>/admin/setting/stt010/trailerInput.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>trailerEdit</from-outcome>
+			<to-view-id>/admin/setting/stt010/trailerEdit.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>trailerDelete</from-outcome>
+			<to-view-id>/admin/setting/stt010/trailerDelete.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Driver Setup -->
+		<navigation-case>
+			<from-outcome>driverList</from-outcome>
+			<to-view-id>/admin/setting/stt011/driverList.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>driverInput</from-outcome>
+			<to-view-id>/admin/setting/stt011/driverInput.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>driverEdit</from-outcome>
+			<to-view-id>/admin/setting/stt011/driverEdit.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>driverDeleteConfirm</from-outcome>
+			<to-view-id>/admin/setting/stt011/driverDeleteConfirm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Dealer Setup -->
+		<navigation-case>
+			<from-outcome>dealerList</from-outcome>
+			<to-view-id>/admin/setting/stt012/dealerList.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dealerInput</from-outcome>
+			<to-view-id>/admin/setting/stt012/dealerInput.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dealerEdit</from-outcome>
+			<to-view-id>/admin/setting/stt012/dealerEdit.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>dealerDeleteConfirm</from-outcome>
+			<to-view-id>/admin/setting/stt012/dealerDeleteConfirm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Charge -->
+		<navigation-case>
+			<from-outcome>chargeList</from-outcome>
+			<to-view-id>/admin/setting/stt014/chargeList.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>chargeInput</from-outcome>
+			<to-view-id>/admin/setting/stt014/chargeInput.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>chargeEdit</from-outcome>
+			<to-view-id>/admin/setting/stt014/chargeEdit.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>chargeDeleteConfirm</from-outcome>
+			<to-view-id>/admin/setting/stt014/chargeDeleteConfirm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- User Setup -->
+		<navigation-case>
+			<from-outcome>userInfoList</from-outcome>
+			<to-view-id>/admin/setting/stt013/userInfoList.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>userInfoInput</from-outcome>
+			<to-view-id>/admin/setting/stt013/userInfoInput.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>userInfoEdit</from-outcome>
+			<to-view-id>/admin/setting/stt013/userInfoEdit.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>roleInfoInput</from-outcome>
+			<to-view-id>/admin/setting/stt013/roleInfoInput.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Yard Setup -->
+		<navigation-case>
+			<from-outcome>yardList</from-outcome>
+			<to-view-id>/admin/setting/stt017/yardList.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>yardInput</from-outcome>
+			<to-view-id>/admin/setting/stt017/yardInput.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>yardEdit</from-outcome>
+			<to-view-id>/admin/setting/stt017/yardEdit.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>yardDeleteConfirm</from-outcome>
+			<to-view-id>/admin/setting/stt017/yardDeleteConfirm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- UploadVehicleFile Setup -->
+		<navigation-case>
+			<from-outcome>uploadVehicleFileList</from-outcome>
+			<to-view-id>/user/setting/stt015/UploadVehicleFile.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Vehicle Information -->
+		<navigation-case>
+			<from-outcome>vehicleInfoList</from-outcome>
+			<to-view-id>/user/operation/opr002/vehicleInfoList.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>vehicleInfoInput</from-outcome>
+			<to-view-id>/admin/operation/opr002/vehicleInfoInput.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>vehicleInfoEdit</from-outcome>
+			<to-view-id>/admin/operation/opr002/vehicleInfoEdit.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>vehicleInfoDeleteConfirm</from-outcome>
+			<to-view-id>/admin/operation/opr002/vehicleInfoDeleteConfirm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- Vehicle Process Information -->
+		<navigation-case>
+			<from-outcome>vehicleProcessInfoList</from-outcome>
+			<to-view-id>/user/operation/opr004/vehicleProcessInfoList.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>vehicleProcessInfoDeleteConfirm</from-outcome>
+			<to-view-id>/admin/operation/opr004/vehicleProcessInfoDeleteConfirm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		
+		<!-- Inventory Report -->
+		<navigation-case>
+			<from-outcome>inventoryList</from-outcome>
+			<to-view-id>/admin/report/rpt001/inventoryList.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		
+		<!-- Invoice Setup -->
+		<navigation-case>
+			<from-outcome>invoiceInput</from-outcome>
+			<to-view-id>/finance/operation/opr001/invoiceInput.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>invoiceList</from-outcome>
+			<to-view-id>/finance/operation/opr001/invoiceList.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>invoicePreview</from-outcome>
+			<to-view-id>/finance/operation/opr001/invoicePreview.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>invoiceEdit</from-outcome>
+			<to-view-id>/finance/operation/opr001/invoiceEdit.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>invoiceDeleteConfirm</from-outcome>
+			<to-view-id>/finance/operation/opr001/invoiceDeleteConfirm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>invoiceReport</from-outcome>
+			<to-view-id>/finance/operation/opr001/invoiceReport.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<!-- ParkingLayoutChecking Setup -->
+		<navigation-case>
+			<from-outcome>parkingLayoutList</from-outcome>
+			<to-view-id>/user/operation/opr003/ParkingLayoutChecking.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+</faces-config>

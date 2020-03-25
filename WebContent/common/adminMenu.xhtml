@@ -1,0 +1,229 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<h:form>
+		<div class="sidebar" role="navigation">
+			<div class="navbar-collapse">
+				<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left notDisplay" id="cbp-spmenu-s1">
+					<ul class="nav scrollspy-example scroll scrollbar1" id="side-menu">
+						<!-- Manual -->
+						<li>
+							<p:commandLink  id="manualLink" action="#{ManualBean.redirectToManual(0)}">
+								<i class="fa fa-question-circle-o nav_icon"></i>
+							#{label['HOW_TO']}
+						</p:commandLink></li>
+						<!-- Home -->
+						<li>
+							<a href="${facesContext.externalContext.requestContextPath}/user/dashboard/dsb001/dashboard.xhtml">
+								<i class="fa fa-home nav_icon"></i>
+								#{label['HOME_LABEL']}
+							</a>
+						</li>
+						<!-- Organization -->
+						<li>
+							<a href="#">
+								<i class="fa fa-fort-awesome nav_icon"></i>
+								#{label['MNU_ORGANIZATION_LABEL']}
+								<span class="fa arrow" />
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/organization/org001/companyProfile.xhtml">#{label['COMPANY_PROFILE_TITLE']} </a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/organization/org002/departmentList.xhtml"> #{label['DEPARTMENT_TITLE']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/organization/org004/jobTitleList.xhtml"> #{label['EMPLOYEE_JOB_TITLE_LABEL']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/organization/org003/positionList.xhtml">#{label['EMPLOYEE_POSITION_LABEL']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/project/prj001/projectList.xhtml">#{label['MNU_PROJECT']} </a>
+								</li>
+							</ul>
+						</li>
+						
+						<!-- Employee -->
+						<li>
+							<a href="#">
+								<i class="fa fa-group nav_icon"></i>
+								#{label['MNU_EMPLOYEE_LABEL']}
+								<span class="fa arrow" />
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/employee/emp001/employeeList.xhtml"> #{label['MNU_EMPLOYEE_LABEL']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/employee/emp003/positionChangeList.xhtml"> #{label['MNU_EMPLOYEE_POSITION_CHANGES']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/employee/emp003/employeeResign.xhtml"> #{label['MNU_EMPLOYEE_RESIGN']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/employee/emp001/employeeResignApproval.xhtml"> #{label['MNU_EMPLOYEE_RESIGN_REQUEST']}</a>
+								</li>
+							</ul>
+						</li>
+						
+						<!-- Attendance Setting -->
+						<li class="">
+							<a href="#">
+								<i class="fa fa-cogs nav_icon"></i>
+								#{label['MNU_ATTENDANCE_SETTING_LABEL']}
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/timesheet/tst003/leaveTypeList.xhtml">#{label['LEAVE_TYPE_TITLE']} </a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/timesheet/tst001/shiftList.xhtml">#{label['WORK_SHIFT_LABEL']}</a>
+								</li>
+							</ul>
+						</li>
+						
+						<!-- Attendance -->
+						<li class="">
+							<a href="#">
+								<i class="fa fa-calendar nav_icon"></i>
+								#{label['MNU_ATTENDANCE_LABEL']}
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/timesheet/tst002/dailyAttendanceList.xhtml">#{label['ATTENDANCE_INPUT_TITLE']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/timesheet/tst004/leaveApplication.xhtml">#{label['LEAVE_APPLICATION_TITLE']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/timesheet/tst004/leaveCancel.xhtml">#{label['LEAVE_CANCEL_TITLE']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/timesheet/tst007/leaveHistory.xhtml"> #{label['LEAVE_HISTORY_TITLE']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/overtime/oti003/overtimeRequestList.xhtml">#{label['OVERTIME_REQUEST_TITLE']} </a>
+								</li>
+							</ul>
+						</li>
+							
+						<!-- Attendance Management -->
+						<li class="">
+							<a href="#">
+								<i class="fa fa-list-ul nav_icon"></i>
+								#{label['MNU_ATTENDANCE_MANAGEMENT_LABEL']}
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/manager/timesheet/tst002/attendanceRequestList.xhtml">#{label['MNU_ATTENDANCE_REQUESTED_LABEL']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/manager/timesheet/tst005/leaveApproval.xhtml">#{label['MNU_LEAVE_REQUESTED_LABEL']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/manager/overtime/oti002/overTimeRequestApproval.xhtml">#{label['MNU_OVERTIME_REQUEST_APPROVAL_LABEL']} </a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/manager/report/rpt002/attendanceListReport.xhtml">#{label['MNU_ATTENDANCE_REPORT_LABEL']} </a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/manager/report/rpt005/leaveReport.xhtml">#{label['LEAVE_REPORT_TITLE']} </a>
+								</li>
+							</ul>
+						</li>
+						
+						<!-- Payroll Setting -->
+						<li class="">
+							<a href="#">
+								<i class="fa fa-cogs nav_icon"></i>
+								#{label['MNU_PAYROLL_SETTING_LABEL']}
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/organization/org005/basicSalaryList.xhtml">#{label['EMPLOYEE_BASIC_SALARY_LABEL']} </a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/payment/pmt001/allowanceList.xhtml">#{label['ALLOWANCE_LABEL']} </a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/deduction/ded001/deductionList.xhtml">#{label['DEDUCTION_LABEL']} </a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/payroll/pay002/employeeAllowanceAndDeductionList.xhtml">#{label['MNU_EMPLOYEE_ALLOWANCE_DEDUCTION']} </a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/incometax/tax001/incomeTax.xhtml">#{label['MNU_INCOME_TAX_LABEL']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/incometax/tax002/employeeIncomeTaxRespiteList.xhtml">#{label['MNU_EMPLOYEE_INCOME_TAX_RESPITE']} </a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/payroll/pay003/employeeBankAccountList.xhtml">#{label['MNU_EMPLOYEE_BANK_ACCOUNT_LIST']} </a>
+								</li>
+							</ul>
+						</li>
+						
+						<!-- Payroll Management -->
+						<li class="">
+							<a href="#">
+								<i class="fa fa-money nav_icon"></i>
+								#{label['MNU_PAYROLL_MANAGEMENT_LABEL']}
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/payroll/pay001/monthlyPaymentList.xhtml">#{label['MNU_MONTHLY_PAYMENT']} </a>
+								</li>
+								<li>
+									<a href="#">#{label['MNU_PAYROLL_REPORT_LABEL']} </a>
+								</li>
+							</ul>
+						</li>
+						
+						<!-- Other Setting -->
+						<li>
+							<a href="#">
+								<i class="fa fa-cogs nav_icon"></i>
+								#{label['MNU_OTHER_LABEL']}
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/setting/stt007/countryList.xhtml">#{label['MNU_COUNTRY_LABEL']} </a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/admin/setting/stt008/branchList.xhtml">#{label['MNU_BRANCH_LABEL']} </a>
+								</li>
+								<li>
+									<a href="#">
+										#{label['EMPLOYEE_BANK_INFO_TITLE']}
+										<span class="fa arrow" />
+									</a>
+									<ul class="nav nav-second-level collapse">
+										<li>
+											<a href="${facesContext.externalContext.requestContextPath}/admin/setting/stt005/bankList.xhtml">#{label['BANK_LABEL']} </a>
+										</li>
+										<li>
+											<a href="${facesContext.externalContext.requestContextPath}/admin/setting/stt006/bankBranchList.xhtml">#{label['MNU_BANK_BRANCH_LABEL']} </a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/timesheet/tst006/holidayList.xhtml">#{label['MNU_HOLIDAY_LABEL']} </a>
+								</li>
+							</ul>
+						</li>
+						<!-- for design -->
+						<div style="height: 70px"/>
+					</ul>
+					<div class="clearfix"></div>
+				</nav>
+			</div>
+		</div>
+	</h:form>
+</ui:composition>

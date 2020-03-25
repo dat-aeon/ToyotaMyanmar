@@ -1,0 +1,83 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<f:metadata>
+					<f:viewAction action="#{ChargesListBean.showMessage}" />
+				</f:metadata>
+				<h:form id="frmChargeList">
+					<p:messages id="msg" globalOnly="true" autoUpdate="true" closable="true" />
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['Charge_LIST_TITLE']}</h1>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
+							<p:commandButton id="btnAddNew" value="#{label['ADD_NEW_LABEL']}" action="chargeInput" immediate="true" icon="ui-icon-add" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:dataTable widgetVar="chargeListWV" var="charge" value="#{ChargesListBean.chargeList}" id="chargeList" paginator="true" rows="10"
+								paginatorAlwaysVisible="#{ChargesListBean.paginatorVisible}" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								first="#{ChargesListBean.firstRowCount}" filteredValue="#{ChargesListBean.filterChargesList}" rowsPerPageTemplate="10,20,50,100" rowIndexVar="index">
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Search:" />
+										<p:inputText id="globalFilter" onkeyup="PF('chargeListWV').filter()" style="width:150px" placeholder="Enter keyword" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="5">
+									<h:outputText value="#{index+1}" />
+								</p:column>
+								<p:column headerText="#{label['Charge_Title_LABEL']}" sortBy="#{charge.title}" width="100" filterBy="#{charge.title}" filterMatchMode="contains">
+									<h:outputText value="#{charge.title}" />
+								</p:column>
+								<p:column headerText="#{label['Charge_UnitPrice_LABEL']}" sortBy="#{charge.unitPrice}" width="70" filterBy="#{charge.unitPrice}" filterMatchMode="contains">
+									<h:outputText value="#{charge.unitPrice}">
+										<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['Charge_Currency_LABEL']}" sortBy="#{charge.currency}" width="50" filterBy="#{charge.currency}" filterMatchMode="contains">
+									<h:outputText value="#{charge.currency}" />
+								</p:column>
+								<p:column headerText="#{label['DISABLED_LABEL']}" style="text-align:center;" width="30" sortBy="#{charge.disabled}" filterBy="#{charge.disabled}" filterMatchMode="equals">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('chargeListWV').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemValue="" itemLabel="" />
+											<f:selectItem itemValue="false" itemLabel="#{label['ENABLE_LABEL']}" />
+											<f:selectItem itemValue="true" itemLabel="#{label['DISABLE_LABEL']}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<p:commandLink action="#{ChargesListBean.disabledCharges(charge)}" immediate="true" update="chargeList">
+										<p:confirm header="Confirmation" message="#{label[(charge.disabled?'MSG_TO_ENABLED':'MSG_TO_DISABLED')]}" />
+										<h:outputText class="fa fa-fw #{charge.disabled  ? 'fa-toggle-on fa-flip-horizontal red' : 'fa-toggle-on green'} fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="#{label['EDIT_LABEL']}" style="text-align:center;" width="30">
+									<p:commandLink id="btnEdit" action="#{ChargesListBean.editCharges(charge)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-edit fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="#{label['DELETE_LABEL']}" style="text-align:center;" width="30">
+									<p:commandLink id="btnDelete" action="#{ChargesListBean.deleteConfirmCharges(charge)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-trash fa-lg" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closable="false" closeOnEscape="true">
+						<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+						<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+					</p:confirmDialog>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

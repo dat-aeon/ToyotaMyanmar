@@ -1,0 +1,892 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mttl.vlms.operation.opr002.mapper.VehicleInfoCustomMapper">
+
+	<select id="searchVehicleInfoList"
+		resultType="com.mttl.vlms.operation.opr002.dto.VehicleInfoDto">
+		SELECT 
+			v.ID,
+			v.CHASSIS_NO,
+			v.MODEL,
+			task.task_name as status,
+			v.COLOR,
+			v.COLOR_CODE,
+			v.FIRST_VESSEL_NAME,
+			v.SECOND_VESSEL_NAME,
+			v.CIF,
+			v.ETD_ORIGIN,
+			v.ETD_ESTIMATED_DATE,
+			v.ETD_SIN,
+			v.ETA,
+			v.CONSIGNEE_ON_BL,
+			v.ORDER_MONTH,
+			v.ORDER_BY,
+			v.PROD_MTH,
+			v.AGENT_NAME,
+			v.STOCK_OF,
+			v.STOCK_DATE,
+			v.VESSEL_BERTHING_DATE,
+			v.PORT_CARRIED_UNIT,
+			v.DISABLED,
+			v.DISCHARGE_PORT_ID,
+			v.DEALER_ID,
+			v.PORT_CARRIED_OUT_DATE,
+			v.PORT_CARRIED_OUT_REMARK,
+			v.PURCHASE_PERMIT_DATE,
+			v.AUDIO_INSTALL_REQUIRED,
+			v.AUDIO_MAIL_DATE,
+			v.AUDIO_INSTALL_DATE,
+			v.REMARK,
+			v.LICENSE_NO,
+			v.DISCHARGE_PORT_PLAN_DATE,
+			v.DISCHARGE_PORT_ACTUAL_DATE,
+			v.DELIVERED,
+			pt.SHORT_NAME,
+			d.DEALER_NAME
+		from
+			(select 
+				iv.vehicle_id as vehicleId,
+				iv.task_id as taskId
+			from 
+				inspect_vehicle as iv
+			right outer join 
+				(select 
+					max(created_date
+				) as lastDate 
+				from 
+					inspect_vehicle
+				group by 
+					vehicle_id
+				) as totalLastData
+			on 
+				iv.created_date=totalLastData.lastDate) as LastUpdateTaskName
+		left outer join 
+			task
+		on 
+			task.id = LastUpdateTaskName.taskId
+		right outer join
+			vehicle_info as v
+		on 
+			v.id=LastUpdateTaskName.vehicleId
+		left outer join
+			port_terminal as pt
+		on 
+			pt.id = v.DISCHARGE_PORT_ID
+		left outer join
+			dealer as d
+		on 
+			d.id = v.dealer_id
+		where 
+			v.delete_flg='0'
+		<if test="vehicleInfoDto.chassisNo !=null">
+			AND LOWER(V.CHASSIS_NO) ILIKE'%'||
+			TRIM(LOWER(#{vehicleInfoDto.chassisNo,jdbcType=VARCHAR})) ||'%'
+		</if>
+		<if test="vehicleInfoDto.status !=null">
+			AND TASK.TASK_NAME = #{vehicleInfoDto.status,jdbcType=VARCHAR}
+		</if>
+		<if
+			test="vehicleInfoDto.fromVessel !=null and vehicleInfoDto.toVessel != null">
+			AND V.VESSEL_BERTHING_DATE BETWEEN
+			#{vehicleInfoDto.fromVessel,jdbcType=DATE} AND
+			#{vehicleInfoDto.toVessel,jdbcType=DATE}
+		</if>
+		<if
+			test="vehicleInfoDto.fromCarried !=null and vehicleInfoDto.toCarried != null">
+			AND V.PORT_CARRIED_OUT_DATE BETWEEN
+			#{vehicleInfoDto.fromCarried,jdbcType=DATE} AND
+			#{vehicleInfoDto.toCarried,jdbcType=DATE}
+		</if>
+		<if test="vehicleInfoDto.dealerId !=null">
+			AND D.ID = #{vehicleInfoDto.dealerId,jdbcType=INTEGER} 
+		</if>
+		<if test="vehicleInfoDto.agentName !=null">
+			AND LOWER(V.AGENT_NAME) ILIKE'%'||
+			TRIM(LOWER(#{vehicleInfoDto.agentName,jdbcType=VARCHAR})) ||'%'
+		</if>
+		<if test="vehicleInfoDto.id == 1">
+			 AND DATE(ETA) = CAST(NOW() AS DATE)	
+		</if>
+		<if test="vehicleInfoDto.id == 2">
+			AND DATE(ETA) = CAST(NOW() AS DATE)	
+			AND V.AUDIO_INSTALL_REQUIRED = 'TRUE'	
+		</if>
+		<if test="vehicleInfoDto.id == 3">
+			AND task.PROCESS_TYPE = '2' 
+			AND (DATE(NOW()) - DATE(V.CREATED_DATE)) >= 60	
+		</if>
+		<foreach collection="filters" index="key" item="value"
+			open=" and " separator=" and " close=" ">
+			<if test="key == 'globalFilter' and value != '' and value != null"> (
+				LOWER(v.chassis_no) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(v.model) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(v.color_code) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(v.color) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(v.license_no) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(pt.short_name) like LOWER('%'|| #{value} ||'%') OR
+				TO_CHAR(v.order_month,'dd/mm/yyyy hh:MM:ss') like '%'|| #{value}
+				||'%' OR
+				LOWER(v.order_by) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(v.first_vessel_name) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(v.second_vessel_name) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(task.task_name) like LOWER('%'|| #{value} ||'%') OR
+				CAST(v.cif AS VARCHAR) like '%'|| #{value} ||'%' OR
+				TO_CHAR(v.prod_mth,'dd/mm/yyyy') like '%'|| #{value} ||'%' OR
+				LOWER(v.etd_origin) like LOWER('%'|| #{value} ||'%') OR
+				TO_CHAR(v.etd_estimated_date,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+				OR
+				TO_CHAR(v.eta,'dd/mm/yyyy') like '%'|| #{value} ||'%' OR
+				TO_CHAR(v.vessel_berthing_date,'dd/mm/yyyy') like '%'|| #{value}
+				||'%' OR
+				LOWER(v.agent_name) like LOWER('%'|| #{value} ||'%') OR
+				CAST(v.port_carried_unit as VARCHAR) like '%'|| #{value} ||'%' OR
+				TO_CHAR(v.port_carried_out_date,'dd/mm/yyyy') like '%'|| #{value}
+				||'%' OR
+				LOWER(v.port_carried_out_remark) like LOWER('%'|| #{value}
+				||'%') OR
+				TO_CHAR(v.discharge_port_plan_date,'dd/mm/yyyy') like '%'||
+				#{value} ||'%' OR
+				TO_CHAR(v.discharge_port_actual_date,'dd/mm/yyyy')
+				like '%'|| #{value} ||'%' OR
+				LOWER(v.stock_of) like LOWER('%'||
+				#{value} ||'%') OR
+				TO_CHAR(v.stock_date,'dd/mm/yyyy') like '%'||
+				#{value} ||'%' OR
+				LOWER(d.dealer_name) like LOWER('%'|| #{value}
+				||'%') OR
+				LOWER(v.consignee_on_bl) like LOWER('%'|| #{value} ||'%')
+				OR
+				TO_CHAR(v.purchase_permit_date,'dd/mm/yyyy') like '%'|| #{value}
+				||'%' OR
+				TO_CHAR(v.audio_mail_date,'dd/mm/yyyy') like '%'|| #{value}
+				||'%' OR
+				TO_CHAR(v.audio_install_date,'dd/mm/yyyy') like '%'||
+				#{value} ||'%' OR
+				LOWER(v.remark) like LOWER('%'|| #{value} ||'%'))
+			</if>
+			<if test="key == 'chassisNo'">
+				LOWER(v.chassis_no) like LOWER('%'|| #{value} ||'%')
+			</if>
+
+			<if test="key == 'model'">
+				LOWER(v.model) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'colorCode'">
+				LOWER(v.color_code) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'color'">
+				LOWER(v.color) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'licenseNo'">
+				LOWER(v.license_no) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'shortName'">
+				LOWER(pt.short_name) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'orderMonth'">
+				TO_CHAR(v.order_month,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'orderBy'">
+				LOWER(v.order_by) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'secondVesselName'">
+				LOWER(v.second_vessel_name) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'firstVesselName'">
+				LOWER(v.first_vessel_name) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'status'">
+				LOWER(task.task_name) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'cif'">
+				CAST(v.cif AS VARCHAR) like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'prodMth'">
+				TO_CHAR(v.prod_mth,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'etdOrigin'">
+				LOWER(v.etd_origin) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'etdEstimatedDate'">
+				TO_CHAR(v.etd_estimated_date,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'eta'">
+				TO_CHAR(v.eta,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'vesselBerthingDate'">
+				TO_CHAR(v.vessel_berthing_date,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'agentName'">
+				LOWER(v.agent_name) like LOWER('%'|| #{value} ||'%')
+			</if>
+
+			<if test="key == 'portCarriedUnit'">
+				CAST(v.port_carried_unit AS VARCHAR) like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'portCarriedOutDate'">
+				TO_CHAR(v.port_carried_out_date,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'portCarriedOutRemark'">
+				LOWER(v.port_carried_out_remark) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'dischargePortPlanDate'">
+				TO_CHAR(v.discharge_port_plan_date,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'dischargePortActualDate'">
+				TO_CHAR(v.discharge_port_actual_date,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'stockOf'">
+				LOWER(v.stock_of) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'stockDate'">
+				TO_CHAR(v.stock_date,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'dealerName'">
+				LOWER(d.dealer_name) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'consigneeOnBl'">
+				LOWER(v.consignee_on_bl) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'audioInstallRequired'">
+				v.audio_install_required = #{value}
+			</if>
+			<if test="key == 'audioMailDate'">
+				TO_CHAR(v.audio_mail_date,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'audioInstallDate'">
+				TO_CHAR(v.audio_install_date,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'purchasePermitDate'">
+				TO_CHAR(v.purchase_permit_date,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'remark'">
+				LOWER(v.remark) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'delivered'">
+				v.delivered = #{value}
+			</if>
+			<if test="key == 'disabled'">
+				v.disabled = #{value}
+			</if>
+		</foreach>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'chassisNo' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.chassis_no ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.chassis_no DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'model' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.model ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.model DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'colorCode' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.color_code ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.color_code DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'color' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.color ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.color DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'licenseNo' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.license_no ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.license_no DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'shortName' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY pt.short_name ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY pt.short_name DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'orderMonth' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.order_month ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.order_month DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'orderBy' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.order_by ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.order_by DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'firstVesselName' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.first_vessel_name ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.first_vessel_name DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'secondVesselName' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.second_vessel_name ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.second_vessel_name DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'status' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY task.task_name ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY task.task_name DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'cif' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.cif ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.cif DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'prodMth' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.prod_mth ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.prod_mth DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'etdOrigin' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.etd_origin ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.etd_origin DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'etdEstimatedDate' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.etd_estimated_date ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.etd_estimated_date DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'eta' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.eta ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.eta DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'vesselBerthingDate' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.vessel_berthing_date ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.vessel_berthing_date DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'agentName' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.agent_name ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.agent_name DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'portCarriedUnit' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.port_carried_unit ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.port_carried_unit DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'portCarriedOutDate' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.port_carried_out_date ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.port_carried_out_date DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'portCarriedOutRemark' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.port_carried_out_remark ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.port_carried_out_remark DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'dischargePortPlanDate' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.discharge_port_plan_date ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.discharge_port_plan_date DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'dischargePortActualDate' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.discharge_port_actual_date ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.discharge_port_actual_date DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'stockOf' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.stock_of ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.stock_of DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'stockDate' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.stock_date ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.stock_date DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'dealerName' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY d.dealer_name ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY d.dealer_name DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'consigneeOnBl' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.consignee_on_bl ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.consignee_on_bl DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'audioInstallRequired' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.audio_install_required ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.audio_install_required DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'delivered' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.delivered ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.delivered DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'audioMailDate' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.audio_mail_date ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.audio_mail_date DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'audioInstallDate' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.audio_install_date ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.audio_install_date DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'purchasePermitDate' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.purchase_permit_date ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.purchase_permit_date DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'remark' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.remark ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.remark DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'disabled' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY v.disabled ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY v.disabled DESC
+			</if>
+		</if>
+		<if test="sortField == null or sortField == ''">
+			order by v.ID
+		</if>
+		<if test="offset != null and limit != null">
+			OFFSET ${offset} LIMIT ${limit}
+		</if>
+	</select>
+
+	<select id="searchAfterUpdate"
+		resultType="com.mttl.vlms.operation.opr002.dto.VehicleInfoDto"
+		parameterType="com.mttl.vlms.operation.opr002.dto.VehicleInfoDto">
+		select 
+			v.ID,
+			v.CHASSIS_NO,
+			v.MODEL,
+			task.task_name as status,
+			v.COLOR,
+			v.COLOR_CODE,
+			v.FIRST_VESSEL_NAME,
+			v.SECOND_VESSEL_NAME,
+			v.CIF,
+			v.ETD_ORIGIN,
+			v.ETD_ESTIMATED_DATE,
+			v.ETD_SIN,
+			v.ETA,
+			v.CONSIGNEE_ON_BL,
+			v.ORDER_MONTH,
+			v.ORDER_BY,
+			v.PROD_MTH,
+			v.AGENT_NAME,
+			v.STOCK_OF,
+			v.STOCK_DATE,
+			v.VESSEL_BERTHING_DATE,
+			v.PORT_CARRIED_UNIT,
+			v.DISABLED,
+			v.DISCHARGE_PORT_ID,
+			v.DEALER_ID,
+			v.PORT_CARRIED_OUT_DATE,
+			v.PORT_CARRIED_OUT_REMARK,
+			v.PURCHASE_PERMIT_DATE,
+			v.AUDIO_INSTALL_REQUIRED,
+			v.AUDIO_MAIL_DATE,
+			v.AUDIO_INSTALL_DATE,
+			v.REMARK,
+			v.LICENSE_NO,
+			v.DISCHARGE_PORT_PLAN_DATE,
+			v.DISCHARGE_PORT_ACTUAL_DATE,
+			V.DELIVERED,
+			pt.SHORT_NAME,
+			d.DEALER_NAME
+		from
+			(select 
+				iv.vehicle_id as vehicleId,
+				iv.task_id as taskId
+			from 
+				inspect_vehicle as iv
+			right outer join 
+				(select max
+					(created_date) as lastDate 
+				from 
+					inspect_vehicle
+				group by 
+					vehicle_id
+				) as totalLastData
+			on 
+				iv.created_date=totalLastData.lastDate
+			) as LastUpdateTaskName
+		left outer join 
+			task
+		on 
+			task.id=LastUpdateTaskName.taskId
+		right outer join
+			vehicle_info as v
+			on 
+				v.id=LastUpdateTaskName.vehicleId
+		left outer join
+			port_terminal as pt
+		on
+			pt.id = v.DISCHARGE_PORT_ID
+		left outer join
+			dealer as d
+		on
+			d.id = v.dealer_id
+		where v.delete_flg='0'
+		<if test="vehicleInfoDto.chassisNo !=null">
+			AND LOWER(V.CHASSIS_NO) ILIKE'%'||
+			TRIM(LOWER(#{vehicleInfoDto.chassisNo,jdbcType=VARCHAR})) ||'%'
+		</if>
+		<if test="vehicleInfoDto.status !=null">
+			AND TASK.TASK_NAME = #{vehicleInfoDto.status,jdbcType=VARCHAR}
+		</if>
+		<if
+			test="vehicleInfoDto.fromVessel !=null and vehicleInfoDto.toVessel != null">
+			AND V.VESSEL_BERTHING_DATE BETWEEN
+			#{vehicleInfoDto.fromVessel,jdbcType=DATE} AND
+			#{vehicleInfoDto.toVessel,jdbcType=DATE}
+		</if>
+		<if
+			test="vehicleInfoDto.fromCarried !=null and vehicleInfoDto.toCarried != null">
+			AND V.PORT_CARRIED_OUT_DATE BETWEEN
+			#{vehicleInfoDto.fromCarried,jdbcType=DATE} AND
+			#{vehicleInfoDto.toCarried,jdbcType=DATE}
+		</if>
+		<if test="vehicleInfoDto.dealerId !=null">
+			AND D.ID = #{vehicleInfoDto.dealerId,jdbcType=INTEGER} 
+		</if>
+		<if test="vehicleInfoDto.agentName !=null">
+			AND LOWER(V.AGENT_NAME) ILIKE'%'||
+			TRIM(LOWER(#{vehicleInfoDto.agentName,jdbcType=VARCHAR})) ||'%'
+		</if>
+		<if test="vehicleInfoDto.id == 1">
+			 AND DATE(ETA) = CAST(NOW() AS DATE)	
+		</if>
+		<if test="vehicleInfoDto.id == 2">
+			AND DATE(ETA) = CAST(NOW() AS DATE)	
+			AND V.AUDIO_INSTALL_REQUIRED = 'TRUE'	
+		</if>
+		<if test="vehicleInfoDto.id == 3">
+			AND task.PROCESS_TYPE = '2' 
+			AND (DATE(NOW()) - DATE(V.CREATED_DATE)) >= 60	
+		</if>
+		order by ID
+	</select>
+	
+	<select id="checkChassisNo" resultType="java.lang.Integer"
+		parameterType="com.mttl.vlms.operation.opr002.dto.VehicleInfoDto">
+		SELECT
+			COUNT(*)
+		FROM
+			VEHICLE_INFO
+		WHERE
+			LOWER(CHASSIS_NO) = TRIM(LOWER(#{vehicleInfoDto.chassisNo,jdbcType=VARCHAR}))
+		<if test="vehicleInfoDto.id != null">
+			AND ID != #{vehicleInfoDto.id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="checkDuplicateLicenseNo"
+		resultType="java.lang.Integer"
+		parameterType="com.mttl.vlms.operation.opr002.dto.VehicleInfoDto">
+		SELECT
+			COUNT(*)
+		FROM
+			VEHICLE_INFO
+		WHERE
+			LOWER(LICENSE_NO) = TRIM(LOWER(#{vehicleInfoDto.licenseNo,jdbcType=VARCHAR}))
+		<if test="vehicleInfoDto.id != null">
+			AND ID != #{vehicleInfoDto.id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+
+	<select id="checkVehicleInfoUsed" resultType="java.lang.Integer"
+		parameterType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			VEHICLE_INFO
+		WHERE
+			ID = #{vehicleInfoId,jdbcType=INTEGER}
+	</select>
+
+	<select id="getChassisNoList" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		SELECT
+			CHASSIS_NO
+		FROM
+			VEHICLE_INFO
+		WHERE
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="getPortList"
+		resultType="com.mttl.vlms.operation.opr002.dto.VehicleInfoDto">
+		SELECT
+			SHORT_NAME,
+			ID AS DISCHARGEPORTID
+		FROM
+			PORT_TERMINAL
+		WHERE
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="getDealerList"
+		resultType="com.mttl.vlms.operation.opr002.dto.VehicleInfoDto">
+		SELECT 
+			DEALER_NAME,
+			ID AS DEALERID 
+		FROM 
+			DEALER 
+		WHERE DELETE_FLG ='0'
+	</select>
+
+	<select id="getVehicleInfoById"
+		resultType="com.mttl.vlms.operation.opr002.dto.VehicleInfoDto"
+		parameterType="java.lang.Integer">
+		SELECT
+			V.ID,
+			V.CHASSIS_NO,
+			V.MODEL,
+			V.COLOR,
+			V.COLOR_CODE,
+			V.FIRST_VESSEL_NAME,
+			V.SECOND_VESSEL_NAME,
+			V.CIF,
+			V.ETD_ORIGIN,
+			V.ETD_ESTIMATED_DATE,
+			V.ETD_SIN,
+			V.ETA,
+			V.CONSIGNEE_ON_BL,
+			V.ORDER_MONTH,
+			V.ORDER_BY,
+			V.PROD_MTH,
+			V.AGENT_NAME,
+			V.STOCK_OF,
+			V.STOCK_DATE,
+			V.VESSEL_BERTHING_DATE,
+			V.PORT_CARRIED_UNIT,
+			V.DISABLED,
+			V.DISCHARGE_PORT_ID,
+			V.DEALER_ID,
+			V.PORT_CARRIED_OUT_DATE,
+			V.PORT_CARRIED_OUT_REMARK,
+			V.PURCHASE_PERMIT_DATE,
+			V.AUDIO_INSTALL_REQUIRED,
+			V.AUDIO_MAIL_DATE,
+			V.AUDIO_INSTALL_DATE,
+			V.DISCHARGE_PORT_PLAN_DATE,
+			V.DISCHARGE_PORT_ACTUAL_DATE,
+			V.REMARK,
+			V.DELIVERED
+		FROM
+			VEHICLE_INFO V
+		WHERE
+			V.ID = #{vehicleInfoId,jdbcType=INTEGER}
+	</select>
+
+	<select id="getStatusList" resultType="java.lang.String">
+		SELECT
+			TASK_NAME
+		FROM
+			TASK
+		WHERE
+			DELETE_FLG = '0'
+	</select>
+</mapper>

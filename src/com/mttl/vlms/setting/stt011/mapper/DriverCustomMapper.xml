@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mttl.vlms.setting.stt011.mapper.DriverCustomMapper">
+
+	<select id="searchDriverList"
+		resultType="com.mttl.vlms.setting.stt011.dto.DriverDto"
+		parameterType="com.mttl.vlms.setting.stt011.dto.DriverDto">
+		SELECT
+			ID AS ID,
+			BARCODE_ID AS BARCODEID,
+			DRIVER_NAME AS DRIVERNAME,
+			STAFF_ID AS STAFFID,
+			PHONE_NO AS PHONENO,
+			JOIN_DATE,
+			LICENSE_TYPE AS
+			LICENSETYPE,
+			LICENSE_NO AS LICENSENO,
+			NRC_NO AS NRCNO,
+			DATE_OF_BIRTH AS
+			DATEOFBIRTH,
+			BASIC_SALARY AS BASICSALARY,
+			ADDRESS AS ADDRESS,
+			LICENSE_EXPIRE_DATE,
+			TYPE AS TYPE,
+			STATUS AS STATUS,
+			GENDER,
+			DIVISION AS
+			DIVISION,
+			DISABLED
+		FROM
+			DRIVER
+		WHERE
+			DELETE_FLG = '0'
+		<if test="driverDto.licenseExpiredDriverFlag != null">
+			and (date(license_expire_date) - date(now())) &lt; 92
+		</if>
+			
+		ORDER BY
+			BARCODE_ID
+	</select>
+
+	<select id="checkDriverCode" resultType="java.lang.Integer"
+		parameterType="com.mttl.vlms.setting.stt011.dto.DriverDto">
+		SELECT
+			COUNT(*)
+		FROM
+			DRIVER
+		WHERE
+			LOWER(BARCODE_ID) = TRIM(LOWER(#{driverDto.barcodeId,jdbcType=VARCHAR}))
+		<if test="driverDto.id != null">
+			AND ID != #{driverDto.id,jdbcType=INTEGER}
+		</if>
+		AND 
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="checkStaffId" resultType="java.lang.Integer"
+		parameterType="com.mttl.vlms.setting.stt011.dto.DriverDto">
+		SELECT
+			COUNT(*)
+		FROM
+			DRIVER
+		WHERE
+			LOWER(STAFF_ID) = TRIM(LOWER(#{driverDto.staffId,jdbcType=VARCHAR}))
+		<if test="driverDto.id != null">
+			AND ID != #{driverDto.id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="checkDuplicateDriverNRCNo"
+		resultType="java.lang.Integer"
+		parameterType="com.mttl.vlms.setting.stt011.dto.DriverDto">
+		SELECT
+			COUNT(*)
+		FROM
+			DRIVER
+		WHERE
+			LOWER(NRC_NO) = TRIM(LOWER(#{driverDto.nrcNo,jdbcType=VARCHAR}))
+		<if test="driverDto.id != null">
+			AND ID != #{driverDto.id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="checkDuplicateLicenseNo"
+		resultType="java.lang.Integer"
+		parameterType="com.mttl.vlms.setting.stt011.dto.DriverDto">
+		SELECT
+			COUNT(*)
+		FROM
+			DRIVER
+		WHERE
+			LOWER(LICENSE_NO) = TRIM(LOWER(#{driverDto.licenseNo,jdbcType=VARCHAR}))
+		<if test="driverDto.id != null">
+			AND ID != #{driverDto.id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="checkDriverUsed" resultType="java.lang.Integer"
+		parameterType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			DRIVER
+		WHERE
+			ID = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="getDriverById"
+		resultType="com.mttl.vlms.setting.stt011.dto.DriverDto"
+		parameterType="java.lang.Integer">
+		SELECT
+			ID,
+			BARCODE_ID,
+			DRIVER_NAME,
+			STAFF_ID,
+			JOIN_DATE,
+			PHONE_NO,
+			LICENSE_TYPE,
+			LICENSE_NO,
+			NRC_NO,
+			DATE_OF_BIRTH,
+			BASIC_SALARY,
+			ADDRESS,
+			LICENSE_EXPIRE_DATE,
+			TYPE,
+			STATUS,
+			GENDER,
+			DIVISION,
+			DISABLED
+		FROM
+			DRIVER
+		WHERE
+			ID = #{id,jdbcType=INTEGER}
+		AND 
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="getNextBPStaffId"
+		resultType="java.lang.String">
+		select bizp_hr_nextid()
+	</select>
+	
+	<select id="checkExpireDate"
+		resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT 
+			COUNT(*)
+		FROM 
+			DRIVER 
+		WHERE 
+			DELETE_FLG = '0' 
+		AND 
+			(DATE(LICENSE_EXPIRE_DATE) - DATE(NOW())) &lt; 92
+		AND 
+			ID=#{id,jdbcType=INTEGER}
+	</select>
+</mapper>

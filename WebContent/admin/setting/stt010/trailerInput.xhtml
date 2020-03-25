@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:a="http://xmlns.jcp.org/jsf/passthrough" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions" template="/templates/template.xhtml">
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<h:form id="frmTrailerInput" enctype="multipart/form-data">
+					<div>
+						<p:messages id="messages" globalOnly="true" autoUpdate="true" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['TRAILER_INPUT_TITLE']}</h1>
+							<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="2" columnClasses="ui-grid-col-2, ui-grid-col-4"
+								layout="grid">
+								<p:outputLabel id="lblTrailerId" for="txtTrailerId" value="#{label['TRAILER_ID']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtTrailerId" value="#{TrailerInputBean.trailerDto.trailerCode}" required="true" label="#{label['TRAILER_ID']}" readonly="true">
+										<o:validator validatorId="javax.faces.Length" maximum="100" message="{0} #{label['LENGTH_MSG']} 100." />
+									</p:inputText>
+									<p:message id="msgTrailerId" for="txtTrailerId" />
+								</h:panelGroup>
+								<p:outputLabel id="lblBarcodeId" for="txtBarcodeId" value="#{label['TRAILER_CODE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtBarcodeId" value="#{TrailerInputBean.trailerDto.barcodeId}" required="true" label="#{label['TRAILER_CODE_LABEL']}" readonly="true">
+										<o:validator validatorId="javax.faces.Length" maximum="50" message="{0} #{label['LENGTH_MSG']} 50." />
+									</p:inputText>
+									<p:message id="msgBarcodeId" for="txtBarcodeId" />
+								</h:panelGroup>
+								<p:outputLabel id="lblLicenseNo" for="txtlicenseNo" value="#{label['TRAILER_LICENSE_NO']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtlicenseNo" value="#{TrailerInputBean.trailerDto.licenseNo}" required="true" label="#{label['TRAILER_LICENSE_NO']}">
+										<o:validator validatorId="javax.faces.Length" maximum="15" message="{0} #{label['LENGTH_MSG']} 15." />
+									</p:inputText>
+									<p:message id="msgLicenseNo" for="txtlicenseNo" />
+								</h:panelGroup>
+								<p:outputLabel id="lblTrailerType" for="txtTrailerType" value="#{label['TRAILER_TYPE']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtTrailerType" value="#{TrailerInputBean.trailerDto.trailerType}" required="true" label="#{label['TRAILER_TYPE']}">
+										<o:validator validatorId="javax.faces.Length" maximum="100" message="{0} #{label['LENGTH_MSG']} 100." />
+									</p:inputText>
+									<p:message id="msgTrailerType" for="txtTrailerType" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDescription" for="txtDescription" value="#{label['DESCRIPTION_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtDescription" value="#{TrailerInputBean.trailerDto.description}" label="#{label['DESCRIPTION_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="256" message="{0} #{label['LENGTH_MSG']} 256." />
+									</p:inputText>
+									<p:message id="msgDescription" for="txtDescription" />
+								</h:panelGroup>
+								<p:outputLabel id="lblPhotoUpload" for="txtPhotoUpload" value="#{label['PHOTO_UPLOAD_LABEL']}" />
+								<p:fileUpload fileUploadListener="#{TrailerInputBean.uploadPhoto}" id="txtPhotoUpload" mode="advanced"  multiple="true" sequential="true" accept=".jpg,.jpeg,.png" style="width:150%" 
+									 allowTypes="/(\.|\/)(jpe?g|png)$/" label="Add New"/>
+									<p:message id="msgPhotoUpload" for="txtPhotoUpload" />
+							</p:panelGrid>
+							<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="3"
+								columnClasses="ui-g-12 ui-md-2 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2" layout="grid">
+								<div />
+								<p:commandButton id="btnAdd" value="#{label['SUBMIT_LABEL']}" action="#{TrailerInputBean.inputTrailer}" update="frmTrailerInput" icon="ui-icon-launch" ajax="false" />
+								<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" action="trailerList" immediate="true" icon="ui-icon-close" />
+							</p:panelGrid>
+						</div>
+					</div>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

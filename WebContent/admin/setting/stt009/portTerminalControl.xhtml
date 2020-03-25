@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<f:metadata>
+					<f:viewAction action="#PortControlTerminalBean.showMessage}" />
+				</f:metadata>
+				<h:form id="frmPort">
+					<div>
+						<p:messages id="msgMessages" globalOnly="true" autoUpdate="true" closable="true" style="word-break:break-all;" />
+						<p:growl for="messages" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['PORT_TERMINAL_CONTROL_TITLE']}</h1>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
+							<p:commandButton id="btnAddNew" value="#{label['ADD_NEW_LABEL']}" action="portInput" immediate="true" icon="ui-icon-add" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:dataTable widgetVar="portListWV" var="port" value="#{PortControlTerminalBean.portList}" id="tblPort" paginator="true" rows="10"
+								paginatorAlwaysVisible="#{PortControlTerminalBean.paginatorVisible}" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								first="#{PortControlTerminalBean.firstRowCount}" rowsPerPageTemplate="10,20,50,100" rowIndexVar="index" filteredValue="#{PortControlTerminalBean.filterPortList}"
+								globalFilterFunction="#{PortControlTerminalBean.globalFilterFunction}">
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Search: " />
+										<p:inputText id="globalFilter" onkeyup="PF('portListWV').filter()" style="width:150px" placeholder="Enter keyword" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column id="colNo" styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="30">
+									<h:outputText id="txtNo" value="#{index+1}" />
+								</p:column>
+								<p:column id="colShortName" headerText="#{label['PORT_SHORT_NAME_LABEL']}" sortBy="#{port.shortName}" width="80" filterBy="#{port.shortName}" filterMatchMode="contains">
+									<h:outputText id="txtShortName" value="#{port.shortName}" />
+								</p:column>
+								<p:column id="colFullName" headerText="#{label['PORT_FULL_NAME_LABEL']}" sortBy="#{port.fullName}" width="150" filterBy="#{port.fullName}" filterMatchMode="contains">
+									<h:outputText id="txtFullName" value="#{port.fullName}" />
+								</p:column>
+								<p:column id="colPhoneNumber" headerText="#{label['PHONE_NO_LABEL']}" sortBy="#{port.phList}" width="200" filterBy="#{port.phList}" filterMatchMode="contains">
+									<h:outputText id="txtPhoneNumber" value="#{port.phList}"/>
+								</p:column>
+								<p:column id="colAddress" headerText="#{label['ADDRESS_LABEL']}" sortBy="#{port.address}" width="100" filterBy="#{port.address}" filterMatchMode="contains">
+									<h:outputText id="txtAddress" value="#{port.address}" />
+								</p:column>
+								<p:column id="colDescription" headerText="#{label['DESCRIPTION_LABEL']}" sortBy="#{port.description}" width="200" filterBy="#{port.description}"
+									filterMatchMode="contains">
+									<h:outputText id="txtDescription" value="#{port.description}" />
+								</p:column>
+								<p:column headerText="#{label['DISABLED_LABEL']}" style="text-align:center;" width="80" sortBy="#{port.disabled}" filterBy="#{port.disabled}" filterMatchMode="equals">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('portListWV').filter()" styleClass="custom-filter">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="" itemValue="" />
+											<f:selectItem itemLabel="#{label['DISABLE_LABEL']}" itemValue="true" />
+											<f:selectItem itemLabel="#{label['ENABLE_LABEL']}" itemValue="false" />
+											<f:selectItems value="#{port.disabled}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<p:commandLink id="cmlDisabled" action="#{PortControlTerminalBean.disabledPort(port)}" immediate="true" update="tblPort">
+										<p:confirm header="#{label['CONFIRMATION']}" message="#{label[(port.disabled?'MSG_TO_ENABLED':'MSG_TO_DISABLED')]}" />
+										<h:outputText class="fa fa-fw #{port.disabled ? 'fa-toggle-on fa-flip-horizontal red' : 'fa-toggle-on green'} fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column id="colEdit" headerText="#{label['EDIT_LABEL']}" style="text-align:center;" width="30">
+									<p:commandLink id="cmlEdit" action="#{PortControlTerminalBean.editPort(port)}" immediate="true">
+										<h:outputText id="txtEdit" class="fa fa-fw fa-edit fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column id="colDelete" headerText="#{label['DELETE_LABEL']}" style="text-align:center;" width="30">
+									<p:commandLink id="cmlDelete" action="#{PortControlTerminalBean.deleteConfirmPort(port)}" immediate="true">
+										<h:outputText id="txtDelete" class="fa fa-fw fa-trash fa-lg" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closable="false" closeOnEscape="true">
+						<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+						<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+					</p:confirmDialog>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

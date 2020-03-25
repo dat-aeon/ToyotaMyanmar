@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{VehicleInfoDeleteConfirmBean.redirect}" />
+		</f:metadata>
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<h:form id="frmVehicleInfoDeleteConfirm">
+					<div>
+						<p:messages id="messages" globalOnly="true" autoUpdate="true" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['VEHICLE_INFO_DELETE_CONFIRM_TITLE']}</h1>
+							<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="2" columnClasses="ui-grid-col-2, ui-grid-col-4"
+								layout="grid">
+								
+								<p:outputLabel id="lblChassisNo" for="txtChassisNo" value="#{label['CHASSIS_NO_LABEL']}" />
+								<h:outputText id="txtChassisNo" styleClass="custom-value-style" value="#{VehicleInfoDeleteConfirmBean.vehicleInfoDtoDelete.chassisNo}" />
+								
+								<p:outputLabel id="lblModel" for="txtModel" value="#{label['MODEL_LABEL']}" />
+								<h:outputText id="txtModel" styleClass="custom-value-style" value="#{VehicleInfoDeleteConfirmBean.vehicleInfoDtoDelete.model}" />
+								
+								<p:outputLabel id="lblColor" for="txtColor" value="#{label['COLOR_LABEL']}" />
+								<h:outputText id="txtColor" styleClass="custom-value-style" value="#{VehicleInfoDeleteConfirmBean.vehicleInfoDtoDelete.color}" />
+							
+							</p:panelGrid>
+							<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="3"
+								columnClasses="ui-g-12 ui-md-2 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2" layout="grid">
+								<div />
+								<p:commandButton id="btnSubmit" value="#{label['CONFIRM_LABEL']}" action="#{VehicleInfoDeleteConfirmBean.deleteConfirmVehicleInfo}" update="frmVehicleInfoDeleteConfirm"
+									icon="ui-icon-launch" />
+								<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" action="vehicleInfoList" immediate="true" icon="ui-icon-close" />
+							</p:panelGrid>
+						</div>
+					</div>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

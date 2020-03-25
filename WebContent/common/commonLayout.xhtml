@@ -1,0 +1,146 @@
+<f:view locale="#{LocaleBean.locale}" encoding="UTF-8" contentType="text/html" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+	<h:head>
+		<link rel="icon" href="${facesContext.externalContext.requestContextPath}/images/favicon.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="${facesContext.externalContext.requestContextPath}/images/apple-touch-icon.png"/>
+		<link rel="icon" type="image/png" sizes="32x32" href="${facesContext.externalContext.requestContextPath}/images/favicon-32x32.png"/>
+		<link rel="icon" type="image/png" sizes="16x16" href="${facesContext.externalContext.requestContextPath}/images/favicon-16x16.png"/>
+		<link rel="manifest" href="${facesContext.externalContext.requestContextPath}/images/manifest.json"/>
+		<link rel="mask-icon" href="${facesContext.externalContext.requestContextPath}/images/safari-pinned-tab.svg" color="#5bbad5"/>
+		<meta name="theme-color" content="#ffffff"/>
+		<ui:insert name="htmlhead" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<style type="text/css">
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 13px;
+	padding: 0 0 50px 0;
+}
+
+h1 {
+	margin: 40px 0 20px 0;
+}
+
+h2 {
+	font-size: 1.5em;
+	padding-bottom: 3px;
+	border-bottom: 1px solid #DDD;
+	margin-top: 50px;
+	margin-bottom: 25px;
+}
+
+table th:first-child {
+	width: 150px;
+}
+/* Bootstrap 3.x re-reset */
+.fn-gantt *, .fn-gantt *:after, .fn-gantt *:before {
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+}
+</style>
+		<!-- Bootstrap Core CSS -->
+		<link href="${facesContext.externalContext.requestContextPath}/css/bootstrap.css" rel='stylesheet' type='text/css' />
+		<link href="${facesContext.externalContext.requestContextPath}/css/style.css" rel='stylesheet' type='text/css' />
+		<link href="${facesContext.externalContext.requestContextPath}/css/gantt/css/prettify.min.css" rel='stylesheet' type='text/css' />
+		<link href="${facesContext.externalContext.requestContextPath}/css/gantt/css/style.css" rel='stylesheet' type='text/css' />
+		<link href="${facesContext.externalContext.requestContextPath}/css/header.css" rel='stylesheet' type='text/css' />
+		<link href="${facesContext.externalContext.requestContextPath}/css/attendance.css" rel='stylesheet' type='text/css' />
+		<link href="${facesContext.externalContext.requestContextPath}/css/common.css" rel='stylesheet' type='text/css' />
+		<link href="${facesContext.externalContext.requestContextPath}/css/leave.css" rel='stylesheet' type='text/css' />
+		<script type="text/javascript" src="${facesContext.externalContext.requestContextPath}/css/gantt/js/jquery.cookie.min.js" />
+		<script type="text/javascript" src="${facesContext.externalContext.requestContextPath}/css/gantt/js/jquery.fn.gantt.js" />
+		<script type="text/javascript" src="${facesContext.externalContext.requestContextPath}/css/gantt/js/prettify.min.js" />
+		<!-- Custom CSS -->
+		<link href="${facesContext.externalContext.requestContextPath}/css/custom.css" rel="stylesheet" />
+		<!-- font CSS -->
+		<!-- font-awesome icons -->
+		<link href="${facesContext.externalContext.requestContextPath}/fonts/css/font-awesome.css" rel="stylesheet" />
+		<!--animate-->
+		<link href="${facesContext.externalContext.requestContextPath}/css/animate.css" rel="stylesheet" type="text/css" media="all" />
+		<!--//end-animate-->
+		<link href="${facesContext.externalContext.requestContextPath}/css/reset.css" rel="stylesheet" type="text/css" />
+		<h:outputScript> 
+       	addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); }
+		</h:outputScript>
+		<script src="${facesContext.externalContext.requestContextPath}/js/wow.min.js" />
+		<script>
+			new WOW().init();
+		</script>
+		<h:outputScript library="primefaces" name="jquery/metisMenu.min.js" target="body" />
+		<h:outputScript library="primefaces" name="jquery/custom.js" target="body" />
+		<script src="${facesContext.externalContext.requestContextPath}/js/modernizr.custom.js" />
+		<!-- Bootstrap Core JavaScript -->
+		<h:outputScript library="primefaces" name="jquery/bootstrap.js" target="body" />
+		<title>Toyota Myanmar</title>
+	</h:head>
+	<h:body class="cbp-spmenu-push">
+		<div id="statusIndicator" style="z-index: 100; position: fixed; margin-top: 50px; margin-left: 650px;">
+			<p:ajaxStatus style="width:16px;height:16px;">
+				<f:facet name="start">
+					<h:outputText value="Loading..." />
+					<h:graphicImage value="/images/loading.gif" />
+				</f:facet>
+				<f:facet name="complete">
+					<h:outputText value="" />
+				</f:facet>
+			</p:ajaxStatus>
+		</div>
+		<div class="main-content">
+			<!-- <p:layoutUnit position="center"> -->
+			<ui:include src="/common/header.xhtml" />
+			<!-- Left content -->
+			<p:outputPanel rendered="#{!empty sessionScope.loginUser ? (sessionScope.loginUser.roleName == 'ADMIN' ? true : false) : false}">
+				<ui:include src="/common/adminMenu.xhtml" />
+			</p:outputPanel>
+			<p:outputPanel rendered="#{!empty sessionScope.loginUser ? (sessionScope.loginUser.roleName != 'ADMIN' ? true : false) : false}">
+				<ui:include src="/common/userMenu.xhtml" />
+			</p:outputPanel>
+			<!-- End of left content -->
+			<!-- right content -->
+			<div id="outer" class="paddingCustom">
+				<div class="main-page">
+					<ui:insert name="content" />
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<ui:include src="/common/footer.xhtml" />
+			<!-- </p:layoutUnit> -->
+		</div>
+		<!-- Classie -->
+		<script src="${facesContext.externalContext.requestContextPath}/js/classie.js" />
+		<script>
+			// cbp-spmenu-s1 is left side menu
+			// showLeftPush is toggle button
+			var menuLeft = document.getElementById('cbp-spmenu-s1'), showLeftPush = document
+					.getElementById('showLeftPush'), body = document.body;
+
+			showLeftPush.onclick = function() {
+				if (classie.hasClass(menuLeft, 'notDisplay')) {
+					classie.remove(menuLeft, 'notDisplay');
+				} else {
+					classie.add(menuLeft, 'notDisplay');
+				}
+			};
+
+			$('#showLeftPush').click(function(e) {
+				e.preventDefault();
+			});
+
+			function disableOther(button) {
+				if (button !== 'showLeftPush') {
+					classie.toggle(showLeftPush, 'disabled');
+				}
+			};
+			var outer = document.getElementById("outer");
+			outer.addEventListener('click', function() {
+				classie.add(menuLeft, 'notDisplay');
+			});
+		</script>
+		<!--scrolling js-->
+		<h:outputScript library="primefaces" name="jquery/jquery.nicescroll.js" target="body" />
+		<h:outputScript library="primefaces" name="jquery/scripts.js" target="body" />
+		<!-- // scrolling js-->
+	</h:body>
+</f:view>

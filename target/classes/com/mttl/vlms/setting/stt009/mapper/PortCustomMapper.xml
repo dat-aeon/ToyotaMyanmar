@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mttl.vlms.setting.stt009.mapper.PortCustomMapper">
+
+	<select id="searchByPortName" resultType="com.mttl.vlms.setting.stt009.dto.PortDto" parameterType="java.lang.String">
+		SELECT
+			ID,
+			SHORT_NAME,
+			FULL_NAME,
+			PHONE_NO,
+			ADDRESS,
+			DESCRIPTION,
+			DISABLED
+		FROM
+			PORT_TERMINAL
+		WHERE
+			DELETE_FLG = '0'
+		<if test="fullName!=null">
+		AND 
+			FULL_NAME ILIKE'%'|| TRIM(#{fullName,jdbcType=VARCHAR}) ||'%'
+		</if>
+		ORDER BY
+			ID
+	</select>
+
+	<!-- <select id="checkShortName" resultType="java.lang.Integer" parameterType="com.mttl.vlms.setting.stt009.dto.PortDto">
+		SELECT
+			COUNT(*)
+		FROM
+			PORT_TERMINAL
+		WHERE
+			LOWER(SHORT_NAME) = TRIM(LOWER(#{portDto.shortName,jdbcType=VARCHAR}))
+		<if test="portDto.portId != null">
+			AND ID != #{portDto.portId,jdbcType=INTEGER}
+		</if>
+		AND DELETE_FLG = '0'
+	</select> -->
+	
+	<select id="checkPortName" resultType="java.lang.Integer" parameterType="com.mttl.vlms.setting.stt009.dto.PortDto">
+		SELECT
+			COUNT(*)
+		FROM
+			PORT_TERMINAL
+		WHERE
+			LOWER(FULL_NAME) = TRIM(LOWER(#{portDto.fullName,jdbcType=VARCHAR}))
+		<if test="portDto.Id != null">
+			AND ID != #{portDto.id,jdbcType=INTEGER}
+		</if>
+		AND 
+			DELETE_FLG = '0'
+	</select>
+	
+	<select id="checkPortUsed" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			PORT_TERMINAL
+		WHERE
+			ID = #{portId,jdbcType=INTEGER}
+	</select>
+
+	<select id="getPortById" resultType="com.mttl.vlms.setting.stt009.dto.PortDto" parameterType="java.lang.Integer">
+		SELECT
+			ID,
+			SHORT_NAME,
+			FULL_NAME,
+			PHONE_NO,
+			ADDRESS,
+			DESCRIPTION,
+			DISABLED
+		FROM
+			PORT_TERMINAL
+		WHERE
+			ID = #{portId,jdbcType=INTEGER}
+		AND 
+			DELETE_FLG = '0'
+	</select>
+	<select id="checkDuplicateShortName" parameterType="map"
+		resultType="java.lang.Integer">
+		SELECT
+			count(PT.ID)
+		FROM
+			PORT_TERMINAL PT
+		WHERE
+			PT.SHORT_NAME = #{shortName,jdbcType=VARCHAR}
+		<if test="id != null">
+			AND PT.ID != #{id,jdbcType=INTEGER}
+		</if>
+	</select>
+	
+</mapper>

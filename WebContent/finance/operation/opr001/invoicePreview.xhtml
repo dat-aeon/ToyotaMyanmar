@@ -1,0 +1,174 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<f:metadata>
+				<f:viewAction action="#{InvoicePreviewBean.showMessage()}" />
+			</f:metadata>
+			<div class="card card-w-title">
+				<h:form id="frmInvoicePreview">
+					<div class="ui-g">
+						<p:messages id="messages" globalOnly="true" autoUpdate="true" closable="true" style="word-break:break-all;" />
+					</div>
+					<div class="ui-g">
+						<h1>#{label['INVOICE_PREVIEW_TITLE']}</h1>
+					</div>
+					<div class="ui-g print-preview-info">
+						<div class="ui-g-5">
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-3 ui-lg-3, ui-g-12 ui-md-9 ui-lg-9" layout="grid">
+								<p:outputLabel id="lblDealerName" for="txtDealerName" value="#{label[(InvoicePreviewBean.invoiceDto.type eq 1) ? 'DEALER_NAME_LABEL' : 'CUSTOMER_LABEL']}" />
+								<p:outputLabel id="txtDealerName" value="#{InvoicePreviewBean.invoiceDto.dealerDto.dealerName}" rendered="#{InvoicePreviewBean.invoiceDto.type eq 1}" />
+								<p:outputLabel id="lblContactName" for="txtContactName" value="#{label['DEALER_ContactName_LABEL']}" rendered="#{InvoicePreviewBean.invoiceDto.type eq 1}" />
+								<p:outputLabel id="txtContactName" value="#{InvoicePreviewBean.invoiceDto.dealerDto.contactName}" rendered="#{InvoicePreviewBean.invoiceDto.type eq 1}" />
+								<p:outputLabel id="txtCustomerName" value="#{InvoicePreviewBean.invoiceDto.customerDealerName}" rendered="#{InvoicePreviewBean.invoiceDto.type eq 2}" />
+								<p:outputLabel id="lblDealerEmail" for="txtDealerEmail" value="#{label['DEALER_EMAIL']}" rendered="#{InvoicePreviewBean.invoiceDto.type eq 1}" />
+								<p:outputLabel id="txtDealerEmail" value="#{InvoicePreviewBean.invoiceDto.dealerDto.contactEmail}" rendered="#{InvoicePreviewBean.invoiceDto.type eq 1}" />
+								<p:outputLabel id="lblDealerPhoneNo" for="txtDealerPhoneNo" value="#{label['DEALER_ContactPhoneNo_LABEL']}" rendered="#{InvoicePreviewBean.invoiceDto.type eq 1}" />
+								<p:outputLabel id="txtDealerPhoneNo" value="#{InvoicePreviewBean.invoiceDto.dealerDto.phoneNo}" rendered="#{InvoicePreviewBean.invoiceDto.type eq 1}" />
+								<p:outputLabel id="lblSubject" for="txtSubject" value="#{label['INVOICE_SUBJECT_LABEL']}" />
+								<p:outputLabel id="txtSubject" value="#{InvoicePreviewBean.invoiceDto.subject}" label="#{label['INVOICE_SUBJECT_LABEL']}" />
+							</p:panelGrid>
+						</div>
+						<div class="ui-g-4" />
+						<div class="ui-g-3">
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-6 ui-lg-6, ui-g-12 ui-md-6 ui-lg-6" layout="grid" styleClass="tx_ali_cen">
+								<p:outputLabel id="lblDate" for="calDate" value="#{label['INVOICE_DATE']}" />
+								<p:outputLabel id="lblInvoiceNo" for="txtInvoiceNo" value="#{label['INVOICE_NO_LABEL']}" />
+								<p:outputLabel id="calDate" value="#{InvoicePreviewBean.invoiceDto.date}" label="#{label['INVOICE_DATE']}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:outputLabel>
+								<p:outputLabel id="txtInvoiceNo" value="#{InvoicePreviewBean.invoiceDto.invoiceNo}" label="#{label['INVOICE_NO_LABEL']}" />
+								<p:outputLabel id="lblPaymentDueDate" for="calPaymentDueDate" value="#{label['PAYMENT_DUE_DATE_LABEL']}" />
+								<p:outputLabel id="calPaymentDueDate" value="#{InvoicePreviewBean.invoiceDto.paymentDueDate}" label="#{label['PAYMENT_DUE_DATE_LABEL']}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:outputLabel>
+							</p:panelGrid>
+						</div>
+					</div>
+					<div class="ui-g">
+						<p:spacer height="10" />
+					</div>
+					<div class="ui-g-12">
+						<p:dataTable id="tblDealerInvoiceList" var="item" value="#{InvoicePreviewBean.invoiceDto.itemList}" rows="10" paginator="false" rowsPerPageTemplate="10,20,50,100"
+							rowIndexVar="index">
+							<p:column headerText="#{label['SERIAL_NO_LABEL']}" style="text-align:center;" width="20">
+								<p:outputLabel value="#{index+1}" />
+							</p:column>
+							<p:column headerText="#{label['DESCRIPTION_LABEL']} &#10;" width="120" style="white-space:pre-line">
+								<p:outputLabel value="#{item.description}" />
+							</p:column>
+							<p:column headerText="#{label['INVOICE_UNIT']}" style="text-align:center;" width="120">
+								<p:outputLabel value="#{item.unit}">
+									<f:convertNumber type="currency" maxFractionDigits="0" minFractionDigits="0" currencySymbol="" />
+								</p:outputLabel>
+							</p:column>
+							<p:column id="lblUnitPrice" headerText="#{label['INVOICE_UNIT_PRICE']} &#10; (#{InvoicePreviewBean.invoiceDto.currency})" styleClass="text-newline thText" width="120"
+								style="text-align:right">
+								<p:outputLabel value="#{item.unitPrice}">
+									<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+								</p:outputLabel>
+							</p:column>
+							<p:column id="lblAmount" headerText="#{label['INVOICE_AMOUNT']}  &#10; (#{InvoicePreviewBean.invoiceDto.currency})" styleClass="text-newline thText" width="120"
+								style="text-align:right">
+								<p:outputLabel value="#{item.amount}">
+									<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+								</p:outputLabel>
+							</p:column>
+							<p:columnGroup id="tblFooter" type="footer">
+								<p:row>
+									<p:column />
+									<p:column />
+									<p:column colspan="2" style="text-align:right" footerText="#{label['INVOICE_SUB_TOTAL']}" />
+									<p:column id="lblSubTotal" style="text-align:right">
+										<f:facet name="footer">
+											<h:outputText value="#{InvoicePreviewBean.invoiceDto.subTotal}">
+												<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+											</h:outputText>
+										</f:facet>
+									</p:column>
+								</p:row>
+								<p:row rendered="#{InvoicePreviewBean.invoiceDto.taxIncluded}">
+									<p:column />
+									<p:column />
+									<p:column colspan="2" style="text-align:right" footerText="#{label['INVOICE_TAX']}" />
+									<p:column id="lblTax" style="text-align:right">
+										<f:facet name="footer">
+											<h:outputText value="#{InvoicePreviewBean.invoiceDto.taxAmount}">
+												<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+											</h:outputText>
+										</f:facet>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="2" />
+									<p:column colspan="2" style="text-align:right" footerText="#{label['INVOICE_GRAND_TOTAL']} (#{InvoicePreviewBean.invoiceDto.currency})" />
+									<p:column id="lblGrandTotal" style="text-align:right">
+										<f:facet name="footer">
+											<h:outputText value="#{InvoicePreviewBean.invoiceDto.grandTotal}">
+												<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+											</h:outputText>
+										</f:facet>
+									</p:column>
+								</p:row>
+							</p:columnGroup>
+						</p:dataTable>
+					</div>
+					<div class="ui-g-12">
+						<h:outputLabel id="txtRemark1" value="Remarks : #{InvoicePreviewBean.invoiceDto.remark1}" />
+					</div>
+					<div class="ui-g-12">
+						<div class="ui-g">
+							<div class="ui-g-12 ui-md-3 ui-lg-2">
+								<p:panelGrid columns="1" layout="grid">
+									<h:outputText value="Prepared By:" />
+									<h:outputText value="" />
+									<h:outputText value="" />
+									<h:outputText value="" />
+									<h:outputText value="#{InvoicePreviewBean.invoiceDto.preparedBy}" />
+								</p:panelGrid>
+							</div>
+							<div class="ui-g-0 ui-md-6 ui-lg-7" />
+							<div class="ui-g-12 ui-md-3 ui-lg-2">
+								<p:panelGrid columns="1" layout="grid">
+									<h:outputText value="Approved By:" />
+									<h:outputText value="" />
+									<h:outputText value="" />
+									<h:outputText value="" />
+									<h:outputText value="#{InvoicePreviewBean.invoiceDto.approvedBy}" />
+								</p:panelGrid>
+							</div>
+						</div>
+					</div>
+					<div class="ui-g-12">
+						<h:outputLabel id="txtRemark2" value="Remarks : #{InvoicePreviewBean.invoiceDto.remark2}" />
+					</div>
+					<div class="ui-g-12">
+						<div class="ui-g-6">
+							<h:outputLabel id="txtRemark3" value="Bank Reference Account Name : #{InvoicePreviewBean.invoiceDto.remark3}" />
+							<p:dataGrid var="bankAccount" value="#{InvoicePreviewBean.bankAccountList}" columns="4" layout="grid">
+								<h:panelGrid>
+									<h:outputText value="#{bankAccount.currencyType}" escape="false" />
+									<h:outputText value="#{bankAccount.bankName}" />
+									<h:outputText value="#{bankAccount.accountNo}" />
+									<h:outputText value="#{bankAccount.swiftCode}" />
+									<h:outputText value="#{bankAccount.branchName}" />
+									<h:outputText value="#{bankAccount.bankAddress}" />
+								</h:panelGrid>
+							</p:dataGrid>
+						</div>
+						<div class="ui-g-6" />
+					</div>
+					<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+						style="border:0px none; background-color:transparent;">
+						<div />
+						<p:commandButton id="btnAdd" value="#{label['SAVE_LABEL']}" action="#{InvoicePreviewBean.inputInvoice}" update="frmInvoicePreview" icon="ui-icon-launch" />
+						<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" action="#{InvoicePreviewBean.back}" immediate="true" icon="ui-icon-close" />
+					</p:panelGrid>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

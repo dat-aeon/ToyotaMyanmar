@@ -1,0 +1,166 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<f:metadata>
+					<f:viewAction action="#{InventoryListBean.showMessage}" />
+				</f:metadata>
+				<h:form id="frmInventory">
+					<div>
+						<p:messages id="msgMessages" globalOnly="true" autoUpdate="true" closable="true" style="word-break:break-all;" />
+						<p:growl for="messages" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['INVENTORY_TITLE']}</h1>
+						</div>
+						<div class="ui-g-12">
+							<p:panelGrid columns="4"
+								columnClasses="ui-g-12 ui-md-6 ui-lg-2, ui-g-12 ui-md-6 ui-lg-3,ui-g-12 ui-md-6 ui-lg-1,ui-g-12 ui-md-6 ui-lg-3"
+								layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+								<p:outputLabel id="lblChassisNo" for="txtChassisNo" value="#{label['CHASSIS_NO_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtChassisNo" value="#{InventoryListBean.inventorySearchDto.chassisNo}" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDlrName" for="txtDlrName" value="#{label['DLR_NAME_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtDlrName" value="#{InventoryListBean.inventorySearchDto.dealerName}"></p:inputText>
+								</h:panelGroup>
+							<p:outputLabel id="lblPortOfDicharge" for="txtPortOfDischarge" value="#{label['PORT_OF_DISCHARGE_LABEL']}" />
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText id="txtPortOfDischarge" value="#{InventoryListBean.inventorySearchDto.shortName}" />
+							</h:panelGroup>
+							<p:outputLabel id="lbLCustomerName" for="txtCustomerName" value="#{label['CUSTOMER_LABEL']}" />
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText id="txtCustomerName" value="#{InventoryListBean.inventorySearchDto.customer}"></p:inputText>
+							</h:panelGroup>
+							</p:panelGrid>
+							<div class="ui-g-12 ui-md-4 ui-lg-2">
+								<p:commandButton id="btnSearch" value="#{label['SEARCH_LABEL']}" action="#{InventoryListBean.searchInventory}" update="frmInventory tblInventory" icon="ui-icon-search" />
+							</div>
+						</div>
+					</div>
+					
+					<div class="ui-g">
+						<div class="ui-g-12">
+						<p:dataTable id="tblInventory" widgetVar="inventoryListWV" var="inventory" value="#{InventoryListBean.inventoryList}" rows="10" paginator="true"
+								paginatorAlwaysVisible="true" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								first="#{InventoryListBean.firstRowCount}" rowsPerPageTemplate="10,20,50,100" rowIndexVar="index">
+								<p:column styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="10">
+									<h:outputText value="#{index+1}" />
+								</p:column>
+								<p:column headerText="#{label['CHASSIS_NO_LABEL']}" sortBy="#{inventory.chassisNo}" width="100" filterBy="#{inventory.chassisNo}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.chassisNo}" />
+								</p:column>
+								<p:column headerText="#{label['MODEL_LABEL']}" sortBy="#{inventory.model}" width="80" filterBy="#{inventory.model}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.model}" />
+								</p:column>
+								<p:column headerText="#{label['COLOR_CODE_LABEL']}" sortBy="#{inventory.colorCode}" width="120" filterBy="#{inventory.colorCode}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.colorCode}" />
+								</p:column>
+								<p:column headerText="#{label['COLOR_LABEL']}" sortBy="#{inventory.color}" width="60" filterBy="#{inventory.color}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.color}" />
+								</p:column>
+								<p:column headerText="#{label['PORT_OF_DISCHARGE_LABEL']}" sortBy="#{inventory.shortName}" width="140" filterBy="#{inventory.shortName}"
+									filterMatchMode="contains">
+									<h:outputText value="#{inventory.shortName}" />
+								</p:column>
+								<p:column headerText="#{label['ORDER_MONTH_LABEL']}" sortBy="#{inventory.orderMonth}" width="120" filterBy="#{inventory.orderMonth}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.orderMonth}">
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['BL_NO_LABEL']}" sortBy="#{inventory.blNo}" width="80" filterBy="#{inventory.blNo}"
+									filterMatchMode="contains">
+									<h:outputText value="#{inventory.blNo}" />
+								</p:column>
+								<p:column headerText="#{label['1ST_VESSEL_NAME_LABEL']}" sortBy="#{inventory.firstVesselName}" width="150" filterBy="#{inventory.firstVesselName}"
+									filterMatchMode="contains">
+									<h:outputText value="#{inventory.firstVesselName}" />
+								</p:column>
+								<p:column headerText="#{label['2ND_VESSEL_NAME_LABEL']}" sortBy="#{inventory.secondVesselName}" width="150" filterBy="#{inventory.secondVesselName}"
+									filterMatchMode="contains">
+									<h:outputText value="#{inventory.secondVesselName}" />
+								</p:column>
+								<p:column headerText="#{label['CIF_LABEL']}" sortBy="#{inventory.cif}" width="60" filterBy="#{inventory.cif}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.cif}" />
+								</p:column>
+								<p:column headerText="#{label['PROD_MTH_LABEL']}" sortBy="#{inventory.prodMth}" width="100" filterBy="#{inventory.prodMth}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.prodMth}">
+										<f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['ETD_ORIGIN_LABEL']}" sortBy="#{inventory.etdOrigin}" width="100" filterBy="#{inventory.etdOrigin}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.etdOrigin}">
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['ETD_ESTIMATED_DATE_LABEL']}" sortBy="#{inventory.etdEstimatedDate}" width="100" filterBy="#{inventory.etdEstimatedDate}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.etdEstimatedDate}">
+									<f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['ETA_LABEL']}" sortBy="#{inventory.eta}" width="100" filterBy="#{inventory.eta}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.eta}">
+										<f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['VESSEL_BERTHING_DATE_LABEL']}" sortBy="#{inventory.vesselBerthingDate}" width="170" filterBy="#{inventory.vesselBerthingDate}"
+									filterMatchMode="contains">
+									<h:outputText value="#{inventory.vesselBerthingDate}">
+										<f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['AGENT_NAME_LABEL']}" sortBy="#{inventory.agentName}" width="120" filterBy="#{inventory.agentName}"
+									filterMatchMode="contains">
+									<h:outputText value="#{inventory.agentName}" />
+								</p:column>
+								<p:column headerText="#{label['CARRIED_OUT_FROM_PORT_LABEL']}" sortBy="#{inventory.carriedOutPort}" width="170" filterBy="#{inventory.carriedOutPort}"
+									filterMatchMode="contains">
+									<h:outputText value="#{inventory.carriedOutPort}">
+										<f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['STOCK_OF_LABEL']}" sortBy="#{inventory.stockOf}" width="80" filterBy="#{inventory.stockOf}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.stockOf}" />
+								</p:column>
+								<p:column headerText="#{label['STOCK_DATE_LABEL']}" sortBy="#{inventory.stockDate}" width="100" filterBy="#{inventory.stockDate}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.stockDate}" >
+										<f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['DLR_NAME_LABEL']}" sortBy="#{inventory.dealerName}" width="120" filterBy="#{inventory.dealerName}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.dealerName}" />
+								</p:column>
+								<p:column headerText="#{label['CONSIGNEE_BL_LABEL']}" sortBy="#{inventory.consigneeBl}" width="120" filterBy="#{inventory.consigneeBl}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.consigneeBl}" />
+								</p:column>
+								<p:column headerText="#{label['CUSTOMER_LABEL']}" sortBy="#{inventory.customer}" width="100" filterBy="#{inventory.customer}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.customer}" />
+								</p:column>
+								<p:column headerText="#{label['REQUESTER_LABEL']}" sortBy="#{inventory.requester}" width="120" filterBy="#{inventory.requester}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.requester}" />
+								</p:column>
+								<p:column headerText="#{label['LOCATION_STATUS_LABEL']}" sortBy="#{inventory.locationStatus}" width="180" filterBy="#{inventory.locationStatus}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.locationStatus}" />
+								</p:column>
+								<p:column headerText="#{label['STORAGE_PERIOD_LABEL']}" sortBy="#{inventory.storagePeriod}" width="100" filterBy="#{inventory.storagePeriod}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.storagePeriod}" />
+								</p:column>
+								<p:column headerText="#{label['LOCATION_LABEL']}" sortBy="#{inventory.location}" width="120" filterBy="#{inventory.location}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.location}" />
+								</p:column>
+								<p:column headerText="#{label['REMARK_LABEL']}" sortBy="#{inventory.remark}" width="180" filterBy="#{inventory.remark}" filterMatchMode="contains">
+									<h:outputText value="#{inventory.remark}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

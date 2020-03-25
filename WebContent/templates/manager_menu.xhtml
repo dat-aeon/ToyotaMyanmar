@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:pm="http://primefaces.org/serenity">
+	<h:form id="managerMenuform">
+		<pm:menu>
+			<p:menuitem id="dashboard" value="#{label['MNU_DASHBOARD_LABEL']}" action="dashboard" icon="fa fa-tachometer nav_icon" />
+			<p:submenu id="operations" label="#{label['MNU_OPERATION_LABEL']}" icon="fa fa-sliders nav_icon">
+				<p:menuitem id="parkingLayout" value="#{label['MNU_PARKING_LAYOUT_LABEL']}" action="parkingLayoutList" ajax="false" icon="fa fa-product-hunt nav_icon" />
+				<p:menuitem id="vehicleInfo" value="#{label['MNU_VEHICLE_INFO_LABEL']}" action="vehicleInfoList" ajax="false" icon="fa fa-car nav_icon" />
+				<p:menuitem id="vehicleProcessInfo" value="#{label['MNU_VEHICLE_PROCESS_LABEL']}" action="vehicleProcessInfoList" ajax="false" icon="fa fa-history nav_icon" />
+			</p:submenu>
+			<p:submenu id="invoice" label="#{label['MNU_INVOICE_LABEL']}" icon="fa fa-file-text-o nav_icon">
+				<p:menuitem id="issueInvoice" value="#{label['MNU_INVOICE_ISSUE_LABEL']}" action="invoiceList" ajax="false" icon="fa fa-share-square nav_icon" />
+				<p:menuitem id="createInvoice" value="#{label['MNU_INVOICE_CREATE_LABEL']}" action="invoiceInput" ajax="false" icon="fa fa-plus-square nav_icon" />
+			</p:submenu>
+			<p:menuitem id="userManagement" value="#{label['MNU_USER_MANAGE_LABEL']}" action="userInfoList" ajax="false" icon="people nav_icon" />
+			<p:menuitem id="uploadVehicleFile" value="#{label['MNU_VEHICLE_UPLOAD_FILE_LABEL']}" action="uploadVehicleFileList" ajax="false" icon="fa fa-upload nav_icon" />
+			<p:submenu id="otherSetting" label="#{label['MNU_SETTING_LABEL']}" icon="fa fa-cogs nav_icon">
+				<p:menuitem id="trailer" value="#{label['MNU_TRAILER_LABEL']}" action="trailerList" ajax="false" icon="fa fa-truck nav_icon" />
+				<p:menuitem id="charge" value="#{label['MNU_CHARGE_LABEL']}" action="chargeList" ajax="false" icon="fa fa-money nav_icon" />
+				<p:menuitem id="dealer" value="#{label['MNU_DEALER_LABEL']}" action="dealerList" ajax="false" icon="fa fa-font-awesome nav_icon"/>
+				<p:menuitem id="driver" value="#{label['MNU_DRIVER_LABEL']}" action="driverList" ajax="false" icon="fa fa-id-card nav_icon" />
+				<p:menuitem id="yard" value="#{label['MNU_YARD_LABEL']}" action="yardList" ajax="false" icon="fa fa-th nav_icon" />
+				<p:menuitem id="task" value="#{label['MNU_TASK_LABEL']}" action="taskControlList" ajax="false" icon="fa fa-tasks nav_icon" />
+				<p:menuitem id="port" value="#{label['MNU_PORT_LABEL']}" action="portTerminalControl" ajax="false" icon="fa fa-anchor nav_icon" />
+			</p:submenu>
+		</pm:menu>
+	</h:form>
+</ui:composition>

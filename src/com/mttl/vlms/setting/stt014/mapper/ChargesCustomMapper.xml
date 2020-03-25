@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mttl.vlms.setting.stt014.mapper.ChargesCustomMapper">
+
+	<select id="searchByTitle"
+		resultType="com.mttl.vlms.setting.stt014.dto.ChargesDto"
+		parameterType="java.lang.String">
+		SELECT
+			ID,
+			TITLE,
+			UNIT_PRICE,
+			CURRENCY,
+			DISABLED
+		FROM
+			CHARGES
+		WHERE
+			DELETE_FLG = false
+		<if test="title!=null">
+			AND TITLE ILIKE'%'|| TRIM(#{title,jdbcType=VARCHAR}) ||'%' 
+		</if>
+		ORDER BY
+			ID
+	</select>
+
+	<select id="checkTitle" resultType="java.lang.Integer"
+		parameterType="com.mttl.vlms.setting.stt014.dto.ChargesDto">
+		SELECT
+			COUNT(*)
+		FROM
+			CHARGES
+		WHERE
+			LOWER(TITLE) = TRIM(LOWER(#{chargesDto.title,jdbcType=VARCHAR}))
+		<if test="chargesDto.id != null">
+			AND ID != #{chargesDto.id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<!-- <select id="checkChargesUsed" resultType="java.lang.Integer"
+		parameterType="java.lang.Integer">
+		SELECT
+		COUNT(*)
+		FROM
+		CHARGES
+		WHERE
+		ID = #{id,jdbcType=INTEGER}
+	</select> -->
+
+	<select id="getChargesById"
+		resultType="com.mttl.vlms.setting.stt014.dto.ChargesDto"
+		parameterType="java.lang.Integer">
+		SELECT
+			ID,
+			TITLE,
+			UNIT_PRICE,
+			CURRENCY,
+			DISABLED
+		FROM
+			CHARGES
+		WHERE 
+			ID = #{id,jdbcType=INTEGER}
+	</select>
+</mapper>

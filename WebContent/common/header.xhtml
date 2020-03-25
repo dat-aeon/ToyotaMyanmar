@@ -1,0 +1,330 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://xmlns.jcp.org/jsf/core">
+	<h:form rendered="#{!empty sessionScope.loginUser}">
+		<!-- header-starts -->
+		<div class="sticky-header header-section ">
+			<div class="header-left">
+				<!--logo -->
+				<div class="logo">
+					<a href="${facesContext.externalContext.requestContextPath}/user/dashboard/dsb001/dashboard.xhtml">
+						<IMG src="${facesContext.externalContext.requestContextPath}/images/headerLogo.png" />
+					</a>
+				</div>
+				<!--toggle button start-->
+				<button id="showLeftPush">
+					<i class="fa fa-bars"></i>
+				</button>
+				<!--toggle button end-->
+				<div class="clearfix"></div>
+			</div>
+			<div class="header-right">
+				<div class="profile_details_left">
+					<!--notifications of menu start -->
+					<ul class="nofitications-dropdown">
+						<li class="dropdown head-dpdn">
+							<p:selectOneRadio value="#{LocaleBean.language}" onchange="submit()" style="margin-left: 10px;">
+								<f:selectItem itemValue="en" itemLabel="EN"/>
+								<f:selectItem itemValue="ja" itemLabel="JP" />
+ 							</p:selectOneRadio>
+						</li>
+						<!-- Start Announcement Notification -->
+						<li class="dropdown head-dpdn">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+								<i class="fa fa-asterisk"></i>
+								<span class="badge blue2">
+									<h:outputText value="#{NotificationBean.announcementCount}" />
+								</span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<div class="notification_header">
+										<h3>
+											<h:outputText value="#{NotificationBean.announcementCount}" />
+											Announcement
+										</h3>
+									</div>
+								</li>
+								<c:if test="#{NotificationBean.employeePositionChangeCount != 0}">
+									<li>
+										<a href="#">
+											<p:commandLink action="positionChangeList">
+												<i class="fa fa-paint-brush nav_icon" />
+												<h:outputText value="#{NotificationBean.employeePositionChangeCount} #{label['ATTENDANCE_POSITION_CHANGES_ALERT_MSG']}" />
+											</p:commandLink>
+										</a>
+									</li>
+								</c:if>
+								<c:if test="#{NotificationBean.projectStatusCount != 0}">
+									<li>
+										<a href="#">
+											<p:commandLink action="#{NotificationBean.redirectProjectList}">
+												<i class="fa fa-paint-brush nav_icon" />
+												<h:outputText value="#{NotificationBean.projectStatusCount} #{label['ATTENDANCE_PROJECT_SITUATION_ALERT_MSG']}" />
+											</p:commandLink>
+										</a>
+									</li>
+								</c:if>
+								<c:if test="#{NotificationBean.meetingRoomBookingInfoCount != 0}">
+									<li class="odd">
+										<a href="#">
+											<p:commandLink action="meetingRoomBooking">
+												<i class="fa fa-paint-brush nav_icon" />
+												<h:outputText value="#{NotificationBean.meetingRoomBookingInfoCount} #{label['ATTENDANCE_MEETING_INFO_ALERT_MSG']}" />
+											</p:commandLink>
+										</a>
+									</li>
+								</c:if>
+								<c:if test="#{NotificationBean.resignApproveCount != 0}">
+									<li class="odd">
+										<a href="#">
+											<p:commandLink action="resignInfo">
+												<i class="fa fa-paint-brush nav_icon" />
+												<h:outputText value="#{NotificationBean.resignApproveCount} #{label['EMPLOYEE_RESIGN_APPROVE_ALERT_MSG']}" />
+											</p:commandLink>
+										</a>
+									</li>
+								</c:if>
+								<li>
+									<p:spacer height="10" />
+								</li>
+							</ul>
+						</li>
+						<!-- End Announcement Notification -->
+						<!-- Start Request Notification -->
+						<h:form rendered="#{(sessionScope.loginUser.roleName == 'ADMIN' ? true : false) or (sessionScope.loginUser.roleName == 'MANAGER' ? true : false)}">
+							<li class="dropdown head-dpdn">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									<i class="fa fa-envelope"></i>
+									<span class="badge">
+										<h:outputText value="#{NotificationBean.requestCount}" />
+									</span>
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<div class="notification_header">
+											<h3>
+												<h:outputText value="#{NotificationBean.requestMessage}" />
+											</h3>
+										</div>
+									</li>
+									<c:if test="#{NotificationBean.leaveRequestCount != 0}">
+										<li>
+											<a href="#">
+												<h:outputLink value="${facesContext.externalContext.requestContextPath}/manager/timesheet/tst005/leaveApproval.xhtml">
+													<i class="fa fa-paint-brush nav_icon" />
+													<h:outputText value="#{NotificationBean.leaveRequestCount} #{label['ATTENDANCE_LEAVE_REQUEST_APPROVE_ALERT_MSG']}" />
+												</h:outputLink>
+												<div class="clearfix"></div>
+											</a>
+										</li>
+									</c:if>
+									<c:if test="#{NotificationBean.attendanceRequestCount != 0}">
+										<li class="odd">
+											<a href="#">
+												<h:outputLink value="${facesContext.externalContext.requestContextPath}/manager/timesheet/tst002/attendanceRequestList.xhtml">
+													<i class="fa fa-paint-brush nav_icon" />
+													<h:outputText value="#{NotificationBean.attendanceRequestCount} #{label['ATTENDANCE_REQUEST_APPROVE_ALERT_MSG']}" />
+												</h:outputLink>
+												<div class="clearfix"></div>
+											</a>
+										</li>
+									</c:if>
+									<c:if test="#{NotificationBean.overtimeRequestCount != 0}">
+										<li class="odd">
+											<a href="#">
+												<h:outputLink value="${facesContext.externalContext.requestContextPath}/manager/overtime/oti002/overTimeRequestApproval.xhtml">
+													<i class="fa fa-paint-brush nav_icon" />
+													<h:outputText value="#{NotificationBean.overtimeRequestCount} #{label['OVERTIME_REQUEST_APPROVE_ALERT_MSG']}" />
+												</h:outputLink>
+												<div class="clearfix"></div>
+											</a>
+										</li>
+									</c:if>
+									<li>
+										<p:spacer height="10" />
+									</li>
+								</ul>
+							</li>
+						</h:form>
+						<!-- End Request Notification -->
+						<!-- Start Reject Notification -->
+						<li class="dropdown head-dpdn">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+								<i class="fa fa-bell"></i>
+								<span class="badge blue">
+									<h:outputText value="#{NotificationBean.rejectCount}" />
+								</span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<div class="notification_header">
+										<h3>
+											<h:outputText value="#{NotificationBean.rejectMessage}" />
+										</h3>
+									</div>
+								</li>
+								<c:if test="#{NotificationBean.rejectLeaveRequestCount != 0}">
+									<li>
+										<a href="#">
+											<h:outputLink value="${facesContext.externalContext.requestContextPath}/user/timesheet/tst004/leaveCancel.xhtml">
+												<i class="fa fa-times nav_icon" />
+												<h:outputText value="#{NotificationBean.rejectLeaveRequestCount} #{label['ATTENDANCE_LEAVE_REQUEST_REJECT_ALERT_MSG']}" />
+											</h:outputLink>
+											<div class="clearfix"></div>
+										</a>
+									</li>
+								</c:if>
+								<c:if test="#{NotificationBean.rejectAttendanceCount != 0}">
+									<li class="odd">
+										<a href="#">
+											<h:outputLink value="${facesContext.externalContext.requestContextPath}/user/timesheet/tst002/dailyAttendanceList.xhtml">
+												<i class="fa fa-times nav_icon" />
+												<h:outputText value="#{NotificationBean.rejectAttendanceCount} #{label['ATTENDANCE_REQUEST_REJECT_ALERT_MSG']}" />
+											</h:outputLink>
+											<div class="clearfix"></div>
+										</a>
+									</li>
+								</c:if>
+								<c:if test="#{NotificationBean.rejectedResignRequest != 0}">
+									<li class="odd">
+										<a href="#">
+											<h:outputLink value="${facesContext.externalContext.requestContextPath}/user/employee/emp003/employeeResignInfo.xhtml">
+												<i class="fa fa-times nav_icon" />
+												<h:outputText value="#{NotificationBean.rejectedResignRequest} #{label['EMPLOYEE_RESIGN_REQUEST_REJECT_ALERT_MSG']}"/>
+											</h:outputLink>
+											<div class="clearfix"></div>
+										</a>
+									</li>
+								</c:if>
+								<c:if test="#{NotificationBean.rejectOvertimeRequest != 0}">
+									<li class="odd">
+										<a href="#">
+											<h:outputLink value="${facesContext.externalContext.requestContextPath}/user/overtime/oti003/overtimeRequestList.xhtml">
+												<i class="fa fa-times nav_icon" />
+												<h:outputText value="#{NotificationBean.rejectOvertimeRequest} #{label['OVERTIME_REQUEST_REJECT_ALERT_MSG']}"/>
+											</h:outputLink>
+											<div class="clearfix"></div>
+										</a>
+									</li>
+								</c:if>
+								<li>
+									<p:spacer height="10" />
+								</li>
+							</ul>
+						</li>
+						<!-- End Reject Notification -->
+						<c:if test="#{NotificationBean.notificationFlag eq true}">
+							<!-- Start Contract Notification -->
+							<li class="dropdown head-dpdn">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									<i class="fa fa-info-circle"></i>
+									<span class="badge blue2">
+										<h:outputText value="#{NotificationBean.contractNotificationCount}" />
+									</span>
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<div class="notification_header">
+											<h3>
+												<h:outputText value="#{NotificationBean.contractMessage}" />
+											</h3>
+										</div>
+									</li>
+									<c:if test="#{NotificationBean.contractNotificationCount != 0}">
+										<li>
+											<a href="#">
+												<p:commandLink action="#{NotificationBean.redirectEmployeeList(1)}">
+													<i class="fa fa-paint-brush nav_icon" />
+													<h:outputText value="#{NotificationBean.contractNotificationCount} #{label['ATTENDANCE_CONTRACT_EXPIRE_ALERT_MSG']}" />
+												</p:commandLink>
+											</a>
+										</li>
+									</c:if>
+									<li>
+										<p:spacer height="10" />
+									</li>
+								</ul>
+							</li>
+							<!-- End Contract Notification -->
+							<!-- Start of employee resign notification count -->
+							<li class="dropdown head-dpdn">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									<i class="fa-user-times"></i>
+									<span class="badge blue1">
+										<h:outputText value="#{NotificationBean.resignationCount}" />
+									</span>
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<div class="notification_header">
+											<h3>
+												<h:outputText value="#{NotificationBean.resignationMessage}" />
+											</h3>
+										</div>
+									</li>
+									<c:if test="#{NotificationBean.resignationCount != 0}">
+										<li>
+											<a href="#">
+												<div class="task-info">
+													<p:commandLink action="employeeResignApproval">
+														<span class="task-desc">
+															<i class="fa fa-paint-brush nav_icon" />
+															<h:outputText value="#{NotificationBean.resignationCount} #{label['ATTENDANCE_RESINATION_ALERT_MSG']}" />
+														</span>
+													</p:commandLink>
+												</div>
+											</a>
+										</li>
+									</c:if>
+									<li>
+										<p:spacer height="10" />
+									</li>
+								</ul>
+							</li>
+							<!-- End of employee resignation count -->
+						</c:if>
+					</ul>
+					<div class="clearfix"></div>
+				</div>
+				<!--notification menu end -->
+				<div class="profile_details">
+					<ul>
+						<li class="dropdown profile_details_drop">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+								<div class="profile_img">
+									<!-- <span class="prfil-img"> </span> -->
+									<div class="user-name">
+										<p>
+											<h:outputText value="#{sessionScope.loginUser.userName}" rendered="#{!empty sessionScope.loginUser}" />
+										</p>
+										<span>
+											<h:outputText value="#{sessionScope.loginUser.roleName}" rendered="#{!empty sessionScope.loginUser}" />
+										</span>
+									</div>
+									<i class="fa fa-angle-down lnr"></i>
+									<i class="fa fa-angle-up lnr"></i>
+									<div class="clearfix"></div>
+								</div>
+							</a>
+							<ul class="dropdown-menu drp-mnu">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/mnu001/changePassword.xhtml?faces-redirect=true">
+										<i class="fa fa-cog" />
+										<h:outputText value="#{label['CHANGE_PASSWORD_LABEL']}" />
+									</a>
+								</li>
+								<li>
+									<h:commandLink value="    #{label['LOGOUT_LABEL']}" action="#{LoginBean.logout}" immediate="true" rendered="#{!empty sessionScope.loginUser}" class="fa fa-sign-out"></h:commandLink>
+								</li>
+							
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<!-- //header-ends -->
+	</h:form>
+</ui:composition>

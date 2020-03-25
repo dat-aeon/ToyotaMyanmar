@@ -1,0 +1,151 @@
+ol {
+	list-style-type: decimal;
+	padding-left: 15px;
+}
+
+ol li {
+	line-height: 30px;
+}
+
+.tab {
+	margin-left: 80px;
+}
+
+.printLeftFloat {
+	width: 50%;
+	float: left;
+}
+
+.printRightFloat {
+	width: 40%;
+	float: right;
+}
+
+.fontBold {
+	font-weight: bold;
+}
+
+.contentPrintDiv {
+	margin-left: 30px;
+}
+
+.contentBody {
+	padding: 0 20px 0 20px;
+	line-height: 30px;
+}
+
+.clearFloat {
+	clear: both;
+	font-size: 1px;
+	height: 1px;
+	visibility: hidden;
+}
+
+.print-header1 {
+	text-align: center;
+	padding: 10px 0px 25px 0px;
+	font-size: 25px;
+}
+
+.print-header2 {
+	padding: 10px 0px 25px 0px;
+	font-size: 18px;
+}
+
+.print-text {
+	font-size: 16px;
+	line-height: 1.5;
+}
+
+.print-label-width {
+	width: 30px;
+	border: 1px solid red;
+}
+
+.print-address {
+	width: 200px;
+}
+
+.marginRight {
+	margin-right: 40px;
+}
+
+td {
+	padding: 5px;
+	border-collapse: collapse;
+	word-break: break-all;
+}
+
+.serialNo {
+	width: 3.5%;
+}
+
+.print-header {
+	text-align: center;
+	color: rgb(65, 94, 156);
+	padding: 20px 0px;
+	font-size: 30px;
+}
+
+.marginTopDiv {
+	margin-top: 30px;
+	min-height: 20px;
+	position: relative;
+	float: left;
+	width: 90%;
+	left: 10%;
+}
+
+.oa-input-table {
+	font-size: 13px;
+}
+
+.oa-input-table tr {
+	line-height: 20px;
+}
+
+.printButtonDiv {
+	width: 10% !important;
+	position: absolute;
+}
+
+.printAddress {
+	width: 70% !important;
+}
+.monthlyPaymentPanel {
+	width: 100% !important;
+}
+
+.monthlyPaymentPanel .ui-panelgrid-cell {
+	padding-left: 0px !important;
+	border: 0px !important;
+	vertical-align: top !important;
+	margin: 0px !important;
+}
+.monthlyPayment-print-tbl tbody tr td{
+	border: 1px solid #ded;
+}
+.monthlyPayment-print-tbl tbody tr:nth-child(2n+1) {
+	background-color: #E1F5FF;
+}
+
+.monthlyPaymentPanel .ui-panelgrid-cell:FIRST-CHILD{
+	width: 58%;
+}
+
+.monthlyPaymentPanel .ui-datatable  thead th {
+	font-weight: bold !important;
+}
+
+.monthlyPaymentPanel .ui-datatable tbody td {
+	margin: 0px !important;
+	padding: 4px 13px !important;
+	font-weight: normal !important;
+}
+.margin0Div {
+	margin-left: 0px !important;
+	padding: 0px !important;
+}
+.monthlyPaymentPrintPanel .ui-panelgrid-cell:FIRST-CHILD{
+	width: 58%;
+}

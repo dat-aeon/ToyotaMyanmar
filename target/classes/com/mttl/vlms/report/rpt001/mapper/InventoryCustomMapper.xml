@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mttl.vlms.report.rpt001.mapper.InventoryCustomMapper">
+	
+	<select id="searchByChassisNo" resultType="com.mttl.vlms.report.rpt001.dto.InventoryDto" parameterType="com.mttl.vlms.report.rpt001.dto.InventoryDto">
+		SELECT
+			V.ID,
+			V.CHASSIS_NO,
+			V.MODEL,
+			V.COLOR,
+			V.COLOR_CODE,
+			V.FIRST_VESSEL_NAME,
+			V.SECOND_VESSEL_NAME,
+			V.CIF,
+			V.ETD_ORIGIN,
+			V.ETD_ESTIMATED_DATE,
+			V.ETD_SIN,
+			V.ETA,
+			V.CONSIGNEE_ON_BL,
+			V.ORDER_MONTH,
+			V.PROD_MTH,
+			V.AGENT_NAME,
+			V.STOCK_OF,
+			V.STOCK_DATE, 
+			V.VESSEL_BERTHING_DATE,
+			V.CARRIED_OUT_PORT,
+			P.SHORT_NAME,
+			D.DEALER_NAME
+		FROM
+			VEHICLE_INFO V,
+			PORT_TERMINAL P,
+			DEALER D
+		WHERE
+			V.DELETE_FLG = '0'
+		AND 
+			P.DELETE_FLG = '0'
+		AND 
+			D.DELETE_FLG = '0'
+		AND 
+			P.ID = V.DISCHARGE_PORT_ID
+		AND 
+			D.ID = V.DEALER_ID
+		<if test="inventoryDto.chassisNo !=null">
+			AND V.CHASSIS_NO ILIKE'%'|| TRIM(#{inventoryDto.chassisNo,jdbcType=VARCHAR}) ||'%'
+		</if>
+		<if test="inventoryDto.shortName !=null">
+			AND P.SHORT_NAME ILIKE'%'|| TRIM(#{inventoryDto.shortName,jdbcType=VARCHAR}) ||'%'
+		</if>
+		<if test="inventoryDto.dealerName !=null">
+			AND D.DEALER_NAME ILIKE'%'|| TRIM(#{inventoryDto.dealerName,jdbcType=VARCHAR}) ||'%'
+		</if>
+		ORDER BY
+			V.ID
+	</select>
+</mapper>

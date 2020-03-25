@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{YardEditBean.redirect}" />
+		</f:metadata>
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<h:form id="editYardForm">
+					<div>
+						<p:messages id="msgMessages" globalOnly="true" autoUpdate="true" />
+					</div>
+					<p:panel header="#{label['YARD_LIST_TITLE']}">
+						<div class="ui-g">
+							<div class="ui-g-12">
+								<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="2" columnClasses="ui-grid-col-2, ui-grid-col-4"
+									layout="grid">
+									<p:outputLabel for="name" value="#{label['YARD_NAME_LABEL']}" />
+									<h:panelGroup styleClass="md-inputfield">
+										<p:inputText id="name" required="true" value="#{YardEditBean.yardDtoEdit.name}">
+										</p:inputText>
+										<p:message id="nameMsg" for="name" />
+									</h:panelGroup>
+									<p:outputLabel id="lblAddress" for="address" value="#{label['ADDRESS_LABEL']}" />
+									<h:panelGroup styleClass="md-inputfield">
+										<p:inputText id="address" required="true" label="#{label['YARD_ADDRESS_LABEL']}" value="#{YardEditBean.yardDtoEdit.address}">
+											<o:validator validatorId="javax.faces.Length" maximum="75" message="{0} #{label['LENGTH_MSG']} 75" />
+										</p:inputText>
+										<p:message id="addressMsg" for="address" />
+									</h:panelGroup>
+									<p:outputLabel id="lblDescription" for="description" value="#{label['DESCRIPTION_LABEL']}" />
+									<h:panelGroup styleClass="md-inputfield">
+										<p:inputText id="description" label="#{label['DESCRIPTION_LABEL']}" value="#{YardEditBean.yardDtoEdit.description}">
+											<o:validator validatorId="javax.faces.Length" maximum="255" message="{0} #{label['LENGTH_MSG']} 255" />
+										</p:inputText>
+										<p:message id="descriptionMsg" for="description" />
+									</h:panelGroup>
+								</p:panelGrid>
+							</div>
+						</div>
+					</p:panel>
+					<p:panel id="previewPanel" header="#{label['YARD_LAYOUT_PREVIEW_LABEL']}">
+						<f:facet name="actions">
+							<p:commandButton value="Add Zone" onclick="PF('wvDlgNewZone').show();" />
+						</f:facet>
+						<p:dataGrid value="#{YardEditBean.yardDtoEdit.zoneDtoList}" var="zoneDto" columns="#{YardEditBean.yardDtoEdit.zoneDtoList.size()}" layout="grid" styleClass="grid-content">
+							<p:panelGrid id="tblZone" rendered="#{zoneDto.deleteFlg ne true}"
+								styleClass="#{zoneDto.disabled eq true ? 'ui-state-custom-disabled' : ''} #{zoneDto.isExtraZone eq true ? 'extra-zone' : ''}">
+								<f:facet name="header">
+									<p:row id="zoneHeader">
+										<p:column colspan="#{zoneDto.columnCount}" style="vertical-align:middle">
+											<p:outputLabel value="#{label['YARD_ZONE_LABEL']} #{zoneDto.name}" />
+										</p:column>
+										<p:contextMenu for="zoneHeader" model="#{YardEditBean.zoneContextMenu(zoneDto)}" />
+									</p:row>
+									<p:row rendered="#{zoneDto.rowDtoList.size() > 0 and zoneDto.rowDtoList.get(0).columnDtoList.size() > 0}"
+										styleClass=" #{rowDto.disabled eq true ? 'ui-state-custom-disabled' : ''}">
+										<p:repeat value="#{zoneDto.rowDtoList.get(0).columnDtoList}" var="columnDto" varStatus="status">
+											<p:column id="columnHeadr" rendered="#{not columnDto.deleteFlg}" styleClass="#{columnDto.disabled eq true ? 'ui-state-custom-disabled' : ''}">
+												<p:outputLabel value="&amp;&#35;#{columnDto.column_name};" escape="false" />
+											</p:column>
+										</p:repeat>
+									</p:row>
+								</f:facet>
+								<p:repeat value="#{zoneDto.rowDtoList}" var="rowDto">
+									<p:row id="rowTest" styleClass="yard-zone-cell">
+										<p:repeat value="#{rowDto.columnDtoList}" var="columnDto">
+											<p:column id="col" rendered="#{not columnDto.deleteFlg}" styleClass="yard-zone-cell">
+												<p:outputLabel id="col_value" value="#{columnDto.name}" styleClass=" #{columnDto.disabled eq true ? 'ui-state-custom-disabled' : ''} yard-zone-lable" />
+												<p:contextMenu for="col_value" model="#{YardEditBean.columnContextMenu(columnDto)}" rendered="#{columnDto.occupiedFlg ne true}" />
+											</p:column>
+										</p:repeat>
+									</p:row>
+								</p:repeat>
+							</p:panelGrid>
+						</p:dataGrid>
+					</p:panel>
+					<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="3"
+						columnClasses="ui-g-12 ui-md-2 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2" layout="grid">
+						<p:commandButton id="submit" value="#{label['UPDATE_LABEL']}" action="#{YardEditBean.editYard()}" update="editYardForm" icon="ui-icon-launch" />
+						<p:commandButton id="cancel" value="#{label['CANCEL_LABEL']}" action="yardList" immediate="true" icon="ui-icon-close" />
+					</p:panelGrid>
+				</h:form>
+				<h:form id="dialogForm">
+					<p:dialog id="dlgNewZone" widgetVar="wvDlgNewZone" modal="true" header="New Zone" closable="false">
+						<p:panelGrid id="dlgNewZonePanel" styleClass="ui-panelgrid-blank form-group" columns="2">
+							<p:outputLabel for="zoneName" value="#{label['YARD_ZONE_NAME_LABEL']}" />
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText id="zoneName" value="#{YardEditBean.zoneDto.name}" required="true" />
+							</h:panelGroup>
+							<p:outputLabel for="totalColumns" value="#{label['YARD_TOTAL_COLUMNS_LABEL']}" />
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputNumber id="totalColumns" required="true" value="#{YardEditBean.zoneDto.columnCount}" minValue="1" maxValue="99" />
+								<p:message id="totalColumnsMsg" for="totalColumns" />
+							</h:panelGroup>
+							<p:outputLabel for="totalRows" value="#{label['YARD_TOTAL_ROWS_LABEL']}" />
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputNumber id="totalRows" required="true" value="#{YardEditBean.zoneDto.rowCount}" minValue="1" maxValue="99" />
+								<p:message id="totalRowsMsg" for="totalRows" />
+							</h:panelGroup>
+							<p:outputLabel id="lblExtraZone" for="rdoDisabled" value="#{label['EXTRA_ZONE_LABEL']}" columns="2" layout="responsive" />
+							<h:panelGroup style="margin-bottom:10px" cellpadding="5">
+								<p:selectOneRadio id="rdoDisabled" value="#{YardEditBean.zoneDto.isExtraZone}" required="true">
+									<f:selectItem itemValue="true" itemLabel="#{label['BOOLEAN_YES_LABEL']}" />
+									<f:selectItem itemValue="false" itemLabel="#{label['BOOLEAN_NO_LABEL']}" />
+								</p:selectOneRadio>
+								<h:panelGroup styleClass="md-inputiield">
+									<p:message id="disabledMsg" for="rdoDisabled" />
+								</h:panelGroup>
+							</h:panelGroup>
+							<p:commandButton id="btnAdd" value="#{label['ADD_LABEL']}" action="#{YardEditBean.addZone()}" update="dialogForm:dlgNewZonePanel" icon="ui-icon-launch" />
+							<p:commandButton value="Cancel" immediate="true" onclick="wvDlgNewZone.hide()">
+								<p:resetInput target="dlgNewZonePanel" />
+							</p:commandButton>
+						</p:panelGrid>
+					</p:dialog>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

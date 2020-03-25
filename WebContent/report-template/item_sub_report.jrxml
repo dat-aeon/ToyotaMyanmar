@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="item_sub_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7a9d4d2b-32ea-423e-abec-3606867907e3">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="javaBeanCollection"/>
+	<subDataset name="AttachmentDataSet" uuid="5c0f0a79-d50f-494e-b5b0-7157bdf1bd5a">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="taskedDate" class="java.util.Date">
+			<fieldDescription><![CDATA[taskedDate]]></fieldDescription>
+		</field>
+		<field name="itemId" class="java.lang.Integer">
+			<fieldDescription><![CDATA[itemId]]></fieldDescription>
+		</field>
+		<field name="dealerId" class="java.lang.Integer">
+			<fieldDescription><![CDATA[dealerId]]></fieldDescription>
+		</field>
+		<field name="chassisNo" class="java.lang.String">
+			<fieldDescription><![CDATA[chassisNo]]></fieldDescription>
+		</field>
+		<field name="model" class="java.lang.String">
+			<fieldDescription><![CDATA[model]]></fieldDescription>
+		</field>
+		<field name="id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[id]]></fieldDescription>
+		</field>
+		<field name="vehicleId" class="java.lang.Integer">
+			<fieldDescription><![CDATA[vehicleId]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="DataSetTest" uuid="64db784d-0e8f-4739-9065-5fe617e8b90f">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="javaBeanCollection"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="chassisNo" class="java.lang.String">
+			<fieldDescription><![CDATA[chassisNo]]></fieldDescription>
+		</field>
+		<field name="model" class="java.lang.String">
+			<fieldDescription><![CDATA[model]]></fieldDescription>
+		</field>
+		<field name="taskedDate" class="java.util.Date"/>
+	</subDataset>
+	<parameter name="invoiceNo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="unitPrice" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[unitPrice]]></fieldDescription>
+	</field>
+	<field name="amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[amount]]></fieldDescription>
+	</field>
+	<field name="unit" class="java.lang.Integer">
+		<fieldDescription><![CDATA[unit]]></fieldDescription>
+	</field>
+	<field name="deleteFlg" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[deleteFlg]]></fieldDescription>
+	</field>
+	<field name="description" class="java.lang.String">
+		<fieldDescription><![CDATA[description]]></fieldDescription>
+	</field>
+	<field name="invoiceId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[invoiceId]]></fieldDescription>
+	</field>
+	<field name="chargesId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[chargesId]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[id]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="itemVehicleDtoList" class="java.util.List">
+		<fieldDescription><![CDATA[itemVehicleDtoList]]></fieldDescription>
+	</field>
+	<field name="itemVehicleSearchReqDto" class="com.mttl.vlms.operation.opr001.dto.ItemVehicleSearchReqDto">
+		<fieldDescription><![CDATA[itemVehicleSearchReqDto]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="248" splitType="Stretch">
+			<printWhenExpression><![CDATA[null != $F{itemVehicleDtoList} && !$F{itemVehicleDtoList}.isEmpty()]]></printWhenExpression>
+			<textField>
+				<reportElement x="2" y="26" width="560" height="16" uuid="f5ecbdcb-8bca-42e4-99b4-ad7cf648aebf"/>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2" y="8" width="148" height="16" uuid="15d9bf9d-3d44-4dda-9906-d08a3cf15312">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{invoiceNo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="33" y="56" width="100" height="20" uuid="c77c1386-4c3c-4a1c-93d4-eb4cdae8953a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="133" y="56" width="106" height="20" uuid="caaef911-c905-4472-998b-992c75c740d0"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Model]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="239" y="56" width="218" height="20" uuid="82fa1c87-4999-4c00-9f2a-5d3953321e64"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Chassis]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="3" y="76" width="455" height="19" uuid="60c85d6a-9e79-4c9d-8529-7b652affd218"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="DataSetTest" uuid="44d85ed7-621c-4cbc-ab58-4e53ac795d9b">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{itemVehicleDtoList})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="455">
+						<textField>
+							<reportElement x="30" y="0" width="100" height="18" uuid="efd59ddd-c95a-4e0a-895b-3e650a4edf0c"/>
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[(($F{taskedDate}!=null)?$F{taskedDate}:"Empty")]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="130" y="0" width="106" height="18" uuid="c20805ae-cf7a-49c4-9948-037eb06cc720"/>
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[(($F{model}!=null)?$F{model}:"Empty")]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="236" y="0" width="218" height="18" uuid="89ea95c3-f17d-465f-896e-a44e90df1bfe"/>
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[(($F{chassisNo}!=null)?$F{chassisNo}:"Empty")]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="0" y="0" width="30" height="18" uuid="ba85da7d-2b6e-4566-a34e-8362be343ccc">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="3" y="56" width="30" height="20" uuid="27ec9ae6-db08-4389-9ce8-30165947c287"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[No]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

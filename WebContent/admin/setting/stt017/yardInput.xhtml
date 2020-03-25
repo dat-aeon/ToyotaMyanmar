@@ -1,0 +1,154 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<h:body>
+					<h:form id="yardInputForm">
+						<div>
+							<p:messages id="messages" globalOnly="true" autoUpdate="true" closable="true" />
+						</div>
+						<p:wizard widgetVar="wizard" flowListener="#{YardInputBean.onFollowProcess}" showNavBar="false">
+							<p:tab id="tabYardInfo" title="#{label['YARD_INFORMATION_LABEL']}">
+								<p:panel>
+									<div class="ui-g">
+										<div class="ui-g-12">
+											<p:panelGrid styleClass="ui-panelgrid-blank form-group" columns="2" columnClasses="ui-grid-col-2, ui-grid-col-4" layout="grid">
+												<p:outputLabel for="name" value="#{label['YARD_NAME_LABEL']}" />
+												<h:panelGroup styleClass="md-inputfield">
+													<p:inputText id="name" required="true" value="#{YardInputBean.yardDto.name}" />
+													<p:message id="nameMsg" for="name" />
+												</h:panelGroup>
+												<p:outputLabel for="address" value="#{label['ADDRESS_LABEL']}" />
+												<h:panelGroup styleClass="md-inputfield">
+													<p:inputText id="address" required="true" value="#{YardInputBean.yardDto.address}" />
+													<p:message id="addressMsg" for="address" />
+												</h:panelGroup>
+												<p:outputLabel for="zone" value="#{label['YARD_NO_OF_ZONE_LABEL']}" />
+												<h:panelGroup styleClass="md-inputfield">
+													<p:inputNumber id="zone" required="true" value="#{YardInputBean.yardDto.zoneCount}" minValue="1" maxValue="50" />
+													<p:message id="zoneMsg" for="zone" />
+												</h:panelGroup>
+												<p:outputLabel for="txtDescription" value="#{label['DESCRIPTION_LABEL']}" />
+												<h:panelGroup styleClass="md-inputfield">
+													<p:inputText id="txtDescription" value="#{YardInputBean.yardDto.description}" label="#{label['YARD_DESCRIPTION']}">
+														<o:validator validatorId="javax.faces.Length" maximum="250" message="{0} #{label['LENGTH_MSG']} 250." />
+													</p:inputText>
+													<p:message id="msgDescription" for="txtDescription" />
+												</h:panelGroup>
+											</p:panelGrid>
+										</div>
+									</div>
+									<div class="ui-g">
+										<div class="ui-g-6 ui-md-2 ui-lg-2 ui-g-nopad tx_ali_cen">
+											<p:commandButton id="cancel" value="#{label['CANCEL_LABEL']}" action="yardList" immediate="true" icon="ui-icon-close" />
+										</div>
+										<div class="ui-g-0 ui-md-8 ui-lg-8 ui-g-nopad" />
+										<div class="ui-g-6 ui-md-2 ui-lg-2 ui-g-nopad tx_ali_cen">
+											<p:commandButton value="Next" icon="ui-icon-arrow-1-e" iconPos="right" type="button" onclick="PF('wizard').next();" />
+										</div>
+									</div>
+								</p:panel>
+							</p:tab>
+							<p:tab id="tabYardZone" title="#{label['ZONE_DETAIL_LABEL']}">
+								<p:panel>
+									<p:tabView value="#{YardInputBean.yardDto.zoneDtoList}" var="zone">
+										<p:tab title="#{label['YARD_ZONE_LABEL']} #{zone.name}" id="zoneId">
+											<p:panelGrid styleClass="ui-panelgrid-blank form-group" columns="2" columnClasses="ui-grid-col-2, ui-grid-col-4" layout="grid">
+												<p:outputLabel for="zoneName" value="#{label['YARD_ZONE_NAME_LABEL']}" />
+												<h:panelGroup styleClass="md-inputfield">
+													<p:inputText id="zoneName" required="true" value="#{zone.name}" />
+													<p:message id="zoneNameMsg" for="zoneName" />
+												</h:panelGroup>
+												<p:outputLabel for="totalColumns" value="#{label['YARD_TOTAL_COLUMNS_LABEL']}" />
+												<h:panelGroup>
+													<p:selectOneMenu id="totalColumns" required="true" value="#{zone.columnCount}">
+														<f:selectItem itemLabel="1" itemValue="1" />
+														<f:selectItem itemLabel="2" itemValue="2" />
+														<f:selectItem itemLabel="3" itemValue="3" />
+														<f:selectItem itemLabel="4" itemValue="4" />
+													</p:selectOneMenu>
+													<h:panelGroup styleClass="md-inputfield">
+														<p:message id="totalColumnsMsg" for="totalColumns" />
+													</h:panelGroup>
+												</h:panelGroup>
+												<p:outputLabel for="totalRows" value="#{label['YARD_TOTAL_ROWS_LABEL']}" />
+												<h:panelGroup styleClass="md-inputfield">
+													<p:inputNumber id="totalRows" required="true" value="#{zone.rowCount}" minValue="1" maxValue="99" />
+													<p:message id="totalRowsMsg" for="totalRows" />
+												</h:panelGroup>
+												<p:outputLabel id="lblExtraZone" for="rdoDisabled" value="#{label['EXTRA_ZONE_LABEL']}" columns="2" layout="responsive" />
+												<h:panelGroup style="margin-bottom:10px" cellpadding="5">
+													<p:selectOneRadio id="rdoDisabled" value="#{zone.isExtraZone}">
+														<f:selectItem itemValue="true" itemLabel="#{label['BOOLEAN_YES_LABEL']}" />
+														<f:selectItem itemValue="false" itemLabel="#{label['BOOLEAN_NO_LABEL']}" />
+													</p:selectOneRadio>
+												</h:panelGroup>
+											</p:panelGrid>
+										</p:tab>
+									</p:tabView>
+									<div class="ui-g">
+										<div class="ui-g-12"></div>
+									</div>
+									<div class="ui-g">
+										<div class="ui-g-6 ui-md-2 ui-lg-2 ui-g-nopad tx_ali_cen">
+											<p:commandButton value="Back" icon="ui-icon-arrow-1-w" iconPos="left" type="button" onclick="PF('wizard').back()" />
+										</div>
+										<div class="ui-g-0 ui-md-8 ui-lg-8 ui-g-nopad" />
+										<div class="ui-g-6 ui-md-2 ui-lg-2 ui-g-nopad tx_ali_cen">
+											<p:commandButton value="Next" icon="ui-icon-arrow-1-e" iconPos="right" type="button" onclick="PF('wizard').next();" />
+										</div>
+									</div>
+								</p:panel>
+							</p:tab>
+							<p:tab id="tabYardPreview" title="#{label['YARD_LAYOUT_PREVIEW_LABEL']}">
+								<p:panel id="previewPanel">
+									<p:dataGrid value="#{YardInputBean.yardDto.zoneDtoList}" var="zoneDto" columns="#{YardInputBean.yardDto.zoneDtoList.size()}" layout="grid" styleClass="grid-content">
+										<p:panelGrid>
+											<f:facet name="header">
+												<p:row>
+													<p:column colspan="#{zoneDto.columnCount}">
+														<p:outputLabel value="#{label['YARD_ZONE_LABEL']} #{zoneDto.name}" />
+													</p:column>
+												</p:row>
+												<p:row id="columnHeadr" rendered="#{zoneDto.rowDtoList.size() > 0 and zoneDto.rowDtoList.get(0).columnDtoList.size() > 0}">
+													<ui:repeat value="#{zoneDto.rowDtoList.get(0).columnDtoList}" var="columnDto" varStatus="status">
+														<p:column>
+															<p:outputLabel value="&amp;&#35;#{64+(status.index+1)};" escape="false" />
+														</p:column>
+													</ui:repeat>
+												</p:row>
+											</f:facet>
+											<ui:repeat value="#{zoneDto.rowDtoList}" var="rowDto">
+												<p:row>
+													<ui:repeat value="#{rowDto.columnDtoList}" var="columnDto">
+														<p:column style="text-align:center;">
+															<p:outputLabel value="#{columnDto.name}" />
+														</p:column>
+													</ui:repeat>
+												</p:row>
+											</ui:repeat>
+										</p:panelGrid>
+									</p:dataGrid>
+									<div class="ui-g">
+										<div class="ui-g-12" />
+									</div>
+									<div class="ui-g">
+										<div class="ui-g-6 ui-md-2 ui-lg-2 ui-g-nopad tx_ali_cen">
+											<p:commandButton value="Back" icon="ui-icon-arrow-1-w" iconPos="left" type="button" onclick="PF('wizard').back()" />
+										</div>
+										<div class="ui-g-0 ui-md-8 ui-lg-8 ui-g-nopad" />
+										<div class="ui-g-6 ui-md-2 ui-lg-2 ui-g-nopad tx_ali_cen">
+											<p:commandButton type="submit" value="#{label['SAVE_LABEL']}" icon="ui-icon-launch" update="yardInputForm" action="#{YardInputBean.inputYard}" />
+										</div>
+									</div>
+								</p:panel>
+							</p:tab>
+						</p:wizard>
+					</h:form>
+				</h:body>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

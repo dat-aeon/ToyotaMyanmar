@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<h:form id="frmUserInfoInput">
+					<div>
+						<p:messages id="messages" globalOnly="true" autoUpdate="true" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['USER_INPUT_TITLE']}</h1>
+							<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="2" columnClasses="ui-grid-col-2, ui-grid-col-4"
+								layout="grid">
+								<p:outputLabel for="staffId" value="#{label['USER_STAFFID_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="staffId" value="#{UserInfoInputBean.userInfoDto.staffId}" required="true" label="#{label['USER_STAFFID_LABEL']}">
+										<p:ajax event="change" update="frmUserInfoInput:barcodeId"></p:ajax>
+										<o:validator validatorId="javax.faces.Length" maximum="50" message="{0} #{label['LENGTH_MSG']} 50" />
+									</p:inputText>
+									<p:message id="staffIdMsg" for="staffId" />
+								</h:panelGroup>
+								<p:outputLabel for="barcodeId" value="#{label['USER_CODE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="barcodeId" value="#{UserInfoInputBean.userInfoDto.staffId}" required="true" label="#{label['USER_CODE_LABEL']}" disabled="true">
+										<o:validator validatorId="javax.faces.Length" maximum="50" message="{0} #{label['LENGTH_MSG']} 50" />
+									</p:inputText>
+									<p:message id="barcodeIdMsg" for="barcodeId" />
+								</h:panelGroup>
+								<p:outputLabel for="txtName" value="#{label['USER_NAME']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtName" value="#{UserInfoInputBean.userInfoDto.name}" required="true" label="#{label['USER_NAME']}">
+										<o:validator validatorId="javax.faces.Length" maximum="100" message="{0} #{label['LENGTH_MSG']} 100." />
+									</p:inputText>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="msgName" for="txtName" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel for="txtLoginId" value="#{label['LOGIN_ID']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtLoginId" value="#{UserInfoInputBean.userInfoDto.loginId}" required="true" label="#{label['LOGIN_ID']}">
+										<o:validator validatorId="javax.faces.Length" maximum="256" message="{0} #{label['LENGTH_MSG']} 256." />
+									</p:inputText>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="msgLoginId" for="txtLoginId" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel for="txtPassword" value="#{label['PASSWORD_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtPassword" type="password" value="#{UserInfoInputBean.userInfoDto.password}" required="true" label="#{label['PASSWORD_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="100" message="{0} #{label['LENGTH_MSG']} 100." />
+									</p:inputText>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="msgPassword" for="txtPassword" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel for="txtRoleId" value="#{label['ROLE_ID']}" />
+								<h:panelGroup>
+									<p:selectOneMenu id="txtRoleId" styleClass="viewlist-height" label="#{label['ROLE_ID']}" converter="omnifaces.SelectItemsIndexConverter"
+										value="#{UserInfoInputBean.userInfoDto.roleId}" required="true">
+										<f:selectItem itemLabel="#{label['ROLE_SELECT_LABEL']}" itemValue="#{null}" />
+										<f:selectItems value="#{UserInfoInputBean.roleList}" var="roleDto" itemLabel="#{roleDto.roleName}" itemValue="#{roleDto.roleId}" />
+									</p:selectOneMenu>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="roleIdMsg" for="txtRoleId" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel id="lblDateOfBirth" for="calDateOfBirth" value="#{label['USER_DATE_OF_BIRTH_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="calDateOfBirth" value="#{UserInfoInputBean.userInfoDto.dateOfBirth}" required="true" pattern="dd/MM/yyyy" navigator="true" yearRange="-60:+0" readonlyInput="true" />
+									<p:message id="msgDateOfBirth" for="calDateOfBirth" />
+								</h:panelGroup>
+								<p:outputLabel id="lblJoinDate" for="calJoinDate" value="#{label['USER_JOIN_DATE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="calJoinDate" value="#{UserInfoInputBean.userInfoDto.joinDate}" required="true" pattern="dd/MM/yyyy" navigator="true" readonlyInput="true"
+										label="#{label['USER_JOIN_DATE_LABEL']}">
+									</p:calendar>
+									<p:message id="msgJoinDate" for="calJoinDate" />
+								</h:panelGroup>
+								<p:outputLabel for="gender" value="#{label['GENDER_LABEL']}" />
+								<h:panelGroup>
+									<p:selectOneRadio id="gender" required="true" value="#{UserInfoInputBean.userInfoDto.gender}" layout="responsive" columns="2">
+										<f:selectItems value="#{UserInfoInputBean.genderTypeMap.entrySet()}" var="genderType" itemValue="#{genderType.key}" itemLabel="#{genderType.value}" />
+									</p:selectOneRadio>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="genderMsg" for="gender" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel for="txtNrcNo" value="#{label['USER_NRC_NO_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtNrcNo" value="#{UserInfoInputBean.userInfoDto.nrcNo}" required="true" label="#{label['USER_NRC_NO_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="30" message="{0} #{label['LENGTH_MSG']} 30." />
+									</p:inputText>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="nrcNoMsg" for="txtNrcNo" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel id="lblPhoneNo" for="chpPhoneNo" value="#{label['PHONE_NO_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:chips id="chpPhoneNo" value="#{UserInfoInputBean.userInfoDto.phoneNoList}" required="true" max="5">
+										<p:keyFilter regEx="/[\d+]/" />
+										<o:validator validatorId="javax.faces.Length" maximum="80" message="{0} #{label['LENGTH_MSG']} 80." />
+									</p:chips>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="phoneNoMsg" for="chpPhoneNo" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel for="txtDepartment" value="#{label['USER_DEPARTMENT']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtDepartment" value="#{UserInfoInputBean.userInfoDto.department}" required="true" label="#{label['USER_DEPARTMENT']}">
+										<o:validator validatorId="javax.faces.Length" maximum="80" message="{0} #{label['LENGTH_MSG']} 80." />
+									</p:inputText>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="departmentMsg" for="txtDepartment" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel for="txtAddress" value="#{label['ADDRESS_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtAddress" value="#{UserInfoInputBean.userInfoDto.address}" required="true" label="#{label['ADDRESS_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="255" message="{0} #{label['LENGTH_MSG']} 255." />
+									</p:inputText>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="addressMsg" for="txtAddress" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel for="txtDescription" value="#{label['DESCRIPTION_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtDescription" value="#{UserInfoInputBean.userInfoDto.description}" label="#{label['DESCRIPTION_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="256" message="{0} #{label['LENGTH_MSG']} 256." />
+									</p:inputText>
+									<p:message id="msgDescription" for="txtDescription" />
+								</h:panelGroup>
+							</p:panelGrid>
+							<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="3"
+								columnClasses="ui-g-12 ui-md-2 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2" layout="grid">
+								<div />
+								<p:commandButton id="add" value="#{label['SAVE_LABEL']}" action="#{UserInfoInputBean.inputUserInfo}" update="frmUserInfoInput" icon="ui-icon-launch" />
+								<p:commandButton id="cancel" value="#{label['CANCEL_LABEL']}" action="userInfoList" immediate="true" icon="ui-icon-close" />
+							</p:panelGrid>
+						</div>
+					</div>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

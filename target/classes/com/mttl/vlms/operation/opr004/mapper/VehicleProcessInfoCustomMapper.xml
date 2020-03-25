@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mttl.vlms.operation.opr004.mapper.VehicleProcessInfoCustomMapper">
+
+
+	<select id="searchByChassisNo"
+		resultType="com.mttl.vlms.operation.opr004.dto.VehicleProcessInfoDto">
+		select
+		vi.chassis_no,
+		vi.model,
+		iv.vehicle_id as vehicleInfoId,
+		count(distinct task.process_type) as processTypeCount,
+		count(distinct
+		trailer.trailer_type) as trailerTypeCount,
+		count(distinct
+		driver.driver_name) as driverCount,
+		vi.agent_name as agentName,
+		vi.order_month as orderMonth,
+		vi.color as color,
+		vi.license_no as
+		vehicleLicenseNo
+		from
+		vehicle_info as vi
+		left join
+		inspect_vehicle as iv
+		on
+		vi.id = iv.vehicle_id
+		left join
+		task
+		on
+		task.id = iv.task_id
+		left join
+		trailer
+		on
+		trailer.id=iv.trailer_id
+		left join
+		inspect_vehicle_driver as
+		ivd
+		on
+		ivd.inspect_vehicle_id=iv.inspect_vehicle_id
+		left join
+		zone_column
+		as z
+		on
+		z.id = iv.parking_column_id
+		left join
+		yard
+		on
+		z.yard_id = yard.id
+		left join
+		driver
+		on
+		driver.id=ivd.driver_id
+		where
+		vi.delete_flg='0'
+		and
+		iv.del_flag='0'
+		and
+		task.delete_flg='0'
+		and
+		trailer.delete_flg='0'
+		and
+		ivd.del_flag='0'
+		and
+		z.delete_flg = '0'
+		and
+		yard.delete_flg = '0'
+		<if test="vehicleProcessInfoDto.processType != null">
+			and task.process_type =
+			#{vehicleProcessInfoDto.processType,jdbcType=INTEGER}
+		</if>
+		<if test="vehicleProcessInfoDto.taskId != null">
+			and
+			iv.task_id=#{vehicleProcessInfoDto.taskId,jdbcType=INTEGER}
+		</if>
+		<if test="vehicleProcessInfoDto.chassisNo != null">
+			and vi.chassis_no ILIKE'%'||
+			TRIM(#{vehicleProcessInfoDto.chassisNo,jdbcType=VARCHAR}) ||'%'
+		</if>
+		<if test="vehicleProcessInfoDto.dealerId != null">
+			and
+			vi.dealer_id=#{vehicleProcessInfoDto.dealerId,jdbcType=INTEGER}
+		</if>
+		<if
+			test="vehicleProcessInfoDto.fromEta !=null and vehicleProcessInfoDto.toEta != null">
+			AND date(iv.created_date) BETWEEN
+			#{vehicleProcessInfoDto.fromEta,jdbcType=DATE} AND
+			#{vehicleProcessInfoDto.toEta,jdbcType=DATE}
+		</if>
+		<if test="vehicleProcessInfoDto .driverId != null">
+			and
+			ivd.inspect_vehicle_id=#{vehicleProcessInfoDto.driverId,jdbcType=INTEGER}
+		</if>
+		<if test="vehicleProcessInfoDto.yardId != null">
+			and yard.id = #{vehicleProcessInfoDto.yardId,jdbcType =
+			INTEGER}
+		</if>
+		<foreach collection="filters" index="key" item="value"
+			open=" and " separator=" and " close=" ">
+			<if test="key == 'globalFilter' and value != '' and value != null"> (
+				LOWER(vi.chassis_no) like LOWER('%'|| #{value} ||'%')
+				OR
+				LOWER(vi.model) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(vi.agent_name) like LOWER ('%'|| #{value} ||'%') OR
+				LOWER(vi.license_no) like LOWER('%'|| #{value} ||'%') OR
+				TO_CHAR(vi.order_month,'dd-mm-yyyy hh:MM:ss') like '%'|| #{value}
+				||'%')
+			</if>
+			<if test="key == 'chassisNo'">
+				LOWER(vi.chassis_no) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'model'">
+				LOWER(vi.model) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'agentName'">
+				LOWER(vi.agent_name) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'vehicleLicenseNo'">
+				LOWER(vi.license_no) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'orderMonth'">
+				TO_CHAR(vi.order_month,'dd-mm-yyyy hh:MM:ss') like '%'||
+				#{value} ||'%'
+			</if>
+		</foreach>
+		group by
+		vi.chassis_no,
+		vi.model,
+		vehicleInfoId,
+		agentName,
+		orderMonth,
+		color,
+		vehicleLicenseNo
+		<if
+			test="sortField != null and sortField != '' and sortField == 'chassisNo' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY vi.chassis_no ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY vi.chassis_no DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'model' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY vi.model ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY vi.model DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'agentName' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY vi.agent_name ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY vi.agent_name DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'vehicleLicenseNo' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY vi.license_no ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY vi.license_no DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'orderMonth' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY vi.order_month ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY vi.order_month DESC
+			</if>
+		</if>
+		<if test="sortField == null or sortField == ''">
+			ORDER BY vi.chassis_no DESC
+		</if>
+		<if test="offset != null and limit != null">
+			OFFSET ${offset} LIMIT ${limit}
+		</if>
+	</select>
+	<select id="checkChassisNo" resultType="java.lang.Integer"
+		parameterType="com.mttl.vlms.operation.opr004.dto.VehicleProcessInfoDto">
+		SELECT
+		COUNT(*)
+		FROM
+		VEHICLE_INFO
+		WHERE
+		LOWER(CHASSIS_NO) =
+		TRIM(LOWER(#{vehicleProcessInfoDto.chassisNo,jdbcType=VARCHAR}))
+		<if test="vehicleProcessInfoDto.id != null">
+			AND ID != #{vehicleProcessInfoDto.id,jdbcType=INTEGER}
+		</if>
+		AND
+		DELETE_FLG = '0'
+	</select>
+
+	<select id="checkVehicleProcessInfoUsed"
+		resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT
+		COUNT(*)
+		FROM
+		VEHICLE_INFO
+		WHERE
+		ID = #{vehicleProcessInfoId,jdbcType=INTEGER}
+	</select>
+
+	<select id="getPortLocation" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		SELECT
+		PORT_DISCHARGE
+		FROM
+		VEHICLE_INFO
+		WHERE
+		DELETE_FLG =
+		'0'
+		AND
+		PORT_DISCHARGE ILIKE'%'||
+		TRIM(#{portDischarge,jdbcType=VARCHAR}) ||'%'
+		ORDER BY
+		PORT_DISCHARGE
+		ILIKE'%'|| TRIM(#{portDischarge,jdbcType=VARCHAR})
+		||'%'
+	</select>
+
+	<select id="getChassisNoList" resultType="java.lang.String">
+		SELECT
+		chassis_no as chassisNo,Max(vi.id)
+		from
+		vehicle_info as vi
+		left
+		join
+		inspect_vehicle as iv
+		on
+		vi.id = iv.vehicle_id
+		left join
+		task
+		on
+		task.id = iv.task_id
+		left join
+		trailer
+		on
+		trailer.id=iv.trailer_id
+		left
+		join
+		inspect_vehicle_driver as ivd
+		on
+		ivd.inspect_vehicle_id=iv.inspect_vehicle_id
+		left join
+		zone_column as z
+		on
+		z.id = iv.parking_column_id
+		left join
+		yard
+		on
+		z.yard_id = yard.id
+		left
+		join
+		driver
+		on
+		driver.id=ivd.driver_id
+		where
+		vi.delete_flg='0'
+		and
+		iv.del_flag='0'
+		and task.delete_flg='0'
+		and
+		trailer.delete_flg='0'
+		and
+		ivd.del_flag='0'
+		and
+		z.delete_flg = '0'
+		and
+		yard.delete_flg = '0'
+		<if test="processType != null">
+			and task.process_type=#{processType,jdbcType=INTEGER}
+		</if>
+		<if test="chassisNo != null">
+			and CHASSIS_NO ILIKE'%'||
+			TRIM(#{chassisNo,jdbcType=VARCHAR}) ||'%'
+		</if>
+		group by
+		vi.id,chassis_no
+		ORDER BY
+		CHASSIS_NO ILIKE'%'||
+		TRIM(#{chassisNo,jdbcType=VARCHAR}) ||'%'
+	</select>
+
+	<select id="getVehicleProcessInfoById"
+		resultType="com.mttl.vlms.operation.opr004.dto.VehicleProcessInfoDto"
+		parameterType="java.lang.String">
+		SELECT
+		ID,
+		CHASSIS_NO as chassisNo,
+		MODEL as model,
+		COLOR as
+		color,
+		COLOR_CODE as color,
+		AGENT_NAME as agentName
+		FROM
+		VEHICLE_INFO
+		WHERE
+		CHASSIS_NO ILIKE'%'|| TRIM(#{chassisNo,jdbcType=VARCHAR}) ||'%'
+		AND
+		DELETE_FLG = '0'
+	</select>
+
+	<select id="getTaskList"
+		resultType="com.mttl.vlms.common.selectdto.TaskSelectDto"
+		parameterType="java.lang.Integer">
+		SELECT
+		distinct TASK_NAME,ID
+		FROM
+		TASK
+		WHERE
+		DELETE_FLG =
+		FALSE
+		AND
+		PROCESS_TYPE = #{processType,jdbcType=INTEGER}
+		ORDER BY
+		TASK_NAME
+	</select>
+
+	<select id="searchMainCheck"
+		resultType="com.mttl.vlms.operation.opr004.dto.VehicleProcessInfoDto"
+		parameterType="java.lang.Integer">
+		select iv.created_date as pdiDate,t.task_name as
+		taskName,ivd.inspect_vehicle_driver_id,d.driver_name from
+		inspect_vehicle as iv,task as t,inspect_vehicle_driver as ivd, driver
+		as d
+		WHERE
+		iv.task_id = t.id and ivd.inspect_vehicle_id =
+		iv.inspect_vehicle_id
+		and ivd.driver_id = d.id and
+		task_id =
+		#{taskId,jdbcType=INTEGER} and iv.inspect_vehicle_id =
+		#{vehicleId,jdbcType=INTEGER}
+	</select>
+
+	<select id="getDriverList"
+		resultType="com.mttl.vlms.common.selectdto.DriverSelectDto"
+		parameterType="java.lang.Integer">
+		select
+		distinct driver.driver_name as driverName,
+		driver.id as id
+		from
+		inspect_vehicle as iv
+		left join
+		inspect_vehicle_driver as ivd
+		on
+		iv.inspect_vehicle_id =
+		ivd.inspect_vehicle_id
+		left join
+		task
+		on
+		iv.task_id = task.id
+		left join
+		driver
+		on
+		ivd.driver_id = driver.id
+		where
+		task.process_type =
+		#{processType,jdbcType=INTEGER}
+		and
+		ivd.del_flag='false' and
+		task.delete_flg='false'
+		group by
+		ivd.inspect_vehicle_driver_id,
+		driver.id
+	</select>
+
+	<select id="getDealerList"
+		resultType="com.mttl.vlms.common.selectdto.DealerSelectDto"
+		parameterType="java.lang.Integer">
+		select
+		distinct dealer.dealer_name as dealerName,
+		dealer.id as id
+		from
+		inspect_vehicle as iv
+		left join
+		vehicle_info as vi
+		on
+		vi.id=iv.vehicle_id
+		left join
+		dealer
+		on
+		vi.dealer_id=dealer.id
+		left join
+		task
+		on
+		iv.task_id = task.id
+		left join
+		inspect_vehicle_driver as ivd
+		on
+		iv.inspect_vehicle_id = ivd.inspect_vehicle_id
+		where
+		task.process_type =
+		#{processType,jdbcType=INTEGER}
+		and
+		dealer.delete_flg = 'false'
+		and
+		task.delete_flg = 'false'
+		and
+		iv.del_flag = 'false'
+		and
+		ivd.del_flag =
+		'false'
+		group by
+		dealer.id,
+		dealer.dealer_name
+	</select>
+
+	<select id="getYardList"
+		resultType="com.mttl.vlms.common.selectdto.YardSelectDto"
+		parameterType="java.lang.Integer">
+		select
+		distinct yard.name as name,
+		yard.id as id
+		from
+		inspect_vehicle as iv
+		left join
+		zone_column as col
+		on
+		iv.parking_column_id=col.id
+		left join
+		yard
+		on
+		yard.id=col.yard_id
+		left join
+		task
+		on
+		task.id=iv.task_id
+		where
+		task.process_type =
+		#{processType,jdbcType=INTEGER}
+		and
+		iv.del_flag='false'
+		and
+		task.delete_flg='false'
+		and
+		col.delete_flg='false'
+		and
+		yard.delete_flg='false'
+		group by
+		yard.id,
+		yard.name
+	</select>
+
+	<select id="searchDetailView"
+		resultType="com.mttl.vlms.operation.opr004.dto.VehicleProcessInfoDto">
+		SELECT
+		iv.inspect_vehicle_id,
+		string_agg(distinct driver.driver_name,
+		',') as driverName,
+		task.process_type as processType,
+		task.task_name,
+		task.created_date
+		as date,
+		trailer.trailer_type as trailerType,
+		col.name as colName,
+		yard.name as yardName,
+		iv.created_date as inspectedDate,
+		iv.car_body_good_flag as carBody,
+		iv.engine_good_flag as engine,
+		iv.interior_good_flag as interior,
+		iv.remark as inspectRemark,
+		ui.name
+		as inspectorBy,
+		task.task_name as taskName
+		FROM
+		driver
+		LEFT JOIN
+		inspect_vehicle_driver as ivd
+		ON
+		driver.id = ivd.driver_id
+		LEFT JOIN
+		inspect_vehicle as iv
+		ON
+		iv.inspect_vehicle_id = ivd.inspect_vehicle_id
+		LEFT JOIN
+		vehicle_info as vi
+		ON
+		vi.id=iv.vehicle_id
+		LEFT JOIN
+		task
+		ON
+		task.id=iv.task_id
+		LEFT JOIN
+		trailer
+		ON
+		trailer.id=iv.trailer_id
+		LEFT JOIN
+		user_info as ui
+		ON
+		ui.id=iv.created_user
+		LEFT JOIN
+		zone_column as col
+		ON
+		col.id=iv.parking_column_id
+		LEFT JOIN
+		zone
+		ON
+		zone.id=col.zone_id
+		LEFT JOIN
+		yard
+		ON
+		yard.id =col.yard_id
+		where
+		<if test="chassisNo != null">
+			vi.chassis_no ILIKE'%'||
+			TRIM(#{chassisNo,jdbcType=VARCHAR}) ||'%'
+
+		</if>
+		<if test="processType != null">
+			and iv.task_id = #{processType,jdbcType=INTEGER}
+		</if>
+		GROUP BY
+		iv.inspect_vehicle_id,
+		task.process_type,
+		task.created_date,
+		trailerType,
+		colName,
+		yardName,
+		inspectedDate,
+		carBody,
+		engine,
+		interior,
+		inspectRemark,
+		ui.name,
+		taskName
+		order by
+		date desc
+	</select>
+
+	<select id="getImageList" resultType="java.lang.String"
+		parameterType="java.lang.Integer">
+		select
+		iva.file_path
+		from
+		inspect_vehicle_attachment as iva,
+		inspect_vehicle as iv
+		where
+		iva.inspect_vehicle_id =
+		iv.inspect_vehicle_id
+		<if test="vehicleInfoId != null">
+			and iva.inspect_vehicle_id =
+			#{vehicleInfoId,jdbcType=INTEGER}
+		</if>
+		and
+		iva.del_flag='false'
+		and
+		iv.del_flag='false'
+	</select>
+
+	<select id="getCountBySearchTable"
+		resultType="java.lang.Integer"
+		parameterType="com.mttl.vlms.operation.opr004.dto.VehicleProcessInfoDto">
+		select
+		sum(countChassisNo.count)
+		from
+		(select
+		count(distinct
+		vi.chassis_no) as count
+		from
+		vehicle_info as vi,
+		inspect_vehicle as iv,
+		task,
+		trailer,
+		inspect_vehicle_driver as ivd,
+		zone_column as z,
+		yard,
+		driver
+		where
+		vi.id=iv.vehicle_id
+		and
+		driver.id=ivd.driver_id
+		and
+		task.id=iv.task_id
+		and
+		trailer.id=iv.trailer_id
+		and
+		ivd.inspect_vehicle_id=iv.inspect_vehicle_id
+		and
+		z.id =
+		iv.parking_column_id
+		and
+		z.yard_id = yard.id
+		and
+		vi.delete_flg='0'
+		and
+		iv.del_flag='0'
+		and
+		task.delete_flg='0'
+		and
+		trailer.delete_flg='0'
+		and
+		ivd.del_flag='0'
+		and
+		z.delete_flg = '0'
+		and
+		yard.delete_flg = '0'
+		<if test="vehicleProcessInfoDto.processType != null">
+			and task.process_type =
+			#{vehicleProcessInfoDto.processType,jdbcType=INTEGER}
+		</if>
+		<if test="vehicleProcessInfoDto.taskId != null">
+			and
+			iv.task_id=#{vehicleProcessInfoDto.taskId,jdbcType=INTEGER}
+		</if>
+		<if test="vehicleProcessInfoDto.chassisNo != null">
+			and vi.chassis_no ILIKE '%'||
+			TRIM(#{vehicleProcessInfoDto.chassisNo,jdbcType=VARCHAR}) ||'%'
+		</if>
+		<if test="vehicleProcessInfoDto.dealerId != null">
+			and
+			vi.dealer_id=#{vehicleProcessInfoDto.dealerId,jdbcType=INTEGER}
+		</if>
+		<if
+			test="vehicleProcessInfoDto.fromEta !=null and vehicleProcessInfoDto.toEta != null">
+			AND date(iv.created_date) BETWEEN
+			#{vehicleProcessInfoDto.fromEta,jdbcType=DATE} AND
+			#{vehicleProcessInfoDto.toEta,jdbcType=DATE}
+		</if>
+		<if test="vehicleProcessInfoDto .driverId != null">
+			and
+			ivd.inspect_vehicle_id=#{vehicleProcessInfoDto.driverId,jdbcType=INTEGER}
+		</if>
+		<if test="vehicleProcessInfoDto.yardId != null">
+			and yard.id = #{vehicleProcessInfoDto.yardId,jdbcType =
+			INTEGER}
+		</if>
+		group by
+		vi.chassis_no,
+		vi.model,
+		vi.agent_name,
+		vi.order_month,
+		vi.license_no
+		) as countChassisNo
+	</select>
+
+</mapper>

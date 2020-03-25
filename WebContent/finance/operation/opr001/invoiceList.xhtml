@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<f:metadata>
+				<f:viewAction action="#{InvoiceListBean.showMessage}" />
+			</f:metadata>
+			<div class="card card-w-title">
+				<h:form id="frmInvoiceList">
+					<div>
+						<p:messages id="messages" globalOnly="true" autoUpdate="true" closable="true" style="word-break:break-all;" />
+						<p:growl for="messages" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['INVOICE_LIST_TITLE']}</h1>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:accordionPanel id="aplSearch">
+								<p:tab id="tabSearch" title="#{label['SEARCH_LABEL']}">
+									<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-6 ui-lg-2,ui-g-12 ui-md-6 ui-lg-2,ui-g-12 ui-md-6 ui-lg-1 tx_ali_cen,ui-g-12 ui-md-6 ui-lg-2" layout="grid"
+										styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+										<p:outputLabel id="lblInvoiceDate" for="txtInvoiceDate" value="#{label['INVOICE_DATE']}" />
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar id="txtInvoiceDate" readonlyInput="true" value="#{InvoiceListBean.invoiceSearchDto.invoiceDateFrom}" pattern="dd/MM/yyyy" effect="blind" navigator="true"></p:calendar>
+										</h:panelGroup>
+										<h:outputLabel id="lblInvoiceDateTo" for="txtInvoiceDateTo" value="#{label['DATE_TO_LABEL']}" />
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar id="txtInvoiceDateTo" readonlyInput="true" value="#{InvoiceListBean.invoiceSearchDto.invoiceDateTo}" pattern="dd/MM/yyyy" effect="blind" navigator="true"></p:calendar>
+										</h:panelGroup>
+										<p:outputLabel id="lblPaymentDueDate" for="txtPaymentDueDate" value="#{label['PAYMENT_DUE_DATE_LABEL']}" />
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar id="txtPaymentDueDate" readonlyInput="true" value="#{InvoiceListBean.invoiceSearchDto.paymentDueDateFrom}" pattern="dd/MM/yyyy" effect="blind"
+												navigator="true"></p:calendar>
+										</h:panelGroup>
+										<h:outputLabel id="lblPaymentDueDateTo" for="txtPaymentDueDateTo" value="#{label['DATE_TO_LABEL']}" />
+										<h:panelGroup styleClass="md-inputfield">
+											<p:calendar id="txtPaymentDueDateTo" readonlyInput="true" value="#{InvoiceListBean.invoiceSearchDto.paymentDueDateTo}" pattern="dd/MM/yyyy" effect="blind"
+												navigator="true"></p:calendar>
+										</h:panelGroup>
+										<p:outputLabel id="lblChassisNo" for="txtChassisNo" value="#{label['INVOICE_NO_LABEL']}" />
+										<h:panelGroup styleClass="md-inputfield">
+											<p:inputText id="txtChassisNo" value="#{InvoiceListBean.invoiceSearchDto.invoiceNo}" label="#{label['INVOICE_NO_LABEL']}" autoSelection="false" />
+										</h:panelGroup>
+										<p:outputLabel value=" " />
+										<h:panelGroup>
+											<p:selectBooleanCheckbox id="chkDeleteFlg" value="#{InvoiceListBean.invoiceSearchDto.deleteFlg}" />
+											<p:outputLabel for="chkDeleteFlg" value="#{label['DELETED_INVOICE_LABEL']}" />
+										</h:panelGroup>
+									</p:panelGrid>
+									<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-6 ui-lg-2,ui-g-12 ui-md-6 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+										style="border:0px none; background-color:transparent;">
+										<p:commandButton id="btnSearch" value="#{label['SEARCH_LABEL']}" action="#{InvoiceListBean.searchInvoice}" icon="ui-icon-search" update=":frmInvoiceList:invoiceList" />
+									</p:panelGrid>
+								</p:tab>
+							</p:accordionPanel>
+						</div>
+						<div class="ui-g-12">
+							<p:dataTable id="invoiceList" lazy="true" widgetVar="invoiceListWV" var="invoice" value="#{InvoiceListBean.invoiceListLazyDataModel}" rows="10" paginator="true"
+								paginatorAlwaysVisible="#{InvoiceListBean.paginatorVisible}" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="10,20,50,100" rowIndexVar="index">
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Search:" />
+										<p:inputText id="globalFilter" onkeyup="PF('invoiceListWV').filter()" style="width:150px" placeholder="Enter keyword" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="30">
+									<h:outputText value="#{index+1}" />
+								</p:column>
+								<p:column headerText="#{label['CUSTOMER_LABEL']}" sortBy="#{invoice.customerDealerName}" filterBy="#{invoice.customerDealerName}" filterMatchMode="contains">
+									<h:outputText value="#{invoice.customerDealerName}" />
+								</p:column>
+								<p:column headerText="#{label['INVOICE_NO_LABEL']}" sortBy="#{invoice.invoiceNo}" filterBy="#{invoice.invoiceNo}" filterMatchMode="contains">
+									<h:outputText value="#{invoice.invoiceNo}" />
+								</p:column>
+								<p:column headerText="#{label['INVOICE_SUBJECT_LABEL']}" sortBy="#{invoice.subject}" filterBy="#{invoice.subject}" filterMatchMode="contains">
+									<h:outputText value="#{invoice.subject}" />
+								</p:column>
+								<p:column headerText="#{label['INVOICE_DATE']}" sortBy="#{invoice.date}" filterBy="#{invoice.date}" filterMatchMode="contains">
+									<h:outputText value="#{invoice.date}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['PAYMENT_DUE_DATE_LABEL']}" sortBy="#{invoice.paymentDueDate}" filterBy="#{invoice.paymentDueDate}" filterMatchMode="contains">
+									<h:outputText value="#{invoice.paymentDueDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['EXPORT_LABEL']}" style="text-align:center;" width="35">
+									<p:commandLink id="btnExport" action="#{InvoiceListBean.callJasper(invoice)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-send fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="#{label['EDIT_LABEL']}" style="text-align:center;" width="35">
+									<p:commandLink id="btnEdit" action="#{InvoiceListBean.editInvoice(invoice)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-edit fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="#{label['DELETE_LABEL']}" style="text-align:center;" width="35">
+									<p:commandLink id="btnDelete" action="#{InvoiceListBean.deleteConfirmInvoice(invoice)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-trash fa-lg" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mttl.vlms.operation.opr003.mapper.ParkingLayoutCustomMapper">
+
+	<select id="getParkingInfo" resultType="java.util.Date"
+		parameterType="java.lang.Integer">
+		SELECT
+			created_date
+		FROM
+			inspect_vehicle
+		WHERE
+			created_date
+		IN 
+			(SELECT
+				max(created_date) 
+			FROM 
+				inspect_vehicle 
+			where
+				parking_column_id = #{parkingId,jdbcType=INTEGER}
+			) 
+		and 
+			parking_column_id = #{parkingId,jdbcType=INTEGER}
+	</select>
+
+	<select id="getParkingSlotInfoByColumnId"
+		resultType="com.mttl.vlms.operation.opr004.dto.InspectVehicleDto"
+		parameterType="java.lang.Integer">
+		SELECT 
+			* 
+		FROM 
+			inspect_vehicle
+		WHERE 
+			created_date 
+		IN
+			(SELECT 
+				max(created_date)
+			FROM 
+				inspect_vehicle 
+			where
+				parking_column_id = #{parkingColId,jdbcType=INTEGER}
+			) 
+		and 
+			del_flag = '0' 
+		and 
+			parking_column_id = #{parkingColId,jdbcType=INTEGER}
+	</select>
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mttl.vlms.user.mapper.UserMapper" >
+
+	<resultMap id="UserMap" type="com.mttl.vlms.user.dto.User">
+		<result property="userID" column="ID" />
+		<result property="roleID" column="ROLE_ID" />
+		<result property="userName" column="NAME"/>
+		<result property="roleName" column="ROLE_NAME" />
+	</resultMap>
+	
+	<select id="findUser" parameterType="java.lang.String" resultMap="UserMap">
+		SELECT
+			UI.ID,
+			UI.ROLE_ID,
+			UI.NAME,
+			R.ROLE_NAME
+		FROM
+			user_info UI
+		LEFT JOIN
+			role R
+		ON
+			UI.ROLE_ID = R.ROLE_ID
+		WHERE 
+			UI.LOGIN_ID = #{userID,jdbcType=VARCHAR}
+		AND
+			UI.ROLE_ID != 5
+	</select>
+	
+	<update id="updateRecoveryCode" parameterType="map">
+		UPDATE
+			LOGIN_USER
+		SET
+			RECOVERY_CODE = #{recoveryCode,jdbcType=VARCHAR},
+			RECOVERY_CODE_TIME = #{recoveryCodeTime,jdbcType=TIMESTAMP}
+		WHERE
+			USER_ID = #{userId,jdbcType=INTEGER}
+</update>
+</mapper>

@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:pa="http://primefaces.org/serenity" xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<div class="layout-topbar">
+		<!-- <a href="${facesContext.externalContext.requestContextPath}/user/?timesheet/tst002/attendanceInput.xhtml" class="topbar-logo"></a> -->
+		<a href="https://via.placeholder.com/300x50" class="topbar-logo"></a>
+
+		<a href="#" class="menu-btn">
+			<i class="material-icons">&#xE5D2;</i>
+		</a>
+		<a href="#" class="topbar-menu-btn">
+			<i class="material-icons">&#xE8B8;</i>
+		</a>
+		
+		<p:graphicImage name="images/MTTL_Logo3.png" library="serenity-layout" styleClass="mobile-logo topbar-logo" />
+		<div class="layout-topbar-menu-wrapper">
+			<div class="sidebar-logo">
+				<!-- <a href="${facesContext.externalContext.requestContextPath}/user/timesheet/tst002/attendanceInput.xhtml">
+				</a> -->
+				<a href="https://via.placeholder.com/300x50" class="topbar-logo"></a>
+				<a href="#" class="sidebar-anchor" title="Toggle Menu"></a>
+			</div>
+			<ul class="topbar-menu animated">
+				<li>
+					<a href="#">
+						<i class="topbar-icon material-icons">&#xE853;</i>
+						<span class="topbar-item-name">
+							<h:outputText value="#{sessionScope.loginUser.userName}" rendered="#{!empty sessionScope.loginUser}" style="font-size: 20px;" />
+							<br />
+							<h:outputText value="#{sessionScope.loginUser.roleName}" rendered="#{!empty sessionScope.loginUser}" style="font-style: italic;" />
+						</span>
+					</a>
+					<ul class="animated">
+						<li role="menuitem" class="topbar-menu-item-profile">
+							<a href="#">
+								<span>
+									<h:outputText value="#{sessionScope.loginUser.userName}" rendered="#{!empty sessionScope.loginUser}" style="font-size: 20px;" />
+									<br />
+									<h:outputText value="#{sessionScope.loginUser.roleName}" rendered="#{!empty sessionScope.loginUser}" style="font-style: italic;" />
+								</span>
+							</a>
+						</li>
+						<li role="menuitem">
+							<p:commandLink action="changePassword">
+								<i class="material-icons">&#xE0DA;</i>
+								<span>#{label['CHANGE_PASSWORD_LABEL']}</span>
+							</p:commandLink>
+						</li>
+						<li role="menuitem">
+							<p:commandLink action="#{LoginBean.logout}">
+								<i class="material-icons">&#xE879;</i>
+								<span>#{label['LOGOUT_LABEL']}</span>
+							</p:commandLink>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+</ui:composition>

@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions" template="/templates/template.xhtml">
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{PortEditBean.redirect}" />
+		</f:metadata>
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<h1>#{label['PORT_EDIT_TITLE']}</h1>
+						<h:form id="frmPortEdit">
+							<div>
+								<p:messages id="msgMessages" globalOnly="true" closable="true" />
+							</div>
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-6 ui-lg-4" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel id="lblPortShortName" for="txtPortShortName" value="#{label['PORT_SHORT_NAME_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtPortShortName" value="#{PortEditBean.portDtoEdit.shortName}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="10" message="{0} #{label['LENGTH_MSG']} 10." />
+									</p:inputText>
+									<p:message id="msgPortShortName" for="txtPortShortName" />
+								</h:panelGroup>
+								<p:outputLabel id="lblPortFullName" for="txtPortFullName" value="#{label['PORT_FULL_NAME_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtPortFullName" value="#{PortEditBean.portDtoEdit.fullName}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="30" message="{0} #{label['LENGTH_MSG']} 30." />
+									</p:inputText>
+									<p:message id="msgPortFullName" for="txtPortFullName" />
+								</h:panelGroup>
+								<p:outputLabel id="lblPhoneNo" for="chpPhoneNo" value="#{label['PHONE_NO_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:chips id="chpPhoneNo" value="#{PortEditBean.portDtoEdit.phoneNoList}" max="5" required="true">
+									<p:keyFilter regEx="/[\d+]/" />
+									<o:validator validatorId="javax.faces.Length" maximum="80" message="{0} #{label['LENGTH_MSG']} 80." />
+									</p:chips>
+									<p:message id="msgPortPhoneNo" for="chpPhoneNo" />
+								</h:panelGroup>
+								<p:outputLabel id="lblAddress" for="txaAddress" value="#{label['ADDRESS_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txaAddress" value="#{PortEditBean.portDtoEdit.address}" label="#{label['PORT_ADDRESS_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" minimum="0" maximum="255" message="{0} #{label['LENGTH_MSG']} 255." />
+									</p:inputText>
+									<p:message id="msgAddress" for="txaAddress" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDescription" for="txaDescription" value="#{label['DESCRIPTION_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txaDescription" value="#{PortEditBean.portDtoEdit.description}" label="#{label['DESCRIPTION_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" minimum="0" maximum="100" message="{0} #{label['LENGTH_MSG']} 100." />
+									</p:inputText>
+									<p:message id="msgDescription" for="txaDescription" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDisabled" for="slrDisabled" value="#{label['DISABLED_LABEL']}" />
+								<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+									<p:selectOneRadio id="slrDisabled" value="#{PortEditBean.portDtoEdit.disabled}">
+										<f:selectItem id="sliFalse" itemValue="false" itemLabel="#{label['ENABLE_LABEL']}" />
+										<f:selectItem id="sliTrue" itemValue="true" itemLabel="#{label['DISABLE_LABEL']}" />
+									</p:selectOneRadio>
+								</h:panelGrid>
+							</p:panelGrid>
+							<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<div />
+								<p:commandButton id="btnAdd" value="#{label['UPDATE_LABEL']}" update="frmPortEdit" action="#{PortEditBean.editPort}" icon="ui-icon-launch">
+									<p:confirm header="Confirmation" message="Are you sure to update?" />
+								</p:commandButton>
+								<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" action="portTerminalControl" immediate="true" icon="ui-icon-close" />
+							</p:panelGrid>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+			<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

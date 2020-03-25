@@ -1,0 +1,125 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="content">
+		<f:metadata>
+			<!-- <f:viewAction action="#{TrailerDeleteConfirmBean.redirect}" /> -->
+		</f:metadata>
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<h:form id="frmInvoiceDeleteConfirm">
+					<div>
+						<p:messages id="messages" globalOnly="true" autoUpdate="true" />
+					</div>
+					<div class="ui-g">
+						<h1>#{label['INVOICE_DELETE_CONFIRM_TITLE']}</h1>
+					</div>
+					<div class="ui-g print-preview-info">
+						<div class="ui-g-5">
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-3 ui-lg-3, ui-g-12 ui-md-9 ui-lg-9" layout="grid">
+								<p:outputLabel id="lblDealerName" for="txtDealerName" value="#{label[(InvoiceDeleteConfirmBean.invoiceDeleteDto.type eq 1) ? 'DEALER_NAME_LABEL' : 'CUSTOMER_LABEL']}" />
+								<p:outputLabel id="txtDealerName" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.dealerDto.dealerName}" rendered="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.type eq 1}" />
+								<p:outputLabel id="lblContactName" for="txtContactName" value="#{label['DEALER_ContactName_LABEL']}" rendered="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.type eq 1}" />
+								<p:outputLabel id="txtContactName" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.dealerDto.contactName}" rendered="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.type eq 1}" />
+								<p:outputLabel id="txtCustomerName" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.customerDealerName}" rendered="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.type eq 2}" />
+								<p:outputLabel id="lblDealerEmail" for="txtDealerEmail" value="#{label['DEALER_EMAIL']}" rendered="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.type eq 1}" />
+								<p:outputLabel id="txtDealerEmail" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.dealerDto.contactEmail}" rendered="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.type eq 1}" />
+								<p:outputLabel id="lblDealerPhoneNo" for="txtDealerPhoneNo" value="#{label['DEALER_ContactPhoneNo_LABEL']}" rendered="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.type eq 1}" />
+								<p:outputLabel id="txtDealerPhoneNo" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.dealerDto.phoneNo}" rendered="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.type eq 1}" />
+								<p:outputLabel id="lblSubject" for="txtSubject" value="#{label['INVOICE_SUBJECT_LABEL']}" />
+								<p:outputLabel id="txtSubject" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.subject}" label="#{label['INVOICE_SUBJECT_LABEL']}" />
+							</p:panelGrid>
+						</div>
+						<div class="ui-g-4" />
+						<div class="ui-g-3">
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-6 ui-lg-6, ui-g-12 ui-md-6 ui-lg-6" layout="grid" styleClass="tx_ali_cen">
+								<p:outputLabel id="lblDate" for="calDate" value="#{label['INVOICE_DATE']}" />
+								<p:outputLabel id="lblInvoiceNo" for="txtInvoiceNo" value="#{label['INVOICE_NO_LABEL']}" />
+								<p:outputLabel id="calDate" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.date}" label="#{label['INVOICE_DATE']}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:outputLabel>
+								<p:outputLabel id="txtInvoiceNo" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.invoiceNo}" label="#{label['INVOICE_NO_LABEL']}" />
+								<p:outputLabel id="lblPaymentDueDate" for="calPaymentDueDate" value="#{label['PAYMENT_DUE_DATE_LABEL']}" />
+								<p:outputLabel id="calPaymentDueDate" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.paymentDueDate}" label="#{label['PAYMENT_DUE_DATE_LABEL']}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:outputLabel>
+							</p:panelGrid>
+						</div>
+					</div>
+					<div class="ui-g-12">
+						<p:dataTable id="tblDealerInvoiceList" var="item" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.itemList}" rows="10" paginator="true" paginatorPosition="bottom"
+							paginatorAlwaysVisible="#{InvoiceDeleteConfirmBean.paginatorVisible}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,20,50,100" rowIndexVar="index" first="#{InvoiceDeleteConfirmBean.firstRowCount}">
+							<p:column headerText="#{label['SERIAL_NO_LABEL']}" style="text-align:center;" width="20">
+								<p:outputLabel value="#{index+1}" />
+							</p:column>
+							<p:column headerText="#{label['DESCRIPTION_LABEL']}" width="120">
+								<p:outputLabel value="#{item.chargesSelectDto.title}" />
+							</p:column>
+							<p:column headerText="#{label['INVOICE_UNIT']}" width="120">
+								<p:outputLabel value="#{item.unit}" style="text-align:center" />
+							</p:column>
+							<p:column id="lblUnitPrice" headerText="#{label['INVOICE_UNIT_PRICE']} &#10; (#{InvoiceDeleteConfirmBean.invoiceDeleteDto.currency})" style="white-space:pre-line"
+								escape="false" width="120">
+								<p:outputLabel value="#{item.chargesSelectDto.unitPrice}" style="text-align:center" />
+							</p:column>
+							<p:column id="lblAmount" headerText="#{label['INVOICE_AMOUNT']}" width="120">
+								<p:outputLabel value="#{item.amount}" style="text-align:center" />
+							</p:column>
+							<p:columnGroup id="tblFooter" type="footer">
+								<p:row>
+									<p:column colspan="4" style="text-align:right" footerText="#{label['INVOICE_SUB_TOTAL']}" />
+									<p:column id="lblSubTotal" style="text-align:right" footerText="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.subTotal}" />
+								</p:row>
+								<p:row>
+									<p:column colspan="4" style="text-align:right" footerText="#{label['INVOICE_TAX']}" />
+									<p:column id="lblTax" style="text-align:right" footerText="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.taxAmount}" />
+								</p:row>
+								<p:row>
+									<p:column colspan="4" style="text-align:right" footerText="#{label['INVOICE_GRAND_TOTAL']}" />
+									<p:column id="lblGrandTotal" style="text-align:right" footerText="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.grandTotal}" />
+								</p:row>
+							</p:columnGroup>
+						</p:dataTable>
+					</div>
+					<div class="ui-g-12">
+						<p:panelGrid styleClass="ui-panelgrid-blank form-group" columns="2" columnClasses="ui-grid-col-2, ui-grid-col-10" layout="grid">
+							<h:outputLabel for="txtRemark1" value="Remarks : " />
+							<p:outputLabel id="txtRemark1" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.remark1}" />
+							<h:outputLabel for="txtRemark2" value="Remarks : " />
+							<p:outputLabel id="txtRemark2" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.remark2}" />
+							<h:outputLabel for="txtRemark3" value="Bank Reference Account Name : " />
+							<p:outputLabel id="txtRemark3" value="#{InvoiceDeleteConfirmBean.invoiceDeleteDto.remark3}" />
+						</p:panelGrid>
+					</div>
+					<div class="ui-g-6">
+						<p:dataGrid var="bankAccount" value="#{InvoiceDeleteConfirmBean.bankAccountList}" columns="4" layout="grid">
+							<h:panelGrid>
+								<h:outputText value="#{bankAccount.currencyType}" escape="false" />
+								<h:outputText value="#{bankAccount.bankName}" />
+								<h:outputText value="#{bankAccount.accountNo}" />
+								<h:outputText value="#{bankAccount.swiftCode}" />
+								<h:outputText value="#{bankAccount.branchName}" />
+								<h:outputText value="#{bankAccount.bankAddress}" />
+							</h:panelGrid>
+						</p:dataGrid>
+					</div>
+					<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+						style="border:0px none; background-color:transparent;">
+						<div />
+						<p:commandButton id="btnEdit" value="#{label['DELETE_LABEL']}" update="frmInvoiceDeleteConfirm" action="#{InvoiceDeleteConfirmBean.deleteConfirmInvoice}"
+							icon="ui-icon-launch">
+							<p:confirm header="Confirmation" message="Are you sure to delete?" />
+						</p:commandButton>
+						<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" immediate="true" action="invoiceList" icon="ui-icon-close" />
+					</p:panelGrid>
+				</h:form>
+			</div>
+		</div>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+			<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

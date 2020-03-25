@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.mttl.vlms.operation.opr001.mapper.InvoiceCustomMapper">
+
+	<select id="getInvoiceList"
+		parameterType="com.mttl.vlms.operation.opr001.dto.InvoiceDto"
+		resultType="com.mttl.vlms.operation.opr001.dto.InvoiceDto">
+		SELECT
+			ID,
+			CUSTOMER_DEALER_NAME,
+			CONTACT_NAME,
+			SUBJECT,
+			INVOICE_NO,
+			DATE,
+			PAYMENT_DUE_DATE,
+			DEALER_ID,
+			SUB_TOTAL,
+			TAX_AMOUNT,
+			GRAND_TOTAL,
+			CURRENCY,
+			REMARK_1,
+			REMARK_2,
+			TYPE,
+			TAX_INCLUDED,
+			TAX_PERCENTAGE,
+			PREPARED_BY,
+			APPROVED_BY,
+			DELETE_FLG
+		FROM
+			INVOICE
+		WHERE
+		<if test="invoiceSearchDto.deleteFlg !=null">
+			DELETE_FLG=#{invoiceSearchDto.deleteFlg,jdbcType=BOOLEAN}
+		</if>
+		<if test="invoiceSearchDto.invoiceNo !=null">
+			AND
+			INVOICE_NO=#{invoiceSearchDto.invoiceNo,jdbcType=VARCHAR}
+		</if>
+		<if
+			test="invoiceSearchDto.invoiceDateFrom !=null and invoiceSearchDto.invoiceDateTo != null">
+			AND DATE BETWEEN
+			#{invoiceSearchDto.invoiceDateFrom,jdbcType=DATE} AND
+			#{invoiceSearchDto.invoiceDateTo,jdbcType=DATE}
+		</if>
+		<if
+			test="invoiceSearchDto.paymentDueDateFrom !=null and invoiceSearchDto.paymentDueDateTo != null">
+			AND payment_due_date BETWEEN
+			#{invoiceSearchDto.paymentDueDateFrom,jdbcType=DATE} AND
+			#{invoiceSearchDto.paymentDueDateTo,jdbcType=DATE}
+		</if>
+		<foreach collection="filters" index="key" item="value"
+			open=" and " separator=" and " close=" ">
+			<if test="key == 'globalFilter' and value != '' and value != null"> (
+				LOWER(CUSTOMER_DEALER_NAME) like LOWER('%'|| #{value}
+				||'%') OR
+				LOWER(INVOICE_NO) like LOWER('%'|| #{value} ||'%') OR
+				LOWER(SUBJECT) like LOWER('%'|| #{value} ||'%') OR
+				TO_CHAR(DATE,'dd/mm/yyyy') like '%'|| #{value} ||'%' OR
+				TO_CHAR(PAYMENT_DUE_DATE,'dd/mm/yyyy') like '%'|| #{value} ||'%' )
+			</if>
+			<if test="key == 'customerDealerName'">
+				LOWER(CUSTOMER_DEALER_NAME) like LOWER('%'|| #{value}
+				||'%')
+			</if>
+			<if test="key == 'invoiceNo'">
+				LOWER(INVOICE_NO) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'subject'">
+				LOWER(SUBJECT) like LOWER('%'|| #{value} ||'%')
+			</if>
+			<if test="key == 'date'">
+				TO_CHAR(DATE,'dd/mm/yyyy') like '%'|| #{value} ||'%'
+			</if>
+			<if test="key == 'paymentDueDate'">
+				TO_CHAR(PAYMENT_DUE_DATE,'dd/mm/yyyy') like '%'||
+				#{value} ||'%'
+			</if>
+		</foreach>
+		GROUP BY 
+			ID
+		<if
+			test="sortField != null and sortField != '' and sortField == 'customerDealerName' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY CUSTOMER_DEALER_NAME ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY CUSTOMER_DEALER_NAME DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'invoiceNo' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY INVOICE_NO ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY INVOICE_NO DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'subject' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY SUBJECT ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY SUBJECT DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'date' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY DATE ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY DATE DESC
+			</if>
+		</if>
+		<if
+			test="sortField != null and sortField != '' and sortField == 'paymentDueDate' ">
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'ASCENDING' ">
+				ORDER BY PAYMENT_DUE_DATE ASC
+			</if>
+			<if
+				test="sortOrder != null and sortOrder != '' and sortOrder == 'DESCENDING' ">
+				ORDER BY PAYMENT_DUE_DATE DESC
+			</if>
+		</if>
+		<if test="sortField == null or sortField == ''">
+			ORDER BY DATE DESC
+		</if>
+		<if test="offset != null and limit != null">
+			OFFSET #{offset} LIMIT #{limit}
+		</if>
+	</select>
+
+	<select id="getInvoiceListCount"
+		parameterType="com.mttl.vlms.operation.opr001.dto.InvoiceSearchReqDto"
+		resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			INVOICE
+		WHERE
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="getInvoiceByInvoiceId"
+		parameterType="java.lang.Integer"
+		resultType="com.mttl.vlms.operation.opr001.dto.InvoiceDto">
+		SELECT
+			ID,
+			CUSTOMER_DEALER_NAME,
+			CONTACT_NAME,
+			SUBJECT,
+			INVOICE_NO,
+			DATE,
+			PAYMENT_DUE_DATE
+		FROM
+			INVOICE
+		WHERE
+			ID = #{id,jdbcType=INTEGER}
+		AND 
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="getItemVehicleList"
+		parameterType="com.mttl.vlms.operation.opr001.dto.ItemVehicleSearchReqDto"
+		resultType="com.mttl.vlms.operation.opr001.dto.ItemVehicleDto">
+		SELECT
+			VI.ID AS VEHICLE_ID,
+			VI.CHASSIS_NO,
+			VI.MODEL,
+			IV.CREATED_DATE AS
+			TASKED_DATE
+		FROM
+			VEHICLE_INFO AS VI
+		RIGHT JOIN
+			INSPECT_VEHICLE AS IV ON VI.ID=IV.VEHICLE_ID
+		<where>
+			VI.DELETE_FLG = FALSE
+			AND 
+				VI.DISABLED = FALSE
+			<if test="dealerId != null">
+				AND VI.DEALER_ID=#{dealerId,jdbcType=INTEGER}
+			</if>
+			<if test="taskId != null">
+				AND IV.TASK_ID=#{taskId,jdbcType=INTEGER}
+			</if>
+			<if test="taskFromDate != null">
+				AND IV.CREATED_DATE &gt;=
+				#{taskFromDate,jdbcType=TIMESTAMP}
+			</if>
+			<if test="taskToDate != null">
+				AND IV.CREATED_DATE &lt;=
+				#{taskToDate,jdbcType=TIMESTAMP}
+			</if>
+		</where>
+		group by 
+			IV.inspect_vehicle_id, VI.ID
+	</select>
+
+	<select id="getItemVehicleListByItemId"
+		parameterType="java.lang.Integer"
+		resultType="com.mttl.vlms.operation.opr001.dto.ItemVehicleDto">
+		SELECT
+			IV.ID AS ID,
+			IV.VEHICLE_ID AS VEHICLE_ID,
+			VI.CHASSIS_NO,
+			VI.MODEL,
+			IV.TASKED_DATE AS TASKED_DATE
+		FROM
+			ITEM_VEHICLE AS IV
+		LEFT JOIN
+			VEHICLE_INFO AS VI ON VI.ID = IV.VEHICLE_ID
+		<where>
+			<if test="itemId != null">
+				IV.ITEM_ID=#{itemId,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+
+	<select id="getDealerById" parameterType="java.lang.Integer"
+		resultType="com.mttl.vlms.common.selectdto.DealerSelectDto">
+		SELECT
+			ID,
+			DEALER_NAME,
+			CONTACT_NAME,
+			PHONE_NO,
+			CONTACT_EMAIL
+		FROM
+			DEALER
+		WHERE
+			ID = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="getNextInvoiceNo" resultType="java.lang.String">
+		select
+		invoice_nextid();
+	</select>
+
+</mapper>

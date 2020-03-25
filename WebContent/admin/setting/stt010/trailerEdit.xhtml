@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions" template="/templates/template.xhtml">
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{TrailerEditBean.redirect}" />
+		</f:metadata>
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<h1>#{label['TRAILER_EDIT_TITLE']}</h1>
+						<h:form id="frmTrailerEdit" enctype="multipart/form-data">
+							<div>
+								<p:messages id="messages" globalOnly="true" closable="true" />
+							</div>
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-6 ui-lg-4" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel id="lblTrailerId" for="txtTrailerId" value="#{label['TRAILER_ID']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtTrailerId" value="#{TrailerEditBean.trailerDtoEdit.trailerCode}" required="true" label="#{label['TRAILER_ID']}" readonly="true">
+										<o:validator validatorId="javax.faces.Length" maximum="100" message="{0} #{label['LENGTH_MSG']} 100." />
+									</p:inputText>
+									<p:message id="msgTrailerId" for="txtTrailerId" />
+								</h:panelGroup>
+								<p:outputLabel id="lblBarcodeId" for="txtBarcodeId" value="#{label['TRAILER_CODE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtBarcodeId" value="#{TrailerEditBean.trailerDtoEdit.barcodeId}" required="true" label="#{label['TRAILER_CODE_LABEL']}" readonly="true">
+										<o:validator validatorId="javax.faces.Length" maximum="15" message="{0} #{label['LENGTH_MSG']} 15." />
+									</p:inputText>
+									<p:message id="msgBarcodeId" for="txtBarcodeId" />
+								</h:panelGroup>
+								<p:outputLabel id="lblLicenseNo" for="txtLicenseNo" value="#{label['TRAILER_LICENSE_NO']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtLicenseNo" value="#{TrailerEditBean.trailerDtoEdit.licenseNo}" required="true" label="#{label['TRAILER_LICENSE_NO']}">
+										<o:validator validatorId="javax.faces.Length" maximum="15" message="{0} #{label['LENGTH_MSG']} 15." />
+									</p:inputText>
+									<p:message id="msgLicenseNo" for="txtLicenseNo" />
+								</h:panelGroup>
+								<p:outputLabel id="lblTrailerType" for="txtTrailerType" value="#{label['TRAILER_TYPE']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtTrailerType" value="#{TrailerEditBean.trailerDtoEdit.trailerType}" required="true" label="#{label['TRAILER_TYPE']}">
+										<o:validator validatorId="javax.faces.Length" maximum="100" message="{0} #{label['LENGTH_MSG']} 100." />
+									</p:inputText>
+									<p:message id="msgTrailerType" for="txtTrailerType" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDescription" for="txtDescription" value="#{label['DESCRIPTION_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtDescription" value="#{TrailerEditBean.trailerDtoEdit.description}" label="#{label['DESCRIPTION_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="256" message="{0} #{label['LENGTH_MSG']} 256." />
+									</p:inputText>
+									<p:message id="msgDescription" for="txtDescription" />
+								</h:panelGroup>
+								<p:outputLabel id="lblPhotoUpload" for="txtPhotoUpload" value="#{label['PHOTO_UPLOAD_LABEL']}" />
+								<h:panelGroup>
+									<p:commandButton icon="ui-icon-view" id="openPhotoDialog" value="Remove Photos" oncomplete="PF('dlgPhotos').show();" update="dlgDetailPhotos"
+										action="#{TrailerEditBean.showPicture(TrailerEditBean.trailerDtoEdit)}" disabled="#{TrailerEditBean.trailerDtoEdit.checkPhoto}" style="width:50%" />
+									<p:fileUpload fileUploadListener="#{TrailerEditBean.uploadPhoto}" id="txtPhotoUpload" mode="advanced" multiple="true" sequential="true" accept=".jpg,.jpeg,.png"
+										style="width:150%" allowTypes="/(\.|\/)(jpe?g|png)$/" label="Add New" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDisabled" for="rdoDisabled" value="#{label['DISABLED_LABEL']}" />
+								<h:panelGroup columns="2" style="margin-bottom:10px" cellpadding="5">
+									<p:selectOneRadio id="rdoDisabled" value="#{TrailerEditBean.trailerDtoEdit.disabled}">
+										<f:selectItem itemValue="false" itemLabel="#{label['ENABLE_LABEL']}" />
+										<f:selectItem itemValue="true" itemLabel="#{label['DISABLE_LABEL']}" />
+									</p:selectOneRadio>
+								</h:panelGroup>
+							</p:panelGrid>
+							<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<div />
+								<p:commandButton id="btnEdit" value="#{label['UPDATE_LABEL']}" update="frmTrailerEdit" action="#{TrailerEditBean.editTrailer}" icon="ui-icon-launch" ajax="true">
+									<p:confirm header="Confirmation" message="Are you sure to update?" />
+								</p:commandButton>
+								<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" immediate="true" action="trailerList" icon="ui-icon-close" />
+							</p:panelGrid>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p:dialog id="dlgDetailPhotos" widgetVar="dlgPhotos" header="#{TrailerEditBean.trailerDtoEdit.trailerCode}" resizable="true" modal="true" dynamic="true" draggable="true"
+			closeOnEscape="true" position="458,157" positionType="absolute" fitViewport="true" style="text-align:center">
+			<p:galleria id="photoGalleria" widgetVar="photoGalleriaWidgetVar" autoPlay="false" value="#{TrailerEditBean.images}" var="ctfImage">
+				<p:panelGrid columns="1" style="text-align: center;">
+					<p:commandButton id="deleteButton" update="dlgDetailPhotos" value="Delete Photo" process="@this" actionListener="#{TrailerEditBean.removePhoto}">
+						<f:param name="ImageName" value="#{ctfImage.getName()}" />
+					</p:commandButton>
+				</p:panelGrid>
+				<p:graphicImage stream="false" value="#{ctfImage}" styleClass="content" style="width:auto;height:inherit;" />
+			</p:galleria>
+		</p:dialog>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+			<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

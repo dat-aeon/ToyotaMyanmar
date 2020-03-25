@@ -1,0 +1,197 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions" template="/templates/template.xhtml">
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<h1>#{label['VEHICLE_INPUT_TITLE']}</h1>
+						<h:form id="frmVehicleInfoInput">
+							<div>
+								<p:messages id="msgMessages" globalOnly="true" closable="true" />
+							</div>
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-6 ui-lg-4" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel id="lblChassisNo" for="txtChassisNo" value="#{label['CHASSIS_NO_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtChassisNo" value="#{VehicleInfoInputBean.vehicleInfoDto.chassisNo}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="20" message="{0} #{label['LENGTH_MSG']} 20" />
+									</p:inputText>
+									<p:message id="msgChassisNo" for="txtChassisNo" />
+								</h:panelGroup>
+								<p:outputLabel id="lblModel" for="txtModel" value="#{label['MODEL_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtModel" value="#{VehicleInfoInputBean.vehicleInfoDto.model}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="20" message="{0} #{label['LENGTH_MSG']} 20" />
+									</p:inputText>
+									<p:message id="msgModel" for="txtModel" />
+								</h:panelGroup>
+								<p:outputLabel id="lblColor" for="txtColor" value="#{label['COLOR_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtColor" value="#{VehicleInfoInputBean.vehicleInfoDto.color}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="20" message="{0} #{label['LENGTH_MSG']} 20" />
+									</p:inputText>
+									<p:message id="msgColor" for="txtColor" />
+								</h:panelGroup>
+								<p:outputLabel id="lblColorCode" for="txtColorCode" value="#{label['COLOR_CODE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtColorCode" value="#{VehicleInfoInputBean.vehicleInfoDto.colorCode}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="10" message="{0} #{label['LENGTH_MSG']} 10" />
+									</p:inputText>
+									<p:message id="msgColorCode" for="txtColorCode" />
+								</h:panelGroup>
+								<p:outputLabel id="lblLicenseNo" for="txtLicenseNo" value="#{label['LICENSE_NO_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtLicenseNo" value="#{VehicleInfoInputBean.vehicleInfoDto.licenseNo}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="10" message="{0} #{label['LENGTH_MSG']} 10" />
+									</p:inputText>
+									<p:message id="msgLicenseNo" for="txtLicenseNo" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDischargePort" for="txtDischargePort" value="#{label['PORT_OF_DISCHARGE_LABEL']}" />
+								<h:panelGroup>
+									<p:selectOneMenu id="txtDischargePort" value="#{VehicleInfoInputBean.vehicleInfoDto.dischargePortId}" converter="omnifaces.SelectItemsIndexConverter">
+										<f:selectItems value="#{VehicleInfoInputBean.portList}" var="port" itemLabel="#{port.shortName}" itemValue="#{port.dischargePortId}" />
+									</p:selectOneMenu>
+									<p:message id="msgDischargePort" for="txtDischargePort" />
+								</h:panelGroup>
+								<p:outputLabel id="lblOrderMonth" for="txtOrderMonth" value="#{label['ORDER_MONTH_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="txtOrderMonth" readonlyInput="true" value="#{VehicleInfoInputBean.vehicleInfoDto.orderMonth}" pattern="dd/MM/yyyy" effect="blind" navigator="true"></p:calendar>
+								</h:panelGroup>
+								<p:outputLabel id="lblOrderBy" for="txtOrderBy" value="#{label['ORDER_BY_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtOrderBy" value="#{VehicleInfoInputBean.vehicleInfoDto.orderBy}">
+									</p:inputText>
+								</h:panelGroup>
+								<p:outputLabel id="lblFirstVessel" for="txtFirstVessel" value="#{label['1ST_VESSEL_NAME_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtFirstVessel" value="#{VehicleInfoInputBean.vehicleInfoDto.firstVesselName}">
+									</p:inputText>
+								</h:panelGroup>
+								<p:outputLabel id="lblSecondVessel" for="txtSecondVessel" value="#{label['2ND_VESSEL_NAME_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtSecondVessel" value="#{VehicleInfoInputBean.vehicleInfoDto.secondVesselName}">
+									</p:inputText>
+								</h:panelGroup>
+								<p:outputLabel id="lblCif" for="txtCif" value="#{label['CIF_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputNumber id="txtCif" value="#{VehicleInfoInputBean.vehicleInfoDto.cif}">
+									</p:inputNumber>
+								</h:panelGroup>
+								<p:outputLabel id="lblProdMth" for="txtProdMth" value="#{label['PROD_MTH_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="txtProdMth" readonlyInput="true" value="#{VehicleInfoInputBean.vehicleInfoDto.prodMth}" pattern="dd/MM/yyyy" effect="blind" navigator="true"></p:calendar>
+								</h:panelGroup>
+								<p:outputLabel id="lblEtdOrigin" for="txtEtdOrigin" value="#{label['ETD_ORIGIN_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtEtdOrigin" value="#{VehicleInfoInputBean.vehicleInfoDto.etdOrigin}">
+									</p:inputText>
+								</h:panelGroup>
+								<p:outputLabel id="lblEtdDate" for="txtEtdDate" value="#{label['ETD_ESTIMATED_DATE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="txtEtdDate" readonlyInput="true" value="#{VehicleInfoInputBean.vehicleInfoDto.etdEstimatedDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true"></p:calendar>
+								</h:panelGroup>
+								<p:outputLabel id="lblEta" for="txtEta" value="#{label['ETA_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="txtEta" readonlyInput="true" value="#{VehicleInfoInputBean.vehicleInfoDto.eta}" pattern="dd/MM/yyyy" effect="blind" navigator="true"></p:calendar>
+								</h:panelGroup>
+								<p:outputLabel id="lblBerthingDate" for="txtBerthingDate" value="#{label['VESSEL_BERTHING_DATE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="txtBerthingDate" readonlyInput="true" value="#{VehicleInfoInputBean.vehicleInfoDto.vesselBerthingDate}" pattern="dd/MM/yyyy" effect="blind"
+										navigator="true"></p:calendar>
+								</h:panelGroup>
+								<p:outputLabel id="lblAgentName" for="txtAgentName" value="#{label['AGENT_NAME_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtAgentName" value="#{VehicleInfoInputBean.vehicleInfoDto.agentName}">
+									</p:inputText>
+								</h:panelGroup>
+								<p:outputLabel id="lblCarriedOutUnit" for="txtCarriedOutUnit" value="#{label['CARRIED_OUT_FROM_PORT_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputNumber id="txtCarriedOutUnit" value="#{VehicleInfoInputBean.vehicleInfoDto.portCarriedUnit}" />
+									<p:message id="msgCarriedOutUnit" for="txtCarriedOutUnit" />
+								</h:panelGroup>
+								<p:outputLabel id="lblCarriedOutDate" for="txtCarriedOutDate" value="#{label['CARRIED_OUT_FROM_PORT_DATE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="txtCarriedOutDate" readonlyInput="true" value="#{VehicleInfoInputBean.vehicleInfoDto.portCarriedOutDate}" pattern="dd/MM/yyyy" effect="blind"
+										navigator="true"></p:calendar>
+								</h:panelGroup>
+								<p:outputLabel id="lblCarriedOutRemark" for="txtCarriedOutRemark" value="#{label['CARRIED_OUT_FROM_PORT_REMARK_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtCarriedOutRemark" value="#{VehicleInfoInputBean.vehicleInfoDto.portCarriedOutRemark}" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDischargePortPlanDate" for="txtDischargePortPlanDate" value="#{label['DISCHARGE_PORT_PLAN_DATE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="txtDischargePortPlanDate" readonlyInput="true" value="#{VehicleInfoInputBean.vehicleInfoDto.dischargePortPlanDate}" pattern="dd/MM/yyyy" effect="blind"
+										navigator="true"></p:calendar>
+								</h:panelGroup>
+								<p:outputLabel id="lblDischargePortActualDate" for="txtDischargePortActualDate" value="#{label['DISCHARGE_PORT_ACTUAL_DATE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="txtDischargePortActualDate" readonlyInput="true" value="#{VehicleInfoInputBean.vehicleInfoDto.dischargePortActualDate}" pattern="dd/MM/yyyy" effect="blind"
+										navigator="true"></p:calendar>
+								</h:panelGroup>
+								<p:outputLabel id="lblStockOf" for="txtStockOf" value="#{label['STOCK_OF_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtStockOf" value="#{VehicleInfoInputBean.vehicleInfoDto.stockOf}">
+									</p:inputText>
+								</h:panelGroup>
+								<p:outputLabel id="lblStockDate" for="txtStockDate" value="#{label['STOCK_DATE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="txtStockDate" readonlyInput="true" value="#{VehicleInfoInputBean.vehicleInfoDto.stockDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true"></p:calendar>
+								</h:panelGroup>
+								<p:outputLabel id="lblDealerName" for="txtDealerName" value="#{label['DLR_NAME_LABEL']}" />
+								<h:panelGroup>
+									<p:selectOneMenu id="txtDealerName" value="#{VehicleInfoInputBean.vehicleInfoDto.dealerId}" converter="omnifaces.SelectItemsIndexConverter">
+										<f:selectItems value="#{VehicleInfoInputBean.dealerList}" var="dealer" itemLabel="#{dealer.dealerName}" itemValue="#{dealer.dealerId}" />
+									</p:selectOneMenu>
+								</h:panelGroup>
+								<p:outputLabel id="lblConsigneeOnBl" for="txtConsigneeOnBl" value="#{label['CONSIGNEE_BL_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtConsigneeOnBl" value="#{VehicleInfoInputBean.vehicleInfoDto.consigneeOnBl}">
+									</p:inputText>
+								</h:panelGroup>
+								<p:outputLabel id="lblPurchasePermitDate" for="calPurchasePermitDate" value="#{label['PURCHASE_PERMIT_DATE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="calPurchasePermitDate" readonlyInput="true" value="#{VehicleInfoInputBean.vehicleInfoDto.purchasePermitDate}" pattern="dd/MM/yyyy" effect="blind"
+										navigator="true"></p:calendar>
+								</h:panelGroup>
+								<p:outputLabel id="lblAudioInstallRequired" for="txtAudioInstallRequired" value="#{label['AUDIO_INSTALLATION_REQUIRED_LABEL']}" />
+								<h:panelGroup>
+									<p:selectOneMenu id="txtAudioInstallRequired" value="#{VehicleInfoInputBean.vehicleInfoDto.audioInstallRequired}">
+										<f:selectItem itemLabel="YES" itemValue="true" />
+										<f:selectItem itemLabel="NO" itemValue="false" />
+									</p:selectOneMenu>
+								</h:panelGroup>
+								<p:outputLabel id="lblAudioMailDate" for="calAudioMailDate" value="#{label['AUDIO_INSTALLATION_REQUIRED_MAILED_ON_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="calAudioMailDate" readonlyInput="true" value="#{VehicleInfoInputBean.vehicleInfoDto.audioMailDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true"></p:calendar>
+								</h:panelGroup>
+								<p:outputLabel id="lblAudioInstallDate" for="calAudioInstallDate" value="#{label['AUDIO_INSTALLATION_REQUIRED_INSTALLED_ON_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="calAudioInstallDate" readonlyInput="true" value="#{VehicleInfoInputBean.vehicleInfoDto.audioInstallDate}" pattern="dd/MM/yyyy" effect="blind"
+										navigator="true"></p:calendar>
+								</h:panelGroup>
+								<p:outputLabel id="lblDelivered" for="txtDelivered" value="#{label['DELIVERED_LABEL']}" />
+								<h:panelGroup>
+									<p:selectOneMenu id="txtDelivered" value="#{VehicleInfoInputBean.vehicleInfoDto.delivered}">
+										<f:selectItem itemLabel="YES" itemValue="true" />
+										<f:selectItem itemLabel="NO" itemValue="false" />
+									</p:selectOneMenu>
+								</h:panelGroup>
+								<p:outputLabel id="lblRemark" for="txtRemark" value="#{label['REMARK_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtRemark" value="#{VehicleInfoInputBean.vehicleInfoDto.remark}" />
+								</h:panelGroup>
+							</p:panelGrid>
+							<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<div />
+								<p:commandButton id="btnAdd" value="#{label['SUBMIT_LABEL']}" action="#{VehicleInfoInputBean.inputVehicleInfo}" update="frmVehicleInfoInput" icon="ui-icon-launch" />
+								<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" action="vehicleInfoList" immediate="true" icon="ui-icon-close" />
+							</p:panelGrid>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

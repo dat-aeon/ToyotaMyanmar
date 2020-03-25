@@ -1,0 +1,350 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<f:metadata>
+				<f:viewAction action="#{InvoiceEditBean.showMessage()}" />
+			</f:metadata>
+			<div class="card card-w-title">
+				<h:form id="frmInvoiceEdit">
+					<div>
+						<p:messages id="messages" globalOnly="true" autoUpdate="true" closable="true" style="word-break:break-all;" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['INVOICE_EDIT_TITLE']}</h1>
+							<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="4"
+								columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4" layout="grid">
+								<p:outputLabel id="lblDealerName" for="txtDealerName" value="#{label[(InvoiceEditBean.invoiceDtoEdit.type eq 1) ? 'DEALER_NAME_LABEL' : 'CUSTOMER_LABEL']}" />
+								<h:panelGroup>
+									<p:selectOneMenu id="txtDealerName" label="#{label['DEALER_NAME_LABEL']}" converter="omnifaces.SelectItemsIndexConverter" required="true"
+										value="#{InvoiceEditBean.invoiceDtoEdit.dealerDto}" rendered="#{InvoiceEditBean.invoiceDtoEdit.type eq 1}">
+										<p:ajax event="change" update="frmInvoiceEdit:txtContactName"></p:ajax>
+										<f:selectItems value="#{InvoiceEditBean.dealerList}" var="dealer" itemLabel="#{dealer.dealerName}" itemValue="#{id}" />
+									</p:selectOneMenu>
+									<p:message id="msgDealerName" for="txtDealerName" />
+									<p:inputText id="txtCustomerName" value="#{InvoiceEditBean.invoiceDtoEdit.customerDealerName}" label="#{label['CUSTOMER_LABEL']}" required="true"
+										rendered="#{InvoiceEditBean.invoiceDtoEdit.type eq 2}">
+										<o:validator validatorId="javax.faces.Length" maximum="100" message="{0} #{label['LENGTH_MSG']} 100." />
+									</p:inputText>
+									<p:message id="msgCustomerName" for="txtCustomerName" />
+								</h:panelGroup>
+								<p:outputLabel id="lblSubject" for="txtSubject" value="#{label['INVOICE_SUBJECT_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtSubject" value="#{InvoiceEditBean.invoiceDtoEdit.subject}" label="#{label['INVOICE_SUBJECT_LABEL']}" required="true">
+										<o:validator validatorId="javax.faces.Length" maximum="100" message="{0} #{label['LENGTH_MSG']} 100." />
+									</p:inputText>
+									<p:message id="msgSubject" for="txtSubject" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDealerEmail" for="txtDealerEmail" value="#{label['DEALER_EMAIL']}" rendered="#{InvoiceEditBean.invoiceDtoEdit.type eq 1}" />
+								<h:panelGroup styleClass="md-inputfield" rendered="#{InvoiceEditBean.invoiceDtoEdit.type eq 1}">
+									<p:inputText id="txtDealerEmail" value="#{InvoiceEditBean.invoiceDtoEdit.dealerDto.contactEmail}" required="true" rendered="#{InvoiceEditBean.invoiceDtoEdit.type eq 1}">
+										<o:validator validatorId="javax.faces.Length" maximum="100" message="{0} #{label['LENGTH_MSG']} 100." />
+									</p:inputText>
+									<p:message id="msgEmail" for="txtDealerEmail" rendered="#{InvoiceEditBean.invoiceDtoEdit.type eq 1}" />
+								</h:panelGroup>
+								<p:outputLabel id="lblInvoiceNo" for="txtInvoiceNo" value="#{label['INVOICE_NO_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtInvoiceNo" value="#{InvoiceEditBean.invoiceDtoEdit.invoiceNo}" label="#{label['INVOICE_NO_LABEL']}" required="true">
+										<o:validator validatorId="javax.faces.Length" maximum="100" message="{0} #{label['LENGTH_MSG']} 100." />
+									</p:inputText>
+									<p:message id="msgInvoiceNo" for="txtInvoiceNo" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDealerPhoneNo" for="txtDealerPhoneNo" value="#{label['DEALER_ContactPhoneNo_LABEL']}" rendered="#{InvoiceEditBean.invoiceDtoEdit.type eq 1}" />
+								<h:panelGroup styleClass="md-inputfield" rendered="#{InvoiceEditBean.invoiceDtoEdit.type eq 1}">
+									<p:inputText id="txtDealerPhoneNo" value="#{InvoiceEditBean.invoiceDtoEdit.dealerDto.phoneNo}" required="true" rendered="#{InvoiceEditBean.invoiceDtoEdit.type eq 1}"
+										readonly="true" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDate" for="calDate" value="#{label['INVOICE_DATE']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="calDate" navigator="true" readonlyInput="true" value="#{InvoiceEditBean.invoiceDtoEdit.date}" required="true" pattern="dd/MM/yyyy"
+										label="#{label['INVOICE_DATE']}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</p:calendar>
+									<p:message id="msgDate" for="calDate" />
+								</h:panelGroup>
+								<p:outputLabel id="lblContactName" for="txtContactName" value="#{label['DEALER_ContactName_LABEL']}" rendered="#{InvoiceEditBean.invoiceDtoEdit.type eq 1}" />
+								<h:panelGroup styleClass="md-inputfield" rendered="#{InvoiceEditBean.invoiceDtoEdit.type eq 1}">
+									<p:inputText id="txtContactName" value="#{InvoiceEditBean.invoiceDtoEdit.contactName}" required="true" label="#{label['DEALER_ContactName_LABEL']}"
+										readonly="#{facesContext.renderResponse}" onkeypress="return false;">
+										<o:validator validatorId="javax.faces.Length" maximum="100" message="{0} #{label['LENGTH_MSG']} 100." />
+									</p:inputText>
+									<p:message id="msgContactName" for="txtContactName" />
+								</h:panelGroup>
+								<p:outputLabel id="lblPaymentDueDate" for="calPaymentDueDate" value="#{label['PAYMENT_DUE_DATE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="calPaymentDueDate" navigator="true" readonlyInput="true" value="#{InvoiceEditBean.invoiceDtoEdit.paymentDueDate}" required="true" pattern="dd/MM/yyyy"
+										label="#{label['PAYMENT_DUE_DATE_LABEL']}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</p:calendar>
+									<p:message id="msgPaymentDueDate" for="calPaymentDueDate" />
+								</h:panelGroup>
+								<p:outputLabel id="lblCurrency" for="rdoCurrency" value="#{label['Charge_Currency_LABEL']}" />
+								<h:panelGroup columns="2" style="margin-bottom:10px" cellpadding="5">
+									<h:selectOneRadio id="rdoCurrency" value="#{InvoiceEditBean.invoiceDtoEdit.currency}" required="true">
+										<f:selectItem itemValue="MMK" itemLabel="MMK" />
+										<f:selectItem itemValue="USD" itemLabel="USD" />
+									</h:selectOneRadio>
+								</h:panelGroup>
+								<p:outputLabel id="lblIncludedTax" for="rdoIncludedTax" value="#{label['INCLUDE_TAX_LABEL']}" />
+								<h:panelGroup columns="2" style="margin-bottom:10px" cellpadding="5">
+									<h:selectOneRadio id="rdoIncludedTax" value="#{InvoiceEditBean.invoiceDtoEdit.taxIncluded}" required="true">
+										<p:ajax event="change" process="@this" listener="#{InvoiceEditBean.calculateAllAmount()}" update="frmInvoiceEdit:tblDealerInvoiceList" />
+										<f:selectItem itemValue="true" itemLabel="Yes" />
+										<f:selectItem itemValue="false" itemLabel="No" />
+									</h:selectOneRadio>
+								</h:panelGroup>
+							</p:panelGrid>
+						</div>
+						<div class="ui-g-12">
+							<p:dataTable id="tblDealerInvoiceList" var="item" value="#{InvoiceEditBean.invoiceDtoEdit.itemList}" paginator="false" rowIndexVar="index">
+								<p:column width="20" rendered="#{not item.deleteFlg}">
+									<f:facet name="header">
+										<p:commandLink id="btnAdd" onclick="PF('dlg').show();">
+											<h:outputText class="fa fa-fw fa-plus-circle fa-lg" />
+										</p:commandLink>
+									</f:facet>
+									<p:commandLink id="editDialog" oncomplete="PF('dlg').show();" actionListener="#{InvoiceEditBean.editItemInit(item)}" update="frmDlg, frmDlg:dialogBox" immediate="true">
+										<h:outputText class="fa fa-fw fa-edit fa-lg" />
+									</p:commandLink>
+									<p:commandLink id="btnRemove" action="#{InvoiceEditBean.deleteItemAction(item)}" update="frmInvoiceEdit:tblDealerInvoiceList">
+										<h:outputText class="fa fa-fw fa-trash fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="#{label['SERIAL_NO_LABEL']}" style="text-align:center;" width="20" rendered="#{not item.deleteFlg}">
+									<h:outputText value="#{index+1}" />
+								</p:column>
+								<p:column headerText="#{label['DESCRIPTION_LABEL']} &#10;" width="120" style="white-space:pre-line" rendered="#{not item.deleteFlg}">
+									<h:outputText value="#{item.description}" />
+								</p:column>
+								<p:column headerText="#{label['INVOICE_UNIT']}" width="120" style="text-align:center;" rendered="#{not item.deleteFlg}">
+									<h:outputText value="#{item.unit}">
+										<f:convertNumber type="currency" maxFractionDigits="0" minFractionDigits="0" currencySymbol="" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['INVOICE_UNIT_PRICE']} &#10; (#{InvoiceEditBean.invoiceDtoEdit.currency})" rendered="#{not item.deleteFlg}" styleClass="text-newline thText"
+									width="120" style="text-align:right;">
+									<h:outputText value="#{item.unitPrice}">
+										<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{(label['INVOICE_AMOUNT']).concat('&#xa;(').concat(InvoiceEditBean.invoiceDtoEdit.currency).concat(')')}" styleClass="text-newline thText"
+									rendered="#{not item.deleteFlg}" width="120" style="text-align:right;">
+									<h:outputText value="#{item.amount}" style="text-align:center">
+										<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+									</h:outputText>
+								</p:column>
+								<p:columnGroup id="tblFooter" type="footer">
+									<p:row>
+										<p:column colspan="5" style="text-align:right" footerText="#{label['INVOICE_SUB_TOTAL']}" />
+										<p:column id="lblSubTotal" style="text-align:right">
+											<f:facet name="footer">
+												<h:outputText value="#{InvoiceEditBean.invoiceDtoEdit.subTotal}">
+													<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+												</h:outputText>
+											</f:facet>
+										</p:column>
+									</p:row>
+									<p:row rendered="#{InvoiceEditBean.invoiceDtoEdit.taxIncluded}">
+										<p:column colspan="5" style="text-align:right" footerText="#{(label['INVOICE_TAX']).concat(' (').concat((InvoiceEditBean.invoiceDtoEdit.taxPercentage)).concat('%)')}" />
+										<p:column id="lblTax" style="text-align:right">
+											<f:facet name="footer">
+												<h:outputText value="#{InvoiceEditBean.invoiceDtoEdit.taxAmount}">
+													<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+												</h:outputText>
+											</f:facet>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column colspan="5" style="text-align:right" footerText="#{(label['INVOICE_GRAND_TOTAL']).concat('&#xa;(').concat(InvoiceEditBean.invoiceDtoEdit.currency).concat(')')}" />
+										<p:column id="lblGrandTotal" style="text-align:right">
+											<f:facet name="footer">
+												<h:outputText value="#{InvoiceEditBean.invoiceDtoEdit.grandTotal}">
+													<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+												</h:outputText>
+											</f:facet>
+										</p:column>
+									</p:row>
+								</p:columnGroup>
+							</p:dataTable>
+						</div>
+						<div class="ui-g-12">
+							<p:panelGrid styleClass="ui-panelgrid-blank form-group" columns="2" columnClasses="ui-grid-col-2, ui-grid-col-10" layout="grid">
+								<h:outputLabel for="txtPreparedBy" value="Prepared By : " />
+								<p:inplace id="txtPreparedBy" editor="true" toggleable="true">
+									<p:inputText value="#{InvoiceEditBean.invoiceDtoEdit.preparedBy}" label="text" />
+								</p:inplace>
+								<h:outputLabel for="txtApprovedBy" value="Approved By : " />
+								<p:inplace id="txtApprovedBy" editor="true" toggleable="true">
+									<p:inputText value="#{InvoiceEditBean.invoiceDtoEdit.approvedBy}" label="text" />
+								</p:inplace>
+								<h:outputLabel for="txtRemark1" value="Remarks : " />
+								<p:inplace id="txtRemark1" editor="true">
+									<p:inputText value="#{InvoiceEditBean.invoiceDtoEdit.remark1}" label="text" />
+								</p:inplace>
+								<h:outputLabel for="txtRemark2" value="Remarks : " />
+								<p:inplace id="txtRemark2" editor="true">
+									<p:inputText value="#{InvoiceEditBean.invoiceDtoEdit.remark2}" label="text" />
+								</p:inplace>
+								<h:outputLabel for="txtRemark3" value="Bank Reference Account Name : " />
+								<h:outputLabel value="#{InvoiceEditBean.invoiceDtoEdit.remark3}" label="text" />
+							</p:panelGrid>
+						</div>
+						<div class="ui-g-6">
+							<p:dataGrid var="bankAccount" value="#{InvoiceEditBean.bankAccountList}" columns="4" layout="grid">
+								<h:panelGrid>
+									<h:outputText value="#{bankAccount.currencyType}" escape="false" />
+									<h:outputText value="#{bankAccount.bankName}" />
+									<h:outputText value="#{bankAccount.accountNo}" />
+									<h:outputText value="#{bankAccount.swiftCode}" />
+									<h:outputText value="#{bankAccount.branchName}" />
+									<h:outputText value="#{bankAccount.bankAddress}" />
+								</h:panelGrid>
+							</p:dataGrid>
+						</div>
+						<div class="ui-g-12">
+							<p:panelGrid columns="4" columnClasses="ui-g-0 ui-md-3 ui-lg-4, ui-g-6 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2, ui-g-0 ui-md-3 ui-lg-4" layout="grid"
+								styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+								<div />
+								<p:commandButton id="btnEdit" value="#{label['UPDATE_LABEL']}" update="@form" action="#{InvoiceEditBean.editInvoice()}" icon="ui-icon-launch">
+									<p:confirm header="Confirmation" message="Are you sure to update?" />
+								</p:commandButton>
+								<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" immediate="true" action="invoiceList" icon="ui-icon-close" />
+							</p:panelGrid>
+						</div>
+					</div>
+				</h:form>
+				<h:form id="frmDlg">
+					<p:dialog id="dialogBox" widgetVar="dlg" modal="true" resizable="false" width="800" style="position: absolute; margin-top: 20px;">
+						<p:ajax event="close" oncomplete="PF('wizard').loadStep('search',true);" />
+						<p:wizard flowListener="#{InvoiceEditBean.onFlowProcess}" widgetVar="wizard" showNavBar="false">
+							<p:tab id="search" title="#{label['SEARCH_LABEL']}">
+								<p:panelGrid id="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="4"
+									columnClasses="ui-grid-col-2, ui-grid-col-4" layout="grid">
+									<p:outputLabel id="lblDealerName" for="txtDealerName" value="#{label['DEALER_NAME_LABEL']}" />
+									<h:panelGroup>
+										<p:selectOneMenu id="txtDealerName" value="#{InvoiceEditBean.itemDto.itemVehicleSearchReqDto.dealerId}">
+											<f:selectItem itemLabel="#{label['SELECT_ALL_LABEL']}" itemValue="#{null}" />
+											<f:selectItems value="#{InvoiceEditBean.dealerList}" var="dealer" itemLabel="#{dealer.dealerName}" itemValue="#{dealer.id}" />
+										</p:selectOneMenu>
+									</h:panelGroup>
+									<p:outputLabel id="lblTaskDateFrom" for="txtTaskDateFrom" value="#{label['TASK_DATE_FROM_LABEL']}" />
+									<h:panelGroup styleClass="md-inputfield">
+										<p:calendar id="txtTaskDateFrom" navigator="true" readonlyInput="true" value="#{InvoiceEditBean.itemDto.itemVehicleSearchReqDto.taskFromDate}" pattern="dd/MM/yyyy"
+											label="#{label['TASK_DATE_FROM_LABEL']}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:calendar>
+									</h:panelGroup>
+									<p:outputLabel id="lblTaskName" for="txtTaskName" value="#{label['TASK_NAME_LABEL']}" />
+									<h:panelGroup>
+										<p:selectOneMenu id="txtTaskName" value="#{InvoiceEditBean.itemDto.itemVehicleSearchReqDto.taskId}">
+											<f:selectItem itemLabel="#{label['SELECT_ALL_LABEL']}" itemValue="#{null}" />
+											<f:selectItems value="#{InvoiceEditBean.taskList}" var="task" itemLabel="#{task.taskName}" itemValue="#{task.id}" />
+										</p:selectOneMenu>
+									</h:panelGroup>
+									<p:outputLabel id="lblTaskDateTo" for="txtTaskDateTo" value="#{label['TASK_DATE_TO_LABEL']}" />
+									<h:panelGroup styleClass="md-inputfield">
+										<p:calendar id="txtTaskDateTo" navigator="true" readonlyInput="true" value="#{InvoiceEditBean.itemDto.itemVehicleSearchReqDto.taskToDate}" pattern="dd/MM/yyyy"
+											label="#{label['TASK_DATE_TO_LABEL']}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:calendar>
+									</h:panelGroup>
+								</p:panelGrid>
+								<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="2"
+									columnClasses="ui-g-12 ui-md-2 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2" layout="grid">
+									<p:commandButton id="btnSearch" value="#{label['SEARCH_LABEL']}" process="dialogBox" action="#{InvoiceEditBean.searchInvoiceVehicleInfo()}" icon="ui-icon-search"
+										update="tblInvoiceVehicleList" />
+								</p:panelGrid>
+								<p:dataTable id="tblInvoiceVehicleList" var="invoiceVehicle" value="#{InvoiceEditBean.itemVehicleDtoList}" rows="10" paginator="true"
+									paginatorAlwaysVisible="#{(not empty InvoiceEditBean.itemVehicleDtoList) and (InvoiceEditBean.itemVehicleDtoList.size() gt 10)}" paginatorPosition="bottom"
+									rowKey="#{invoiceVehicle.vehicleId}#{of:formatDate(invoiceVehicle.taskedDate, 'yyyyMMddHHmmssz')}"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									rowsPerPageTemplate="10,20,50,100" rowIndexVar="index" selection="#{InvoiceEditBean.itemDto.itemVehicleDtoList}">
+									<p:column selectionMode="multiple" styleClass="tx_ali_cen" width="30" />
+									<p:column styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="30">
+										<h:outputText value="#{index+1}" />
+									</p:column>
+									<p:column headerText="#{label['DATE_LABEL']}">
+										<h:outputText value="#{invoiceVehicle.taskedDate}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="#{label['CHASSIS_NO_LABEL']}">
+										<h:outputText value="#{invoiceVehicle.chassisNo}" />
+									</p:column>
+									<p:column headerText="#{label['MODEL_LABEL']}">
+										<h:outputText value="#{invoiceVehicle.model}" />
+									</p:column>
+								</p:dataTable>
+								<div class="ui-g" style="padding-top: 10px;">
+									<div class="ui-g-6 ui-md-2 ui-lg-2 ui-g-nopad tx_ali_cen" />
+									<div class="ui-g-0 ui-md-8 ui-lg-8 ui-g-nopad" />
+									<div class="ui-g-6 ui-md-2 ui-lg-2 ui-g-nopad tx_ali_cen">
+										<p:commandButton value="Next" icon="ui-icon-arrow-1-e" process="frmInvoiceEdit:tblDealerInvoiceList:tblInvoiceVehicleList" iconPos="right" type="button"
+											onclick="PF('wizard').next();" />
+									</div>
+								</div>
+							</p:tab>
+							<p:tab id="charges" title="#{label['Charge_LIST_TITLE']}">
+								<p:panelGrid id="chargesGrid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="2"
+									columnClasses="ui-grid-col-2, ui-grid-col-4" layout="grid">
+									<p:outputLabel id="lblType" for="txtType" value="#{label['CHARGES_TYPE_LABEL']}" />
+									<h:panelGroup>
+										<p:selectOneMenu id="txtType" value="#{InvoiceEditBean.itemDto.chargesId}">
+											<p:ajax event="change" update="frmDlg:txtPrice" listener="#{InvoiceEditBean.changeChargeSelect()}" />
+											<f:selectItem itemLabel="#{label['SELECT_ALL_LABEL']}" itemValue="#{null}" />
+											<f:selectItems value="#{InvoiceEditBean.chargesList}" var="charge" itemLabel="#{charge.title}" itemValue="#{charge.id}" />
+										</p:selectOneMenu>
+									</h:panelGroup>
+									<p:outputLabel id="lblPrice" for="txtPrice" value="#{label['INVOICE_UNIT_PRICE']}" />
+									<h:panelGroup styleClass="md-inputfield">
+										<p:inputText id="txtPrice" value="#{InvoiceEditBean.itemDto.unitPrice}" label="#{label['INVOICE_UNIT_PRICE']}" />
+										<p:message id="msgPrice" for="txtPrice" />
+									</h:panelGroup>
+									<p:outputLabel id="lblUnit" for="txtUnit" value="#{label['INVOICE_UNIT']}" />
+									<h:panelGroup styleClass="md-inputfield">
+										<h:outputText id="txtUnit" value="#{InvoiceEditBean.itemDto.unit}" />
+									</h:panelGroup>
+								</p:panelGrid>
+								<div class="ui-g">
+									<div class="ui-g-6 ui-md-2 ui-lg-2 ui-g-nopad tx_ali_cen">
+										<p:commandButton value="Back" icon="ui-icon-arrow-1-w" iconPos="left" type="button" onclick="PF('wizard').back()" />
+									</div>
+									<div class="ui-g-0 ui-md-8 ui-lg-8 ui-g-nopad" />
+									<div class="ui-g-6 ui-md-2 ui-lg-2 ui-g-nopad tx_ali_cen">
+										<p:commandButton value="Next" icon="ui-icon-arrow-1-e" iconPos="right" type="button" onclick="PF('wizard').next();" />
+									</div>
+								</div>
+							</p:tab>
+							<p:tab id="description" title="#{label['DESCRIPTION_LABEL']}">
+								<h:panelGrid columns="2" id="descriptionGrid">
+									<p:outputLabel id="lblChargesDescription" for="txtChargesDescription" value="#{label['DESCRIPTION_LABEL']}" />
+									<h:panelGroup styleClass="md-inputfield">
+										<p:inputTextarea id="txtChargesDescription" value="#{InvoiceEditBean.itemDto.description}" />
+									</h:panelGroup>
+								</h:panelGrid>
+								<div class="ui-g">
+									<div class="ui-g-6 ui-md-2 ui-lg-2 ui-g-nopad tx_ali_cen">
+										<p:commandButton value="Back" icon="ui-icon-arrow-1-w" iconPos="left" type="button" onclick="PF('wizard').back()" />
+									</div>
+									<div class="ui-g-0 ui-md-8 ui-lg-8 ui-g-nopad" />
+									<div class="ui-g-6 ui-md-2 ui-lg-2 ui-g-nopad tx_ali_cen">
+										<p:commandButton type="submit" value="#{label['SAVE_LABEL']}" icon="ui-icon-launch" process="@form" actionListener="#{InvoiceEditBean.saveItemAction()}"
+											update="frmInvoiceEdit:tblDealerInvoiceList" oncomplete="PF('dlg').hide();" />
+									</div>
+								</div>
+							</p:tab>
+						</p:wizard>
+					</p:dialog>
+				</h:form>
+			</div>
+		</div>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+			<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

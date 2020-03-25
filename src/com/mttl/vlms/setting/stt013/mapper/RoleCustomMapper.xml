@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mttl.vlms.setting.stt013.mapper.RoleCustomMapper">
+
+	<select id="getUserList" parameterType="java.lang.String"
+		resultType="com.mttl.vlms.setting.stt013.dto.RoleDto">
+		SELECT
+			ROLE_ID,
+			ROLE_NAME,
+			DESCRIPTION,
+			DISABLED
+		FROM
+			ROLE
+		WHERE
+			DELETE_FLG = '0'
+		<!-- <if test="bankName!=null"> AND BANK_NAME ILIKE'%'|| TRIM(#{bankName,jdbcType=VARCHAR}) 
+			||'%' </if> -->
+		ORDER BY
+			ROLE_ID
+	</select>
+
+	<!-- <select id="checkLicenseNo"
+		parameterType="com.mttl.vlms.setting.stt013.dto.UserInfoDto"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(*)
+		FROM
+		TRAILER
+		WHERE
+		LOWER(LICENSE_NO) =
+		TRIM(LOWER(#{trailerDto.licenseNo,jdbcType=VARCHAR}))
+		<if test="trailerDto.id != null">
+			AND ID != #{trailerDto.id,jdbcType=INTEGER}
+		</if>
+		AND DELETE_FLG = '0'
+	</select>
+
+	<select id="checkTrailerId"
+		parameterType="com.mttl.vlms.setting.stt013.dto.UserInfoDto"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(*)
+		FROM
+		TRAILER
+		WHERE
+		LOWER(TRAILER_ID) =
+		TRIM(LOWER(#{trailerDto.trailerId,jdbcType=VARCHAR}))
+		<if test="trailerDto.id != null">
+			AND ID != #{trailerDto.id,jdbcType=INTEGER}
+		</if>
+		AND DELETE_FLG = '0'
+	</select> -->
+
+</mapper>

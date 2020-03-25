@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mttl.vlms.dashboard.dsb001.mapper.DashboardMapper">
+<select id="searchYard" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		select
+			count(*)
+		from
+			yard
+		where
+			delete_flg = '0'	
+	</select>
+	
+	<select id="findYardList" resultType="com.mttl.vlms.setting.stt017.dto.YardDto" >
+		select
+			id,name
+		from
+			yard
+		where
+			delete_flg = '0'
+	</select>
+	
+	<select id="findTotalSpace" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+		select
+			count(*)
+		from
+			zone_column
+		right join
+			zone
+		on
+			zone_column.zone_id = zone.id
+		where
+			zone.delete_flg = '0'
+		and
+			zone_column.delete_flg = '0'
+		and
+			zone_column.yard_id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="findRestSpace" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+		select 
+	 		(
+		 		select
+					count(*)
+				from
+					zone_column
+				right join
+					zone
+				on
+					zone_column.zone_id = zone.id
+				where
+					zone.delete_flg = '0'
+				and
+					zone_column.delete_flg = '0'
+				and
+					zone_column.yard_id = #{id,jdbcType=INTEGER}
+			) -
+			(
+				select
+					count(col.id)
+				from
+					zone_column as col,
+					zone,
+					yard
+				where
+					col.zone_id = zone.id	
+				and 
+					col.yard_id = yard.id 
+				and 
+					zone.is_extra_zone = 'true' 
+	  			and 
+	  				col.delete_flg ='false' 
+	  			and 
+	  				zone.delete_flg ='false' 
+	  			and 
+	  				yard.id =#{id,jdbcType=INTEGER} 
+	  		)as rest_cell
+	</select>
+	
+	<select id="findSpace" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+		select 
+	 		(
+		 		select
+					count(*)
+				from
+					zone_column
+				where
+					delete_flg = '0'
+				and
+					yard_id = #{id,jdbcType=INTEGER}
+				
+			) -
+			(
+				select
+					count(*)
+				from
+					zone_column
+				where
+					delete_flg ='false'
+				and
+					status = '0'
+	  			and
+					yard_id = #{id,jdbcType=INTEGER}
+	  		)
+	</select>
+	
+	<select id="getEtaVehicleNo" resultType="java.lang.Integer">
+		select
+			count(*)
+		from
+			vehicle_info
+		where
+			delete_flg = '0'
+		and
+			date(eta) = cast(now() as date)
+	</select>
+	
+	<select id="getAudioInstallVehicle" resultType="java.lang.Integer">
+		select
+			count(*)
+		from
+			vehicle_info
+		where
+			delete_flg = '0'
+		and
+			date(eta) = cast(now() as date)
+		and
+			vehicle_info.audio_install_required = 'true'
+	</select>
+	
+	<select id="getPdiVehicle" resultType="java.lang.Integer">
+		select 
+			count (distinct v.id)
+		from
+			(select 
+				iv.vehicle_id as vehicleId,
+				iv.task_id as taskId
+			from 
+				inspect_vehicle as iv
+			right outer join 
+				(select 
+					max(created_date
+				) as lastDate 
+				from 
+					inspect_vehicle
+				group by 
+					vehicle_id
+				) as totalLastData
+			on 
+				iv.created_date=totalLastData.lastDate) as LastUpdateTaskName
+		left outer join 
+			task
+		on 
+			task.id = LastUpdateTaskName.taskId
+		right outer join
+			vehicle_info as v
+		on 
+			v.id=LastUpdateTaskName.vehicleId
+		where 
+			v.delete_flg='0'
+		and
+			task.process_type = '2'
+		and
+			(date(now()) - date(v.created_date)) >=60  	
+	</select>
+	
+	<select id="countLicenseExpireDriver" resultType="java.lang.Integer">
+		select
+			count(id)
+		from
+			driver
+		where
+			delete_flg = '0'
+		and
+			(date(license_expire_date) - date(now())) &lt; 92	
+	</select>
+</mapper>

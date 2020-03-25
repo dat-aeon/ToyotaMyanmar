@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mttl.vlms.setting.stt016.mapper.TaskCustomMapper">
+
+	<select id="searchByTaskName" resultType="com.mttl.vlms.setting.stt016.dto.TaskDto" parameterType="java.lang.String">
+		SELECT
+			ID,
+			PROCESS_TYPE,
+			TASK_NAME,
+			TASK,
+			DESCRIPTION,
+			DISABLED
+		FROM
+			TASK
+		WHERE
+			DELETE_FLG = '0'
+		<if test="taskName!=null">
+			AND TASK_NAME ILIKE'%'||
+			TRIM(#{taskName,jdbcType=VARCHAR}) ||'%'
+		</if>
+		ORDER BY
+			ID
+	</select>
+
+	
+	<select id="checkTaskName" resultType="java.lang.Integer" parameterType="com.mttl.vlms.setting.stt016.dto.TaskDto">
+		SELECT
+			COUNT(*)
+		FROM
+			TASK
+		WHERE
+			LOWER(TASK_NAME) = TRIM(LOWER(#{taskDto.taskName,jdbcType=VARCHAR}))
+		<if test="taskDto.id != null">
+			AND ID != #{taskDto.id,jdbcType=INTEGER}
+		</if>
+		AND DELETE_FLG = '0'
+	</select>
+	
+	<select id="checkTaskUsed" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TASK
+		WHERE
+			ID = #{taskId,jdbcType=INTEGER}
+	</select>
+
+	<select id="getTaskById" resultType="com.mttl.vlms.setting.stt016.dto.TaskDto" parameterType="java.lang.Integer">
+		SELECT
+			ID,
+			PROCESS_TYPE,
+			TASK_NAME,
+			TASK,
+			DESCRIPTION,
+			DISABLED
+		FROM
+			TASK
+		WHERE
+			ID = #{taskId,jdbcType=INTEGER}
+		AND DELETE_FLG = '0'
+	</select>
+
+</mapper>

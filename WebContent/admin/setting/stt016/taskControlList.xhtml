@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<f:metadata>
+					<f:viewAction action="#{TaskControlListBean.showMessage}" />
+				</f:metadata>
+				<h:form id="frmTask">
+					<p:messages id="messages" globalOnly="true" autoUpdate="true" closable="true" style="word-break:break-all;" />
+					<p:growl for="messages" />
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['TASK_CONTROL_TITLE']}</h1>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
+							<p:commandButton id="addNew" value="#{label['ADD_NEW_LABEL']}" action="taskInput" immediate="true" icon="ui-icon-add" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:dataTable widgetVar="taskListWV" var="task" value="#{TaskControlListBean.taskList}" id="tblTask" paginator="true" rows="10"
+								paginatorAlwaysVisible="#{TaskControlTerminalBean.paginatorVisible}" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								first="#{TaskControlListBean.firstRowCount}" rowsPerPageTemplate="10,20,50,100" rowIndexVar="index" filteredValue="#{TaskControlListBean.filterTaskList}"
+								globalFilterFunction="#{TaskControlListBean.globalFilterFunction}">
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Search: " />
+										<p:inputText id="globalFilter" onkeyup="PF('taskListWV').filter()" style="width:150px" placeholder="Enter keyword" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column id="colNo" styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="30">
+									<h:outputText id="txtNo" value="#{index+1}" />
+								</p:column>
+								<p:column id="colProcessType" headerText="#{label['TASK_PROCESS_TYPE_LABEL']}" sortBy="#{task.getNewProcessType()}" width="100" filterBy="#{task.getNewProcessType()}"
+									filterMatchMode="contains">
+									<h:outputText id="txtProcessType" value="#{task.getNewProcessType()}" />
+								</p:column>
+								<p:column id="colTaskName" headerText="#{label['TASK_NAME_LABEL']}" sortBy="#{task.taskName}" width="80" filterBy="#{task.taskName}" filterMatchMode="contains">
+									<h:outputText id="txtTaskName" value="#{task.taskName}" />
+								</p:column>
+								<p:column id="colTask" headerText="#{label['TASK_LABEL']}" sortBy="#{task.task}" width="150" filterBy="#{task.task}" filterMatchMode="contains">
+									<h:outputText id="txtTask" value="#{task.task}" />
+								</p:column>
+								<p:column id="colDescription" headerText="#{label['DESCRIPTION_LABEL']}" sortBy="#{task.description}" width="150" filterBy="#{task.description}"
+									filterMatchMode="contains">
+									<h:outputText id="txtDescription" value="#{task.description}" />
+								</p:column>
+								<p:column headerText="#{label['DISABLED_LABEL']}" style="text-align:center;" width="80" sortBy="#{task.disabled}" filterBy="#{task.disabled}"
+									filterMatchMode="equals" >
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('taskListWV').filter()" styleClass="custom-filter">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="" itemValue="" />
+											<f:selectItem itemLabel="#{label['DISABLE_LABEL']}" itemValue="true" />
+											<f:selectItem itemLabel="#{label['ENABLE_LABEL']}" itemValue="false" />
+											<f:selectItems value="#{task.disabled}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<p:commandLink id="cmlDisabled" action="#{TaskControlListBean.disabledTask(task)}" immediate="true" update="tblTask">
+										<p:confirm header="#{label['CONFIRMATION']}" message="#{label[(task.disabled?'MSG_TO_ENABLED':'MSG_TO_DISABLED')]}" />
+										<h:outputText class="fa fa-fw #{task.disabled ? 'fa-toggle-on fa-flip-horizontal red' : 'fa-toggle-on green'} fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column id="colEdit" headerText="#{label['EDIT_LABEL']}" style="text-align:center;" width="30">
+									<p:commandLink id="cmlEdit" action="#{TaskControlListBean.editTask(task)}" immediate="true">
+										<h:outputText id="txtEdit" class="fa fa-fw fa-edit fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column id="colDelete" headerText="#{label['DELETE_LABEL']}" style="text-align:center;" width="30">
+									<p:commandLink id="cmlDelete" action="#{TaskControlListBean.deleteConfirmTask(task)}" immediate="true">
+										<h:outputText id="txtDelete" class="fa fa-fw fa-trash fa-lg" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closable="false" closeOnEscape="true">
+						<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+						<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+					</p:confirmDialog>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

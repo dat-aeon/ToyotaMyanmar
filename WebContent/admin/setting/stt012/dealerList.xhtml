@@ -1,0 +1,167 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<f:metadata>
+				<f:viewAction action="#{DealerListBean.showMessage}" />
+			</f:metadata>
+			<div class="card card-w-title">
+				<h:form id="frmDealerList">
+					<div>
+						<p:messages id="msg" globalOnly="true" autoUpdate="#{DealerListBean.checkAutoUpdate}" closable="true" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['DEALER_LIST_TITLE']}</h1>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
+							<p:commandButton id="btnAddNew" class="ui-corner-left" value="#{label['ADD_NEW_LABEL']}" action="dealerInput" immediate="true" icon="ui-icon-add" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:remoteCommand name="onload" oncomplete="synchronizeRowsHeight();" autoRun="true" />
+							<p:dataTable id="tblDealerList" widgetVar="dealerListWV" var="dealer" value="#{DealerListBean.dealerList}" rows="10" paginator="true" paginatorAlwaysVisible="true"
+								paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								first="#{DealerListBean.firstRowCount}" filteredValue="#{DealerListBean.filterDealerList}" rowsPerPageTemplate="10,20,50,100" rowIndexVar="index" scrollable="true"
+								scrollWidth="100%" frozenColumns="3" globalFilterFunction="#{DealerListBean.globalFilterFunction}">
+								<p:ajax event="sort" listener="#{UserInfoListBean.changeAutoUpdate}" oncomplete="synchronizeRowsHeight();" />
+								<p:ajax event="page" listener="#{UserInfoListBean.changeAutoUpdate}" oncomplete="synchronizeRowsHeight();" />
+								<p:ajax event="filter" listener="#{UserInfoListBean.changeAutoUpdate}" oncomplete="synchronizeRowsHeight();" />
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText id="txtSearch" value="Search:" />
+										<p:inputText id="globalFilter" onkeyup="PF('dealerListWV').filter()" style="width:150px" placeholder="Enter keyword" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="15">
+									<h:outputText value="#{index+1}" />
+								</p:column>
+								<p:column headerText="#{label['DEALER_CODE_LABEL']}" sortBy="#{dealer.dealerCode}" width="120" filterBy="#{dealer.dealerCode}" filterMatchMode="contains">
+									<h:outputText id="txtDealerCode" value="#{dealer.dealerCode}">
+										<f:convertNumber type="currency" maxFractionDigits="2" minFractionDigits="2" currencySymbol="" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['DEALER_NAME_LABEL']}" sortBy="#{dealer.dealerName}" width="180" filterBy="#{dealer.dealerName}" filterMatchMode="contains">
+									<h:outputText id="txtDealerName" value="#{dealer.dealerName}" />
+								</p:column>
+								<p:column headerText="#{label['PHONE_NO_LABEL']}" sortBy="#{dealer.phList}" width="180" filterBy="#{dealer.phList}" filterMatchMode="contains">
+									<h:outputText id="txtPhoneNo" value="#{dealer.phList}" />
+								</p:column>
+								<p:column headerText="#{label['DEALER_ContactEmail_LABEL']}" sortBy="#{dealer.contactEmail}" width="180" filterBy="#{dealer.contactEmail}" filterMatchMode="contains">
+									<h:outputText id="txtContactEmail" value="#{dealer.contactEmail}" />
+								</p:column>
+								<p:column headerText="#{label['DEALER_ContactName_LABEL']}" sortBy="#{dealer.contactName}" width="180" filterBy="#{dealer.contactName}" filterMatchMode="contains">
+									<h:outputText id="txtContactName" value="#{dealer.contactName}" />
+								</p:column>
+								<p:column headerText="#{label['DEALER_ContactPosition_LABEL']}" sortBy="#{dealer.contactPosition}" width="180" filterBy="#{dealer.contactPosition}"
+									filterMatchMode="contains">
+									<h:outputText id="txtContactPosition" value="#{dealer.contactPosition}" />
+								</p:column>
+								<p:column headerText="#{label['DEALER_ContactPhoneNo_LABEL']}" sortBy="#{dealer.phList}" width="200" filterBy="#{dealer.phList}" filterMatchMode="contains">
+									<h:outputText id="txtContactPhoneNo" value="#{dealer.phList}" />
+								</p:column>
+								<p:column headerText="#{label['DEALER_ContractStartDate_LABEL']}" sortBy="#{dealer.contractStartDate}" width="150" filterBy="#{dealer.contractStartDate}"
+									filterMatchMode="contains">
+									<h:outputText id="txtContractStartDate" value="#{dealer.contractStartDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['DEALER_ContractEndDate_LABEL']}" sortBy="#{dealer.contractEndDate}" width="150" filterBy="#{dealer.contractEndDate}"
+									filterMatchMode="contains">
+									<h:outputText id="txtContractEndDate" value="#{dealer.contractEndDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['DEALER_AccountInformation_LABEL']}" sortBy="#{dealer.accountInformation}" width="300" filterBy="#{dealer.accountInformation}"
+									filterMatchMode="contains">
+									<h:outputText id="txtAccountInformation" value="#{dealer.accountInformation}" />
+								</p:column>
+								<p:column headerText="#{label['DISABLED_LABEL']}" style="text-align:center;" width="80" sortBy="#{dealer.disabled}" filterBy="#{dealer.disabled}" filterMatchMode="equals">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('dealerListWV').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemValue="" itemLabel="" />
+											<f:selectItem itemValue="false" itemLabel="#{label['ENABLED_LABEL']}" />
+											<f:selectItem itemValue="true" itemLabel="#{label['DISABLED_LABEL']}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<p:commandLink action="#{DealerListBean.disabledDealer(dealer)}" immediate="true" update="tblDealerList" oncomplete="synchronizeRowsHeight();">
+										<p:confirm header="Confirmation" message="#{label[(dealer.disabled?'MSG_TO_ENABLED':'MSG_TO_DISABLED')]}" />
+										<h:outputText class="fa fa-fw #{dealer.disabled  ? 'fa-toggle-on fa-flip-horizontal red' : 'fa-toggle-on green'} fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="#{label['EDIT_LABEL']}" style="text-align:center;" width="30">
+									<p:commandLink id="btnEditDealer" action="#{DealerListBean.editDealer(dealer)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-edit fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="#{label['DELETE_LABEL']}" style="text-align:center;" width="35">
+									<p:commandLink id="btnDeleteConfirmDealer" action="#{DealerListBean.deleteConfirmDealer(dealer)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-trash fa-lg" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closable="false" closeOnEscape="true">
+						<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+						<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+					</p:confirmDialog>
+					<h:outputScript target="body">
+					
+					//<![CDATA[
+
+    
+    
+    function synchronizeRowsHeight() {
+    
+    
+    	//var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+    	var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    	//window.alert("isChrome " + isChrome);
+    	
+    
+        var $leftRows = $('.ui-datatable-frozenlayout-left').find('tr');
+        var $rightRows = $('.ui-datatable-frozenlayout-right').find('tr');
+
+        $leftRows.each(function (index) {
+        
+        	var $leftRow = $(this);
+        	var $leftHeight = $leftRow.innerHeight();
+        	var $rightRow = $rightRows.eq(index);
+        	var $rightHeight = $rightRow.innerHeight();
+
+			if(isChrome) {
+				if ($rightHeight > $leftHeight) {
+                $leftRow.innerHeight($rightHeight);
+                var diff = $rightHeight - $leftRow.innerHeight();
+                if (diff != 0)
+                       $leftRow.innerHeight($rightHeight + diff);
+         } else if ($rightHeight < $leftHeight) {
+                $rightRow.innerHeight($leftHeight);
+                var diff = $leftHeight - $rightRow.innerHeight();
+                if (diff != 0)
+                       $rightRow.innerHeight($leftHeight + diff);
+         }
+			}else {
+	            if ($rightHeight > $leftHeight) {
+	                $leftRow.innerHeight($rightRow.outerHeight());
+	            } else {
+	                $rightRow.innerHeight($leftRow.outerHeight());
+	            }
+            }
+        })
+   $(window).trigger('resize');
+}
+
+// ]]>
+					</h:outputScript>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

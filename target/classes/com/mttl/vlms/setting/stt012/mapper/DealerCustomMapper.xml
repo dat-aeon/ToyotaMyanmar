@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mttl.vlms.setting.stt012.mapper.DealerCustomMapper">
+	
+	<select id="searchByDealerName" resultType="com.mttl.vlms.setting.stt012.dto.DealerDto" parameterType="java.lang.String">
+		SELECT
+			ID AS ID,
+			DEALER_CODE AS DEALERCODE,
+			DEALER_NAME AS DEALERNAME,
+			ADDRESS AS ADDRESS,
+			PHONE_NO AS PHONE_NO,
+			CONTACT_NAME AS CONTACT_NAME,
+			CONTACT_POSITION AS CONTACT_POSITION,
+			CONTACT_PHONE_NO AS CONTACT_PHONE_NO,
+			CONTACT_EMAIL AS CONTACT_EMAIL,
+			CONTRACT_START_DATE AS CONTRACT_START_DATE,
+			CONTRACT_END_DATE AS CONTRACT_END_DATE,
+			ACCOUNT_INFORMATION AS ACCOUNT_INFORMATION,
+			DISABLED AS DISABLED
+		FROM
+			DEALER
+		WHERE
+			DELETE_FLG = '0'
+		<if test="dealerName!=null">
+			AND DEALER_NAME ILIKE'%'|| TRIM(#{dealerName,jdbcType=VARCHAR}) ||'%'
+		</if>
+		ORDER BY
+			DEALER_CODE
+	</select>
+
+	<select id="checkDealerName" resultType="java.lang.Integer" parameterType="com.mttl.vlms.setting.stt012.dto.DealerDto">
+		SELECT
+			COUNT(*)
+		FROM
+			DEALER
+		WHERE
+			LOWER(DEALER_NAME) = TRIM(LOWER(#{dealerDto.dealerName,jdbcType=VARCHAR}))
+		<if test="dealerDto.id != null">
+			AND ID != #{dealerDto.id,jdbcType=INTEGER}
+		</if>
+		AND 
+			DELETE_FLG = '0'
+	</select>
+
+	<select id="checkDealerCode" resultType="java.lang.Integer" parameterType="com.mttl.vlms.setting.stt012.dto.DealerDto">
+		SELECT
+			COUNT(*)
+		FROM
+			DEALER
+		WHERE
+			LOWER(DEALER_CODE) = TRIM(LOWER(#{dealerDto.dealerCode,jdbcType=VARCHAR}))
+		<if test="dealerDto.id != null">
+			AND ID != #{dealerDto.id,jdbcType=INTEGER}
+		</if>
+		AND 
+			DELETE_FLG = '0'
+	</select>
+
+	<!-- <select id="checkDealerUsed" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			DEALER
+		WHERE
+			ID = #{dealerId,jdbcType=INTEGER}
+	</select> -->
+
+	<select id="getDealerById" resultType="com.mttl.vlms.setting.stt012.dto.DealerDto" parameterType="java.lang.Integer">
+		SELECT
+			ID,
+			DEALER_CODE,
+			DEALER_NAME,
+			ADDRESS,
+			PHONE_NO,
+			CONTACT_NAME,
+			CONTACT_POSITION,
+			CONTACT_PHONE_NO,
+			CONTACT_EMAIL,
+			CONTRACT_START_DATE,
+			CONTRACT_END_DATE,
+			ACCOUNT_INFORMATION,
+			DISABLED AS DISABLED
+		FROM
+			DEALER
+		WHERE
+			ID = #{id,jdbcType=INTEGER}
+		AND 
+			DELETE_FLG = '0'
+	</select>
+</mapper>

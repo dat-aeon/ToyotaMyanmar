@@ -1,0 +1,36 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pm="http://primefaces.org/serenity">
+
+    <div class="layout-sidebar #{guestPreferences.darkMenu ? 'layout-sidebar-dark' : ''}">
+        <div class="sidebar-logo">
+            <a href="${facesContext.externalContext.requestContextPath}/user/dashboard/dsb001/dashboard.xhtml">
+            </a>
+            <a href="#" class="sidebar-anchor" title="Toggle Menu"></a>
+        </div>
+
+        <div class="nano">
+            <div class="nano-content sidebar-scroll-content">
+                <div class="layout-menu-container">
+                <ui:fragment rendered="#{!empty sessionScope.loginUser ? (sessionScope.loginUser.roleName == 'ADMIN' ? true : false) : false}">
+					<ui:include src="admin_menu.xhtml"></ui:include>
+   				</ui:fragment>
+   				<ui:fragment rendered="#{!empty sessionScope.loginUser ? (sessionScope.loginUser.roleName == 'MANAGER' ? true : false) : false}">
+					<ui:include src="manager_menu.xhtml"></ui:include>
+   				</ui:fragment>
+   				<ui:fragment rendered="#{!empty sessionScope.loginUser ? (sessionScope.loginUser.roleName == 'FINANCE' ? true : false) : false}">
+					<ui:include src="finance_menu.xhtml"></ui:include>
+   				</ui:fragment>
+   				<ui:fragment rendered="#{!empty sessionScope.loginUser ? (sessionScope.loginUser.roleName == 'USER' ? true : false) : false}">
+					<ui:include src="user_menu.xhtml"></ui:include>
+   				</ui:fragment>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>

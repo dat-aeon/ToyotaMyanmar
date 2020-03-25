@@ -1,0 +1,186 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<h:form id="frmUploadVehicleFile" enctype="multipart/form-data">
+						<div class="card card-w-title">
+							<h1>#{label['MNU_TEMPLATE_FILE_DOWNLOAD']}</h1>
+							<p:panelGrid columns="1" columnClasses="ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:commandButton id="btnTempDownload" value="#{label['DOWNLOAD_TEMPLATE_LABEL']}" update="frmUploadVehicleFile" ajax="false">
+									<p:fileDownload value="#{UploadVehicleFileInputBean.downloadTemp()}" />
+								</p:commandButton>
+							</p:panelGrid>
+						</div>
+						<div class="card card-w-title">
+							<h1>#{label['MNU_VEHICLE_UPLOAD_FILE_LABEL']}</h1>
+							<div>
+								<p:messages id="msg" globalOnly="true" autoUpdate="true" closable="true" />
+							</div>
+							<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-6, ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel id="lblupload" for="txtupload" value="#{label['Upload_Vehicle_UPLOAD']}" />
+								<p:fileUpload value="#{UploadVehicleFileInputBean.file}" id="txtupload" mode="simple" skinSimple="true" required="true" label="Click here to choose file.."
+									style="width:370px" />
+								<br />
+							</p:panelGrid>
+							<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:commandButton id="btnUpload" value="#{label['Upload_Vehicle_UPLOAD']}" rendered="#{UploadVehicleFileInputBean.buttonFlag}" action="#{UploadVehicleFileInputBean.upload}"
+									icon="ui-icon-launch" ajax="false" />
+								<p:commandButton id="txtDownload" value="#{label['DOWNLOAD_ERROR_TEMPLATE_LABEL']}" update="frmUploadVehicleFile" disabled="#{UploadVehicleFileInputBean.dFlag}"
+									ajax="false" process="@this">
+									<p:fileDownload value="#{UploadVehicleFileInputBean.download()}" />
+								</p:commandButton>
+								<p:commandButton id="btnCancel" value="#{label['Upload_Vehicle_CANCLE']}" icon="ui-icon-close" update="frmUploadVehicleFile" process="@this"
+									action="#{UploadVehicleFileInputBean.reset}" style="margin-right:20px;">
+									<p:resetInput target="frmUploadVehicleFile" />
+								</p:commandButton>
+							</p:panelGrid>
+							<div class="ui-g">
+								<div class="ui-g-12">
+									<p:dataTable id="tblUploadVehicleFile" rendered="#{not empty UploadVehicleFileInputBean.uploadVehicleFileDtoList}" widgetVar="dealerListWV" var="upload"
+										value="#{UploadVehicleFileInputBean.uploadVehicleFileDtoList}" rows="10" paginator="true" paginatorAlwaysVisible="true" paginatorPosition="bottom"
+										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+										rowsPerPageTemplate="10,20,50,100" rowIndexVar="index">
+										<f:facet name="header">
+											<p:outputPanel>
+												<h:outputText id="txtSearch" value="Search:" />
+												<p:inputText id="fltGlobalFilter" onkeyup="PF('dealerListWV').filter()" style="width:150px" placeholder="Enter keyword" />
+											</p:outputPanel>
+										</f:facet>
+										<p:column styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="30">
+											<h:outputText value="#{index+1}" />
+										</p:column>
+										<p:column headerText="#{label['Upload_Vehicle_MODEL']}" sortBy="#{upload.model}" width="200" filterBy="#{upload.model}" filterMatchMode="contains">
+											<h:outputText id="txtModel" value="#{upload.model}" />
+										</p:column>
+										<p:column headerText="#{label['Upload_Vehicle_CHASSIS_NO']}" sortBy="#{upload.chassisNo}" width="200" filterBy="#{upload.chassisNo}" filterMatchMode="contains">
+											<h:outputText id="txtChassisNo" value="#{upload.chassisNo}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_COlOR']}" sortBy="#{upload.color}" width="150" filterBy="#{upload.color}" filterMatchMode="contains">
+											<h:outputText id="txtColor" value="#{upload.color}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_COlOR_NO']}" sortBy="#{upload.colorCode}" width="150" filterBy="#{upload.colorCode}" filterMatchMode="contains">
+											<h:outputText id="txtColorNo" value="#{upload.colorCode}" />
+										</p:column>
+										<p:column headerText="#{label['Upload_Vehicle_PORT_OF_DISCHARGE']}" sortBy="#{upload.dischargePortId}" width="150" filterBy="#{upload.dischargePortId}"
+											filterMatchMode="contains">
+											<h:outputText id="txtPortOfDischarge" value="#{upload.dischargePortId}" />
+										</p:column>
+										<p:column headerText="#{label['Upload_Vehicle_PORT_OF_DISCHARGE_PLAN_DATE']}" sortBy="#{upload.dischargePortId}" width="200" filterBy="#{upload.dischargePortId}"
+											filterMatchMode="contains">
+											<h:outputText id="txtPortOfDischargePlanDate" value="#{upload.dischargePortPlanDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{label['Upload_Vehicle_PORT_OF_DISCHARGE_ACTUAL_DATE']}" sortBy="#{upload.dischargePortId}" width="220" filterBy="#{upload.dischargePortId}"
+											filterMatchMode="contains">
+											<h:outputText id="txtPortOfDischargeActualDate" value="#{upload.dischargePortActualDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{label['Upload_Vehicle_ETD_ORIGIN']}" sortBy="#{upload.etdOrigin}" width="150" filterBy="#{upload.etdOrigin}" filterMatchMode="contains">
+											<h:outputText id="txtEtdOrigin" value="#{upload.etdOrigin}" />
+										</p:column>
+										<p:column headerText="#{label['Upload_Vehicle_ETD_ESTIMATE_DATE']}" sortBy="#{upload.etdEstimateDate}" width="150" filterBy="#{upload.etdEstimateDate}"
+											filterMatchMode="contains">
+											<h:outputText id="txtEstimateDate" value="#{upload.etdEstimateDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{label['Upload_Vehicle_ETD_SIN']}" sortBy="#{upload.etdSin}" width="150" filterBy="#{upload.etdSin}" filterMatchMode="contains">
+											<h:outputText id="txtEtdSin" value="#{upload.etdSin}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{label['Upload_Vehicle_ETA']}" sortBy="#{upload.eta}" width="150" filterBy="#{upload.eta}" filterMatchMode="contains">
+											<h:outputText id="txtEta" value="#{upload.eta}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_VESSELBERTHING_DATE']}" sortBy="#{upload.vesselBerthingDate}" width="170" filterBy="#{upload.vesselBerthingDate}"
+											filterMatchMode="contains">
+											<h:outputText id="txtVesselBerthingDate" value="#{upload.vesselBerthingDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_DLR_NAME']}" sortBy="#{upload.dlrName}" width="150" filterBy="#{upload.dlrName}" filterMatchMode="contains">
+											<h:outputText id="txtDlrName" value="#{upload.dlrName}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_CONSIGNEE_ON_BL']}" sortBy="#{upload.consigneeOnBl}" width="150" filterBy="#{upload.consigneeOnBl}"
+											filterMatchMode="contains">
+											<h:outputText id="txtConsigneeOnBl" value="#{upload.consigneeOnBl}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_ORDER_MONTH']}" sortBy="#{upload.orderMonth}" width="150" filterBy="#{upload.orderMonth}" filterMatchMode="contains">
+											<h:outputText id="txtOlderMonth" value="#{upload.orderMonth}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_ORDER_BY']}" sortBy="#{upload.orderBy}" width="150" filterBy="#{upload.orderBy}" filterMatchMode="contains">
+											<h:outputText id="txtOrderBy" value="#{upload.orderBy}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_1ST_VESSEL']}" sortBy="#{upload.firstVessel}" width="150" filterBy="#{upload.firstVessel}" filterMatchMode="contains">
+											<h:outputText id="txtFirstVessel" value="#{upload.firstVessel}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_2ND_VESSEL']}" sortBy="#{upload.secondVessel}" width="150" filterBy="#{upload.secondVessel}" filterMatchMode="contains">
+											<h:outputText id="txtSecondVessel" value="#{upload.secondVessel}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_PRODMTH']}" sortBy="#{upload.prodMth}" width="250" filterBy="#{upload.prodMth}" filterMatchMode="contains">
+											<h:outputText id="txtProdMth" value="#{upload.prodMth}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_AGENT_NAME']}" sortBy="#{upload.agentName}" width="150" filterBy="#{upload.agentName}" filterMatchMode="contains">
+											<h:outputText id="txtAgentName" value="#{upload.agentName}" />
+										</p:column>
+										<p:column headerText="#{label['Upload_Vehicle_CARRIED_OUT_UNITS_FROM_PORT_Date']}" sortBy="#{upload.carriedOutUnitsFromPortDate}" width="250"
+											filterBy="#{upload.carriedOutUnitsFromPortDate}" filterMatchMode="contains">
+											<h:outputText id="txtCarriedOutUnitsFromPortDate" value="#{upload.carriedOutUnitsFromPortDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{label['Upload_Vehicle_CARRIED_OUT_UNITS_FROM_PORT_Remark']}" sortBy="#{upload.carriedOutUnitsFromPortRemark}" width="250"
+											filterBy="#{upload.carriedOutUnitsFromPortRemark}" filterMatchMode="contains">
+											<h:outputText id="txtCarriedOutUnitsFromPortRemark" value="#{upload.carriedOutUnitsFromPortRemark}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_STOCK_OF']}" sortBy="#{upload.stockOf}" width="100" filterBy="#{upload.stockOf}" filterMatchMode="contains">
+											<h:outputText id="txtStockOf" value="#{upload.stockOf}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_STOCK_DATE']}" sortBy="#{upload.consigneeOnBl}" width="150" filterBy="#{upload.stockDate}" filterMatchMode="contains">
+											<h:outputText id="txtStockDate" value="#{upload.stockDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_LIST_OF_UNDER_APPLYING_PURCHASE_PERMIT_PROCESS']}" sortBy="#{upload.purchasePermitDate}" width="250"
+											filterBy="#{upload.purchasePermitDate}" filterMatchMode="contains">
+											<h:outputText id="txtpurchasePermitDate" value="#{upload.purchasePermitDate}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_REQUIRED']}" sortBy="#{upload.audioInstallRequired}" width="100" filterBy="#{upload.audioInstallRequired}"
+											filterMatchMode="contains">
+											<h:outputText id="txtRequired" value="#{upload.audioInstallRequired ? 'Yes' : 'No'}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_MAILED_ON']}" sortBy="#{upload.audioMaileDate}" width="300" filterBy="#{upload.audioMaileDate}" filterMatchMode="contains">
+											<h:outputText id="txtMailedOn" value="#{upload.audioMaileDate}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_INSTALLED_ON']}" sortBy="#{upload.audioInstallDate}" width="300" filterBy="#{upload.audioInstallDate}"
+											filterMatchMode="contains">
+											<h:outputText id="txtInstalledOn" value="#{upload.audioInstallDate}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_DELIVERED']}" sortBy="#{upload.delivered}" width="300" filterBy="#{upload.delivered}" filterMatchMode="contains">
+											<h:outputText id="txtDelivered" value="#{upload.delivered ? 'Yes' : 'No'}" />
+										</p:column>
+										<p:column headerText="#{label['UPLOAD_VEHICLE_REMARK']}" sortBy="#{upload.remark}" width="300" filterBy="#{upload.remark}" filterMatchMode="contains">
+											<h:outputText id="txtRemark" value="#{upload.remark}" />
+										</p:column>
+									</p:dataTable>
+								</div>
+							</div>
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

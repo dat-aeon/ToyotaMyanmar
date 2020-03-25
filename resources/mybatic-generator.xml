@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<context id="spring-primefaces">
+		<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+		<plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+		<commentGenerator>
+			<property name="suppressDate" value="true" />
+		</commentGenerator>
+		<jdbcConnection driverClass="org.postgresql.Driver"
+			connectionURL="jdbc:postgresql://10.1.9.74:5432/toyota?useUnicode=yes&amp;characterEncoding=UTF-8"
+			userId="postgres" password="postgres" />
+		<javaModelGenerator targetPackage="com.mttl.vlms.entity"
+			targetProject=".\src" />
+		<sqlMapGenerator targetPackage="com.mttl.vlms.mapper"
+			targetProject=".\src" />
+		<javaClientGenerator targetPackage="com.mttl.vlms.mapper"
+			targetProject=".\src" type="XMLMAPPER" />
+		<table tableName="role" />
+		<table tableName="driver" />
+		<table tableName="dealer" />
+		<table tableName="port_terminal" />
+		<table tableName="trailer">
+			<generatedKey column="ID" sqlStatement="JDBC"
+				identity="true" type="post" />
+		</table>
+		<table tableName="charges" />
+		<table tableName="task" />
+		<table tableName="user_info" />
+		<table tableName="vehicle_info" />
+		<table tableName="state_division_info" />
+		<table tableName="inspect_vehicle" />
+		<table tableName="yard">
+			<generatedKey column="ID" sqlStatement="JDBC"
+				identity="true" type="post" />
+		</table>
+		<table tableName="zone">
+			<generatedKey column="ID" sqlStatement="JDBC"
+				identity="true" type="post" />
+		</table>
+		<table tableName="zone_row">
+			<generatedKey column="ID" sqlStatement="JDBC"
+				identity="true" type="post" />
+		</table>
+		<table tableName="zone_column">
+			<generatedKey column="ID" sqlStatement="JDBC"
+				identity="true" type="post" />
+		</table>
+		<table tableName="bank_account" />
+
+		<table tableName="invoice">
+			<generatedKey column="ID" sqlStatement="JDBC"
+				identity="true" type="post" />
+		</table>
+		<table tableName="item">
+			<generatedKey column="ID" sqlStatement="JDBC"
+				identity="true" type="post" />
+		</table>
+		<table tableName="inspect_vehicle_attachment" />
+		<table tableName="item_vehicle">
+			<generatedKey column="ID" sqlStatement="JDBC"
+				identity="true" type="post" />
+		</table>
+	</context>
+</generatorConfiguration>

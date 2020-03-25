@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<h:outputStylesheet library="css" name="customstyle.css" />
+		<div class="ui-fluid">
+			<f:metadata>
+				<f:viewAction action="#{ParkingLayoutListBean.showMessage}" />
+			</f:metadata>
+			<div class="card card-w-title">
+				<h:form id="parkingLayoutListForm">
+					<div>
+						<p:messages id="messages" globalOnly="true" autoUpdate="true" closable="true" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['PARKING_LAYOUT_LIST_TITLE']}</h1>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12 ui-g-nopad">
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-6 ui-lg-4" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel for="txtYard" value="#{label['PARKING_LAYOUT_YARD']}" />
+								<p:selectOneMenu id="txtYard" value="#{ParkingLayoutListBean.parkingLayoutdto.yardDto}" label="#{label['PARKING_LAYOUT_YARD']}"
+									converter="omnifaces.SelectItemsIndexConverter" required="true">
+									<f:selectItems value="#{ParkingLayoutListBean.yardList}" var="yard" itemLabel="#{yard.name}" itemValue="#{yardId}" />
+								</p:selectOneMenu>
+							</p:panelGrid>
+							<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-2 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<div />
+								<p:commandButton id="submit" value="#{label['PARKING_LAYOUT_SHOW_LAYOUT']}" action="#{ParkingLayoutListBean.searchYard()}" update="parkingLayoutListForm"
+									icon="ui-icon-launch" />
+							</p:panelGrid>
+						</div>
+						<div class="ui-g-12">
+							<p:dataGrid rendered="#{not empty ParkingLayoutListBean.parkingInfoDtoList}" var="carInfo" value="#{ParkingLayoutListBean.parkingInfoDtoList}" columns="6" layout="grid">
+								<div class="parking-status-#{carInfo.color}" style="height: 30px; text-align: center; padding-top: 15px; box-shadow: 10px 10px 5px #888f">
+									<h:outputText value="#{carInfo.type} (#{of:formatNumber(carInfo.total, '#')})  #{carInfo.percentage != null ? carInfo.percentage : ''}" style="height:10px" />
+								</div>
+							</p:dataGrid>
+						</div>
+					</div>
+					<p:panel id="previewPanel" header="#{label['YARD_LAYOUT_PREVIEW_LABEL']}" rendered="#{not empty ParkingLayoutListBean.zoneDtoList}">
+						<p:dataGrid value="#{ParkingLayoutListBean.zoneDtoList}" var="zoneDto" columns="#{ParkingLayoutListBean.zoneDtoList.size()}" layout="grid" styleClass="grid-content">
+							<p:panelGrid rendered="#{zoneDto.deleteFlg ne true}" styleClass="#{zoneDto.isExtraZone eq true ? 'extra-zone' : ''}">
+								<f:facet name="header">
+									<p:row id="zoneHeader">
+										<p:column colspan="#{zoneDto.columnCount}" style="vertical-align:middle">
+											<p:outputLabel value="#{label['YARD_ZONE_LABEL']} #{zoneDto.name}" />
+										</p:column>
+									</p:row>
+								</f:facet>
+								<f:facet name="footer">
+									<ui:repeat value="#{zoneDto.rowDtoList}" var="rowDto">
+										<p:row styleClass="yard-zone-cell">
+											<p:repeat value="#{rowDto.columnDtoList}" var="columnDto">
+												<p:column styleClass="yard-zone-cell parking-status-#{columnDto.status}">
+													<p:outputLabel id="track1" value="#{columnDto.name}" styleClass="yard-zone-lable" />
+													<p:tooltip id="toolTipContent" position="right" for="track1" rendered="#{not empty columnDto.vehicleInfoDto}">
+														<p:outputLabel value="Model = #{columnDto.vehicleInfoDto.model}" />
+														<br />
+														<p:outputLabel value="Chassis No = #{columnDto.vehicleInfoDto.chassisNo}" />
+														<br />
+														<p:outputLabel value="Color = #{columnDto.vehicleInfoDto.color}" />
+														<br />
+														<p:outputLabel value="DealerId = #{columnDto.vehicleInfoDto.dealerId}" />
+														<br />
+														<p:outputLabel value="Storage Days = #{columnDto.vehicleInfoDto.parkingDuration}" />
+														<br />
+														<p:outputLabel value="Parking Date = #{of:formatDate(columnDto.vehicleInfoDto.parkingDate, 'dd/MM/yyyy')}" />
+														<br />
+														<p:outputLabel value="Storage Days = #{columnDto.id}" />
+														<br />
+													</p:tooltip>
+												</p:column>
+											</p:repeat>
+										</p:row>
+									</ui:repeat>
+								</f:facet>
+							</p:panelGrid>
+						</p:dataGrid>
+					</p:panel>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<f:metadata>
+				<f:viewAction action="#{YardListBean.showMessage}" />
+			</f:metadata>
+			<div class="card card-w-title">
+				<h:form id="yardListForm">
+					<div>
+						<p:messages id="messages" globalOnly="true" autoUpdate="true" closable="true" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['YARD_LIST_TITLE']}</h1>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
+							<p:commandButton id="addNew" class="ui-corner-left" value="#{label['ADD_NEW_LABEL']}" action="yardInput" immediate="true" icon="ui-icon-add" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:dataTable id="yardTable" widgetVar="yardListWV" var="yard" value="#{YardListBean.yardList}" rows="10" paginator="true" paginatorAlwaysVisible="true"
+								paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								first="#{YardListBean.firstRowCount}" rowsPerPageTemplate="10,20,50,100" rowIndexVar="index">
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Search:" />
+										<p:inputText id="globalFilter" onkeyup="PF('yardListWV').filter()" style="width:150px" placeholder="Enter keyword" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="10">
+									<h:outputText value="#{index+1}" />
+								</p:column>
+								<p:column headerText="#{label['YARD_NAME_LABEL']}" sortBy="#{yard.name}" width="45" filterBy="#{yard.name}" filterMatchMode="contains">
+									<h:outputText value="#{yard.name}" />
+								</p:column>
+								<p:column headerText="#{label['ADDRESS_LABEL']}" sortBy="#{yard.address}" width="45" filterBy="#{yard.address}" filterMatchMode="contains">
+									<h:outputText value="#{yard.address}" />
+								</p:column>
+								<p:column headerText="#{label['YARD_ZONE_LABEL']}" sortBy="#{yard.zoneCount}" width="30" filterBy="#{yard.zoneCount}" filterMatchMode="contains" style="text-align:center">
+									<h:outputText value="#{yard.zoneCount}" />
+								</p:column>
+								<p:column headerText="#{label['DESCRIPTION_LABEL']}" sortBy="#{yard.description}" width="120" filterBy="#{yard.description}" filterMatchMode="contains">
+									<h:outputText value="#{yard.description}" />
+								</p:column>
+								<p:column headerText="#{label['DISABLED_LABEL']}" style="text-align:center;" width="45" sortBy="#{yard.disabled}" filterBy="#{yard.disabled}" filterMatchMode="equals">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('yardListWV').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemValue="" itemLabel="" />
+											<f:selectItem itemValue="false" itemLabel="#{label['ENABLE_LABEL']}" />
+											<f:selectItem itemValue="true" itemLabel="#{label['DISABLE_LABEL']}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<p:commandLink action="#{YardListBean.disabledYard(yard)}" immediate="true" update="yardTable">
+										<p:confirm header="Confirmation" message="#{label[(yard.disabled?'MSG_TO_ENABLED':'MSG_TO_DISABLED')]}" />
+										<h:outputText class="fa fa-fw #{yard.disabled  ? 'fa-toggle-on fa-flip-horizontal red' : 'fa-toggle-on green'} fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column style="text-align:center;" width="45" headerText="#{label['EDIT_LABEL']}">
+									<p:commandLink id="edit" action="#{YardListBean.editYard(yard)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-edit fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column style="text-align:center;" width="45" headerText="#{label['DELETE_LABEL']}">
+									<p:commandLink id="delete" action="#{YardListBean.deleteConfirmYard(yard)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-trash fa-lg" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closable="false" closeOnEscape="true">
+						<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+						<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+					</p:confirmDialog>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<h:form>
+		<div class="sidebar" role="navigation">
+			<div class="navbar-collapse">
+				<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left notDisplay" id="cbp-spmenu-s1">
+					<ul class="nav scrollspy-example scroll scrollbar1" id="side-menu">
+						<!-- Manual -->
+						<li><p:commandLink id="manualLink"
+								action="#{ManualBean.redirectToManual(0)}">
+								<i class="fa fa-question-circle-o nav_icon"></i>
+							#{label['HOW_TO']}
+						</p:commandLink></li>
+						<!-- Home -->
+						<li>
+							<a href="${facesContext.externalContext.requestContextPath}/user/dashboard/dsb001/dashboard.xhtml">
+								<i class="fa fa-home nav_icon"></i>
+								#{label['HOME_LABEL']}
+							</a>
+						</li>
+						
+						<!-- Organization -->
+						<c:if test="#{!empty sessionScope.loginUser ? (sessionScope.loginUser.roleName == 'MANAGER' ? true : false) : false}">
+						<li>
+							<a href="#">
+								<i class="fa fa-fort-awesome nav_icon"></i>
+								#{label['MNU_ORGANIZATION_LABEL']}
+								<span class="fa arrow" />
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/project/prj001/projectList.xhtml">
+										#{label['MNU_PROJECT']} </a>
+								</li>
+							</ul>
+						</li>
+						</c:if>
+						<!-- Employee -->
+						<li>
+							<a href="#">
+								<i class="fa fa-group nav_icon"></i>
+								#{label['MNU_EMPLOYEE_LABEL']}
+								<span class="fa arrow" />
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<c:if test="#{!empty sessionScope.loginUser ? (sessionScope.loginUser.roleName == 'MANAGER' ? true : false) : false}">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/employee/emp003/positionChangeList.xhtml"> #{label['MNU_EMPLOYEE_POSITION_CHANGES']}</a>
+								</li>
+								</c:if>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/employee/emp003/employeeResign.xhtml"> #{label['MNU_EMPLOYEE_RESIGN']}</a>
+								</li>
+							</ul>
+						</li>
+						
+						<!-- Attendance -->
+						<li class="">
+							<a href="#">
+								<i class="fa fa-calendar nav_icon"></i>
+								#{label['MNU_ATTENDANCE_LABEL']}
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/timesheet/tst002/dailyAttendanceList.xhtml">#{label['ATTENDANCE_INPUT_TITLE']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/timesheet/tst004/leaveApplication.xhtml">#{label['LEAVE_APPLICATION_TITLE']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/timesheet/tst004/leaveCancel.xhtml">#{label['LEAVE_CANCEL_TITLE']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/timesheet/tst007/leaveHistory.xhtml"> #{label['LEAVE_HISTORY_TITLE']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/user/overtime/oti003/overtimeRequestList.xhtml">#{label['OVERTIME_REQUEST_TITLE']} </a>
+								</li>
+							</ul>
+						</li>
+						
+						<!-- Attendance Management -->
+						<c:if test="#{!empty sessionScope.loginUser ? (sessionScope.loginUser.roleName == 'MANAGER' ? true : false) : false}">
+						<li class="">
+							<a href="#">
+								<i class="fa fa-list-ul nav_icon"></i>
+								#{label['MNU_ATTENDANCE_MANAGEMENT_LABEL']}
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/manager/timesheet/tst002/attendanceRequestList.xhtml">#{label['MNU_ATTENDANCE_REQUESTED_LABEL']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/manager/timesheet/tst005/leaveApproval.xhtml">#{label['MNU_LEAVE_REQUESTED_LABEL']}</a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/manager/overtime/oti002/overTimeRequestApproval.xhtml">#{label['MNU_OVERTIME_REQUEST_APPROVAL_LABEL']} </a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/manager/report/rpt002/attendanceListReport.xhtml">#{label['MNU_ATTENDANCE_REPORT_LABEL']} </a>
+								</li>
+								<li>
+									<a href="${facesContext.externalContext.requestContextPath}/manager/report/rpt005/leaveReport.xhtml">#{label['LEAVE_REPORT_TITLE']} </a>
+								</li>
+							</ul>
+						</li>
+						</c:if>
+						<li>
+							<a href="${facesContext.externalContext.requestContextPath}/user/payroll/pay001/monthlyPaymentList.xhtml">
+								<i class="fa fa-money nav_icon"></i>
+								#{label['MNU_PAYROLL_LABEL']} </a>
+						</li>
+						<!-- for design -->
+						<div style="height: 70px"/>
+					</ul>
+					<div class="clearfix"></div>
+				</nav>
+			</div>
+		</div>
+	</h:form>
+</ui:composition>

@@ -1,0 +1,388 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<f:metadata>
+					<f:viewAction action="#{VehicleProcessInfoListBean.showMessage}" />
+				</f:metadata>
+				<h:form id="frmVehicleInfoUp">
+					<div>
+						<p:messages id="msgMessages" globalOnly="true" autoUpdate="true" closable="true" style="word-break:break-all;" />
+						<p:growl for="messages"></p:growl>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['VEHICLE_PROCESS_INFO_TITLE']}</h1>
+						</div>
+						<div class="ui-g-12">
+							<p:accordionPanel id="aplSearch">
+								<p:tab id="tabSearch" title="#{label['SEARCH_LABEL']}">
+									<p:panelGrid columns="6"
+										columnClasses="ui-g-12 ui-md-6 ui-lg-2, ui-g-12 ui-md-6 ui-lg-4,ui-g-12 ui-md-6 ui-lg-2,ui-g-12 ui-md-6 ui-lg-1,ui-g-12 ui-md-6 ui-lg-1,ui-g-12 ui-md-6 ui-lg-1"
+										layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+										<p:outputLabel id="lblPortLocation" for="txtProcessType" value="#{label['PROCESS_TYPE_LABEL']}" />
+										<h:panelGroup>
+											<p:selectOneMenu id="txtProcessType" label="#{label['TASK_PROCESS_TYPE_LABEL']}" converter="omnifaces.SelectItemsIndexConverter"
+												value="#{VehicleProcessInfoListBean.vehicleProcessInfoSearchDto.processType}">
+												<f:selectItem itemLabel="#{label['SELECT_ALL_LABEL']}" itemValue="#{null}" />
+												<f:selectItems value="#{MyBean.processTypeList}" var="process" itemLabel="#{process}" itemValue="#{process.getId()}" />
+												<p:ajax update="frmVehicleInfoUp" event="change" listener="#{VehicleProcessInfoListBean.changeUpdate}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<p:outputLabel id="lblEtaDateFrom" for="txtEtaDateFrom" value="#{label['OPERATION_DATE_LABEL']}" />
+										<h:panelGroup>
+											<p:calendar id="txtEtaDateFrom" value="#{VehicleProcessInfoListBean.vehicleProcessInfoSearchDto.fromEta}" pattern="dd/MM/yyyy" mask="true" />
+										</h:panelGroup>
+										<h:outputLabel id="lblEtaDateTo" for="txtEtaDateTo" value="#{label['DATE_TO_LABEL']}" />
+										<h:panelGroup>
+											<p:calendar id="txtEtaDateTo" value="#{VehicleProcessInfoListBean.vehicleProcessInfoSearchDto.toEta}" pattern="dd/MM/yyyy" mask="true" />
+										</h:panelGroup>
+									</p:panelGrid>
+									<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-6 ui-lg-2, ui-g-12 ui-md-6 ui-lg-4,ui-g-12 ui-md-6 ui-lg-2,ui-g-12 ui-md-6 ui-lg-4" layout="grid"
+										styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+										<p:outputLabel id="lblTask" for="txtTaskLabel" value="#{label['TASK_NAME_LABEL']}" />
+										<h:panelGroup>
+											<p:selectOneMenu id="txtTaskLabel" value="#{VehicleProcessInfoListBean.vehicleProcessInfoSearchDto.taskId}">
+												<f:selectItem itemLabel="#{label['SELECT_ALL_LABEL']}" itemValue="#{null}" />
+												<f:selectItems value="#{VehicleProcessInfoListBean.taskList}" var="taskInfo" itemLabel="#{taskInfo.taskName}" itemValue="#{taskInfo.id}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<p:outputLabel id="lblDriver" for="txtDriver" value="#{label['DRIVER_LABEL']}" />
+										<h:panelGroup>
+											<p:selectOneMenu id="txtDriver" value="#{VehicleProcessInfoListBean.vehicleProcessInfoSearchDto.driverId}">
+												<f:selectItem itemLabel="#{label['SELECT_ALL_LABEL']}" itemValue="#{null}" />
+												<f:selectItems value="#{VehicleProcessInfoListBean.driverList}" var="driverInfo" itemLabel="#{driverInfo.driverName}" itemValue="#{driverInfo.id}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<p:outputLabel id="lblChassisNo" for="txtChassisNo" value="#{label['CHASSIS_NO_LABEL']}" />
+										<h:panelGroup styleClass="md-inputfield">
+											<p:autoComplete id="txtChassisNo" value="#{VehicleProcessInfoListBean.vehicleProcessInfoSearchDto.chassisNo}" label="#{label['CHASSIS_NO_LABEL']}"
+												completeMethod="#{VehicleProcessInfoListBean.chassisNoList(vehicleInfoSearchDto.chassisNo,vehicleInfoSearchDto.processType)}" />
+										</h:panelGroup>
+										<p:outputLabel id="lblYard" for="txtYard" value="#{label['YARD_LABEL']}" />
+										<h:panelGroup>
+											<p:selectOneMenu id="txtYard" value="#{VehicleProcessInfoListBean.vehicleProcessInfoSearchDto.yardId}">
+												<f:selectItem itemLabel="#{label['SELECT_ALL_LABEL']}" itemValue="#{null}" />
+												<f:selectItems value="#{VehicleProcessInfoListBean.yardList}" var="yardInfo" itemLabel="#{yardInfo.name}" itemValue="#{yardInfo.id}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<p:outputLabel id="lblDlrName" for="txtDlrName" value="#{label['DLR_NAME_LABEL']}" />
+										<h:panelGroup>
+											<p:selectOneMenu id="txtDlrName" value="#{VehicleProcessInfoListBean.vehicleProcessInfoSearchDto.dealerId}">
+												<f:selectItem itemLabel="#{label['SELECT_ALL_LABEL']}" itemValue="#{null}" />
+												<f:selectItems value="#{VehicleProcessInfoListBean.dealerList}" var="dealerInfo" itemLabel="#{dealerInfo.dealerName}" itemValue="#{dealerInfo.id}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<p:outputLabel id="lblStatus" for="txtStatus" value="#{label['STATUS_LABEL']}" />
+										<h:panelGroup>
+											<p:selectOneMenu id="txtStatus" label="#{label['STATUS_LABEL']}">
+												<f:selectItem itemLabel="#{label['SELECT_ALL_LABEL']}" itemValue="#{null}" />
+												<f:selectItems value="#{MyStatusBean.statusList}" var="status" itemLabel="#{status.label}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+									</p:panelGrid>
+									<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-6 ui-lg-2,ui-g-12 ui-md-6 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+										style="border:0px none; background-color:transparent;">
+										<p:commandButton id="btnSearch" value="#{label['SEARCH_LABEL']}" action="#{VehicleProcessInfoListBean.searchVehicleInfo}" icon="ui-icon-search"
+											update=":frmVehicleInfo:tblVehicleInfo" />
+										<p:commandButton id="btnClear" value="#{label['CLEAR_LABEL']}" action="#{VehicleProcessInfoListBean.clear}" />
+									</p:panelGrid>
+								</p:tab>
+							</p:accordionPanel>
+						</div>
+					</div>
+				</h:form>
+				<h:form id="frmVehicleInfo">
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:remoteCommand name="onload" oncomplete="synchronizeRowsHeight();" autoRun="true" />
+							<p:dataTable id="tblVehicleInfo" lazy="true" widgetVar="vehicleProcessInfoListWV" var="vehicleProcessInfo"
+								value="#{VehicleProcessInfoListBean.vehicleProcessInfoListLazyDataModel}" rows="10" paginator="true" paginatorAlwaysVisible="#{VehicleProcessInfoListBean.paginatorVisible}"
+								paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								first="#{VehicleProcessInfoListBean.firstRowCount}" rowsPerPageTemplate="10,20,50,100" rowIndexVar="index" scrollable="true" scrollWidth="100%" frozenColumns="3">
+								<p:ajax event="sort" oncomplete="synchronizeRowsHeight();" />
+								<p:ajax event="page" oncomplete="synchronizeRowsHeight();" />
+								<p:ajax event="filter" oncomplete="synchronizeRowsHeight();" />
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Search:" />
+										<p:inputText id="globalFilter" onkeyup="PF('vehicleProcessInfoListWV').filter()" style="width:150px;" placeholder="Enter keyword" />
+										<p:commandButton id="btnExport" icon="ui-icon-import-export" style="width:150px;float:right;" value="Export" ajax="false"
+											actionListener="#{VehicleProcessInfoListBean.callExcel}" disabled="#{VehicleProcessInfoListBean.bolExport}">
+											<p:fileDownload value="#{VehicleProcessInfoListBean.filePath}"></p:fileDownload>
+										</p:commandButton>
+										<p:commandButton id="btnExport2" icon="ui-icon-import-export" style="width:150px;float:right;" value="Summary" ajax="false"
+											actionListener="#{VehicleProcessInfoListBean.exportExcel2}" disabled="#{VehicleProcessInfoListBean.bolExport}">
+											<p:fileDownload value="#{VehicleProcessInfoListBean.filePath}"></p:fileDownload>
+										</p:commandButton>
+									</p:outputPanel>
+								</f:facet>
+								<p:column styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="10">
+									<h:outputText value="#{index+1}" />
+								</p:column>
+								<p:column headerText="#{label['CHASSIS_NO_LABEL']}" sortBy="#{vehicleProcessInfo.chassisNo}" width="180" filterBy="#{vehicleProcessInfo.chassisNo}"
+									filterMatchMode="contains">
+									<h:outputText value="#{vehicleProcessInfo.chassisNo}" />
+								</p:column>
+								<p:column headerText="#{label['MODEL_LABEL']}" sortBy="#{vehicleProcessInfo.model}" width="100" filterBy="#{vehicleProcessInfo.model}" filterMatchMode="contains">
+									<h:outputText value="#{vehicleProcessInfo.model}" />
+								</p:column>
+								<p:column headerText="#{label['OPERATIONS_LABEL']}" width="120"  style="text-align:center">
+									<p:commandLink id="openDialogLink" value="#{label['VIEW_DETAILS_LABEL']}" oncomplete="PF('dlg').show();" update="dlgDetail"
+										actionListener="#{VehicleProcessInfoListBean.detailViewInfo(vehicleProcessInfo)}" />
+								</p:column>
+								<p:column headerText="#{label['VEHICLE_MAIN_CHECK_LABEL']}" width="120" style="text-align:center">
+									<p:commandLink id="mainCheckLink" value="#{label['VIEW_DETAILS_LABEL']}" oncomplete="PF('dlgMainCheck').show();" update="dlgMainCheck"
+										actionListener="#{VehicleProcessInfoListBean.mainCheckViewInfo(vehicleProcessInfo)}" />
+								</p:column>
+								<p:column headerText="#{label['PORT_OF_DISCHARGE_LABEL']}" sortBy="#{vehicleProcessInfo.carriedOutPort}" width="187" filterBy="#{vehicleProcessInfo.carriedOutPort}"
+									filterMatchMode="contains">
+									<h:outputText>
+										<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['VEHICLE_HTAUNK_KYANT_YARD_LOCATION_YARD']}" sortBy="#{vehicleProcessInfo.portDischarge}" width="187"
+									filterBy="#{vehicleProcessInfo.portDischarge}" filterMatchMode="contains">
+									<h:outputText />
+								</p:column>
+								<p:column headerText="#{label['AGENT_NAME_LABEL']} #{label['FOR_RTA_LABEL']}" sortBy="#{vehicleProcessInfo.agentName}" width="187"
+									filterBy="#{vehicleProcessInfo.agentName}" filterMatchMode="contains">
+									<h:outputText value="#{vehicleProcessInfo.agentName}" />
+								</p:column>
+								<p:column headerText="#{label['VEHICLE_NO_LABEL']}" sortBy="#{vehicleProcessInfo.vehicleLicenseNo}" width="100" filterBy="#{vehicleProcessInfo.vehicleLicenseNo}"
+									filterMatchMode="contains">
+									<h:outputText value="#{vehicleProcessInfo.vehicleLicenseNo}" />
+								</p:column>
+								<p:column headerText="#{label['RTA_DATE_LABEL']}" sortBy="#{vehicleProcessInfo.carriedOutPort}" width="187" filterBy="#{vehicleProcessInfo.carriedOutPort}"
+									filterMatchMode="contains">
+									<h:outputText>
+										<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['DLR_ORDER_LABEL']}" sortBy="#{vehicleProcessInfo.orderMonth}" width="187" filterBy="#{vehicleProcessInfo.orderMonth}"
+									filterMatchMode="contains">
+									<h:outputText value="#{vehicleProcessInfo.orderMonth}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['TTAP_VROP_LABEL']}" sortBy="#{vehicleProcessInfo.carriedOutPort}" width="187" filterBy="#{vehicleProcessInfo.carriedOutPort}"
+									filterMatchMode="contains">
+									<h:outputText>
+										<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['DELIVER_ROUTE_LABEL']}" sortBy="#{vehicleProcessInfo.portDischarge}" width="187" filterBy="#{vehicleProcessInfo.portDischarge}"
+									filterMatchMode="contains">
+									<h:outputText />
+								</p:column>
+								<p:column headerText="#{label['DELIVER_ROUTE_LABEL']}" sortBy="#{vehicleProcessInfo.portDischarge}" width="187" filterBy="#{vehicleProcessInfo.portDischarge}"
+									filterMatchMode="contains">
+									<h:outputText />
+								</p:column>
+								<p:column headerText="#{label['CUSTOMER_LABEL']}" sortBy="#{vehicleProcessInfo.portDischarge}" width="100" filterBy="#{vehicleProcessInfo.portDischarge}"
+									filterMatchMode="contains">
+									<h:outputText />
+								</p:column>
+								<p:column headerText="#{label['LOCATION_LABEL']} #{label['STATUS_LABEL']}" sortBy="#{vehicleProcessInfo.eta}" width="150" filterBy="#{vehicleProcessInfo.eta}"
+									filterMatchMode="contains">
+									<h:outputText>
+										<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['LOCATION_LABEL']}" sortBy="#{vehicleProcessInfo.eta}" width="100" filterBy="#{vehicleProcessInfo.eta}" filterMatchMode="contains">
+									<h:outputText>
+										<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['STORAGE_LABEL']} #{label['DAYS_LABEL']}" sortBy="#{vehicleProcessInfo.eta}" width="180" filterBy="#{vehicleProcessInfo.eta}"
+									filterMatchMode="contains">
+									<h:outputText>
+										<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column style="text-align:center;" width="45" headerText="#{label['DELETE_LABEL']}">
+									<p:commandLink id="delete" action="#{VehicleProcessInfoListBean.deleteConfirmVehicleInfo(vehicleProcessInfo)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-trash fa-lg" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+				</h:form>
+				<p:dialog id="dlgDetail" styleClass="z-index-high" widgetVar="dlg"
+					header="Chassis No - #{VehicleProcessInfoListBean.selectedVPID.chassisNo} / Model - #{VehicleProcessInfoListBean.selectedVPID.model}" width="1300" closeOnEscape="true"
+					modal="true" draggable="true" fitViewport="true">
+					<h:form id="frmdlgDetail">
+						<p:dataTable id="tblDetailInfo" widgetVar="inspectCheckListWV" var="detailInfo" value="#{VehicleProcessInfoListBean.detailVeiwList}" rows="10" paginator="true"
+							paginatorAlwaysVisible="true" paginatorPosition="bottom"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+							rowIndexVar="index">
+							<p:column headerText="#{label['DRIVER_NAME_LABEL']}" sortBy="#{detailInfo.driverName}" width="100" filterBy="#{detailInfo.driverName}" filterMatchMode="contains">
+								<h:outputText value="#{detailInfo.driverName}" />
+							</p:column>
+							<p:column headerText="#{label['TASK_PROCESS_TYPE_LABEL']}" sortBy="#{detailInfo.processType}" width="110" filterBy="#{detailInfo.processType}" filterMatchMode="contains">
+								<h:outputText value="#{VehicleProcessInfoListBean.taskProcessTypeMap.get(detailInfo.processType)}" />
+							</p:column>
+							<p:column headerText="#{label['MNU_TASK_LABEL']}" sortBy="#{detailInfo.taskName}" width="80" filterBy="#{detailInfo.taskName}" filterMatchMode="contains">
+								<h:outputText value="#{detailInfo.taskName}" />
+							</p:column>
+							<p:column headerText="#{label['TRAILER_TYPE']}" sortBy="#{detailInfo.trailerType}" width="80" filterBy="#{detailInfo.trailerType}" filterMatchMode="contains">
+								<h:outputText value="#{detailInfo.trailerType}" />
+							</p:column>
+							<p:column headerText="#{label['PARKING_SLOT_LABEL']}" sortBy="#{detailInfo.yardName} #{detailInfo.colName}" width="100"
+								filterBy="#{detailInfo.yardName} #{detailInfo.colName}" filterMatchMode="contains">
+								<h:outputText value="#{detailInfo.yardName} #{detailInfo.colName}" />
+							</p:column>
+							<p:column headerText="#{label['INSPECTOR_DATE_LABEL']}" sortBy="#{detailInfo.inspectedDate}" width="180" filterBy="#{detailInfo.inspectedDate}" filterMatchMode="contains">
+								<h:outputText value="#{detailInfo.inspectedDate}">
+									<f:convertDateTime pattern="dd/MM/yyyy hh:mm"></f:convertDateTime>
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{label['CAR_BODY_LABEL']}" sortBy="#{detailInfo.carBody}" width="100" filterBy="#{detailInfo.carBody}" filterMatchMode="equals">
+								<f:facet name="filter">
+									<p:selectOneMenu onchange="PF('inspectCheckListWV').filter()" styleClass="custom-filter">
+										<f:converter converterId="javax.faces.Boolean" />
+										<f:selectItem itemLabel="" itemValue="" />
+										<f:selectItem itemLabel="Pass" itemValue="true" />
+										<f:selectItem itemLabel="Not Pass" itemValue="false" />
+										<f:selectItems value="#{detailInfo.carBody}" />
+									</p:selectOneMenu>
+								</f:facet>
+								<h:outputText style="padding-left:20px;" class="fa fa-fw fa-#{detailInfo.carBody ? 'check green' : 'close red'} fa-lg" />
+							</p:column>
+							<p:column headerText="#{label['ENGINE_LABEL']}" sortBy="#{detailInfo.engine}" width="100" filterBy="#{detailInfo.engine}" filterMatchMode="equals">
+								<f:facet name="filter">
+									<p:selectOneMenu onchange="PF('inspectCheckListWV').filter()" styleClass="custom-filter">
+										<f:converter converterId="javax.faces.Boolean" />
+										<f:selectItem itemLabel="" itemValue="" />
+										<f:selectItem itemLabel="Pass" itemValue="true" />
+										<f:selectItem itemLabel="Not Pass" itemValue="false" />
+										<f:selectItems value="#{detailInfo.engine}" />
+									</p:selectOneMenu>
+								</f:facet>
+								<h:outputText style="padding-left:20px;" class="fa fa-fw fa-#{detailInfo.engine ? 'check green' : 'close red'} fa-lg" />
+							</p:column>
+							<p:column headerText="#{label['INTERIOR_LABEL']}" sortBy="#{detailInfo.interior}" width="100" filterBy="#{detailInfo.interior}" filterMatchMode="equals">
+								<f:facet name="filter">
+									<p:selectOneMenu onchange="PF('inspectCheckListWV').filter()" styleClass="custom-filter">
+										<f:converter converterId="javax.faces.Boolean" />
+										<f:selectItem itemLabel="" itemValue="" />
+										<f:selectItem itemLabel="Pass" itemValue="true" />
+										<f:selectItem itemLabel="Not Pass" itemValue="false" />
+										<f:selectItems value="#{detailInfo.interior}" />
+									</p:selectOneMenu>
+								</f:facet>
+								<h:outputText style="padding-left:20px;" class="fa fa-fw fa-#{detailInfo.interior ? 'check green' : 'close red'} fa-lg" />
+							</p:column>
+							<p:column headerText="#{label['INSPECTOR_BY_LABEL']}" sortBy="#{detailInfo.inspectorBy}" width="90" filterBy="#{detailInfo.inspectorBy}" filterMatchMode="contains">
+								<h:outputText value="#{detailInfo.inspectorBy}" />
+							</p:column>
+							<p:column headerText="#{label['STATUS_LABEL']}" sortBy="#{vehicleProcessInfo.cif}" width="80" filterBy="#{vehicleProcessInfo.cif}" filterMatchMode="contains">
+								<h:outputText />
+							</p:column>
+							<p:column headerText="#{label['REMARK_LABEL']}" sortBy="#{detailInfo.inspectRemark}" width="60" filterBy="#{detailInfo.inspectRemark}" filterMatchMode="contains">
+								<h:outputText value="#{detailInfo.inspectRemark}" />
+							</p:column>
+							<p:column headerText="#{label['EVIDENCE_IMAGE_LABEL']}" width="60" style="text-align:center">
+								<p:commandLink id="openDialogLink" oncomplete="PF('dlg1').show();" update="dlgPicture" action="#{VehicleProcessInfoListBean.showPicture(detailInfo)}">
+									<h:outputText class="fa fa-fw fa-list fa-lg" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+						<h:outputScript target="body">
+					
+					//<![CDATA[
+
+    
+    
+    function synchronizeRowsHeight() {
+    
+    
+    	//var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+    		var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    	
+    	//window.alert("isChrome " + isChrome);
+    	
+    
+        var $leftRows = $('.ui-datatable-frozenlayout-left').find('tr');
+        var $rightRows = $('.ui-datatable-frozenlayout-right').find('tr');
+
+        $leftRows.each(function (index) {
+        
+        	var $leftRow = $(this);
+        	var $leftHeight = $leftRow.innerHeight();
+        	var $rightRow = $rightRows.eq(index);
+        	var $rightHeight = $rightRow.innerHeight();
+
+			if(isChrome) {
+				if ($rightHeight > $leftHeight) {
+                $leftRow.innerHeight($rightHeight);
+                var diff = $rightHeight - $leftRow.innerHeight();
+                if (diff != 0) 
+                       $leftRow.innerHeight($rightHeight + diff);
+         } else if ($rightHeight < $leftHeight) {
+                $rightRow.innerHeight($leftHeight);
+                var diff = $leftHeight - $rightRow.innerHeight();
+                if (diff != 0)
+                       $rightRow.innerHeight($leftHeight + diff);
+         }
+			}else {
+	            if ($rightHeight > $leftHeight) {
+	                $leftRow.innerHeight($rightRow.outerHeight());
+	            } else {
+	                $rightRow.innerHeight($leftRow.outerHeight());
+	            }
+            }
+        })
+   $(window).trigger('resize');
+}
+
+// ]]>
+						</h:outputScript>
+					</h:form>
+				</p:dialog>
+				<p:dialog id="dlgMainCheck" widgetVar="dlgMainCheck" styleClass="z-index-high" width="800" modal="true"
+					header="Chassis No - #{VehicleProcessInfoListBean.selectedVPID.chassisNo} / Model - #{VehicleProcessInfoListBean.selectedVPID.model}">
+					<h:form id="frmdlgMainCheck" rendered="#{VehicleProcessInfoListBean.detailVeiwList.size() ne 0}">
+						<p:dataTable id="tblMainCheck" widgetVar="mainCheckListWV" var="detailInfo" value="#{VehicleProcessInfoListBean.detailVeiwList}" rows="10" paginator="true"
+							paginatorAlwaysVisible="true" paginatorPosition="bottom"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+							rowIndexVar="index">
+							<p:column headerText="#{label['TASK_PROCESS_TYPE_LABEL']}" sortBy="#{detailInfo.taskName}" width="110" filterBy="#{detailInfo.taskName}" filterMatchMode="contains">
+								<h:outputText value="#{detailInfo.taskName}" />
+							</p:column>
+							<p:column headerText="#{label['DATE_LABEL']}" sortBy="#{detailInfo.date}" width="100" filterBy="#{detailInfo.date}" filterMatchMode="contains">
+								<h:outputText value="#{detailInfo.date}">
+									<f:convertDateTime pattern="dd/MM/yyyy hh:mm"></f:convertDateTime>
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{label['INSPECTED_BY']}" sortBy="#{detailInfo.inspectorBy}" width="100" filterBy="#{detailInfo.inspectorBy}" filterMatchMode="contains">
+								<h:outputText value="#{detailInfo.inspectorBy}" />
+							</p:column>
+						</p:dataTable>
+					</h:form>
+					<h:form id="nullChk" rendered="#{VehicleProcessInfoListBean.detailVeiwList.size() eq 0}" style="text-align:center;font-size:15px;">
+						<h:head>There is no data.</h:head>
+					</h:form>
+				</p:dialog>
+				<p:dialog id="dlgPicture" styleClass="z-index-max" widgetVar="dlg1" header="Evidence Image" closeOnEscape="true" dynamic="true" position="200,360" fitViewport="true"
+					draggable="true" modal="true">
+					<p:galleria value="#{VehicleProcessInfoListBean.images}" var="ctfImage">
+						<p:graphicImage stream="false" value="#{ctfImage}" styleClass="content" style="width:auto;height:inherit;padding:13px 0px 0px 188px;" />
+					</p:galleria>
+					<h:form id="nullChkPictures" rendered="#{VehicleProcessInfoListBean.images.size() eq 0}" style="text-align:center;font-size:15px;">
+						<h:head>There is no image.</h:head>
+					</h:form>
+				</p:dialog>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closable="false" closeOnEscape="true">
+					<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+					<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+				</p:confirmDialog>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

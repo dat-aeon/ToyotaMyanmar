@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions" template="/templates/template.xhtml">
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<h:form id="frmTaskInput">
+					<div>
+						<p:messages id="msgMessages" globalOnly="true" autoUpdate="true" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['TASK_INPUT_TITLE']}</h1>
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-6 ui-lg-4" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel id="lblProcessType" for="slmProcessType" value="#{label['TASK_PROCESS_TYPE_LABEL']}" />
+								<h:panelGroup>
+									<p:selectOneMenu id="slmProcessType" label="#{label['TASK_PROCESS_TYPE_LABEL']}" converter="omnifaces.SelectItemsIndexConverter" required="true"
+										value="#{TaskInputBean.taskDto.processType}">
+										<f:selectItem itemLabel="#{label['PROCESS_TYPE_SELECT_LABEL']}" itemValue="#{null}" />
+										<f:selectItems value="#{MyBean.processTypeList}" var="process" itemLabel="#{process}" itemValue="#{process.getId()}" />
+									</p:selectOneMenu>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="msgProcessType" for="slmProcessType" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel id="lblTaskName" for="txtTaskName" value="#{label['TASK_NAME_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtTaskName" value="#{TaskInputBean.taskDto.taskName}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="255" message="TaskName #{label['LENGTH_MSG']} 255." />
+									</p:inputText>
+									<p:message id="msgTaskName" for="txtTaskName" />
+								</h:panelGroup>
+								<p:outputLabel id="lblTask" for="txtTask" value="#{label['TASK_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtTask" value="#{TaskInputBean.taskDto.task}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="255" message="{0} #{label['LENGTH_MSG']} 255." />
+									</p:inputText>
+									<p:message id="msgTask" for="txtTask" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDescription" for="txaDescription" value="#{label['DESCRIPTION_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txaDescription" value="#{TaskInputBean.taskDto.description}" label="#{label['DESCRIPTION_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="255" message="{0} #{label['LENGTH_MSG']} 255." />
+									</p:inputText>
+									<p:message id="msgDescription" for="txaDescription" />
+								</h:panelGroup>
+							</p:panelGrid>
+							<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<div />
+								<p:commandButton id="btnAdd" value="#{label['SUBMIT_LABEL']}" action="#{TaskInputBean.inputTask}" update="frmTaskInput" icon="ui-icon-launch" />
+								<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" action="taskControlList" immediate="true" icon="ui-icon-close" />
+							</p:panelGrid>
+						</div>
+					</div>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

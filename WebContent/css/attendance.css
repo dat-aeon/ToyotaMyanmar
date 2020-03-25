@@ -1,0 +1,290 @@
+ul.dropdown-menu {
+	padding: 0;
+	min-width: 215px;
+	top: 101%;
+	font-size: 13px;
+}
+
+.attendance-page .title1 {
+	text-align: center;
+	margin-bottom: 1em;
+}
+
+@media ( min-width : 1441px) {
+}
+
+@media ( max-width :1440px) {
+}
+
+@media ( max-width :1366px) {
+}
+
+@media ( max-width :1280px) {
+}
+
+@media ( max-width :1080px) {
+	#cssmenu {
+		margin-top: 20px !important;
+		margin-bottom: 15px !important;
+	}
+}
+
+@media ( max-width :1024px) {
+}
+
+@media ( max-width :991px) {
+	#cssmenu {
+		margin-top: 20px !important;
+		margin-bottom: 15px !important;
+	}
+	.daily_att_title_admin {
+		margin-top: 80px !important;
+	}
+}
+
+@media ( max-width :950px) {
+	#cssmenu {
+		margin-top: 20px !important;
+		margin-bottom: 15px !important;
+	}
+	.menu_btn {
+		margin-top: 0px !important;
+	}
+	.daily_att_title_admin {
+		margin-top: 120px !important;
+	}
+}
+
+@media ( max-width :900px) {
+	#cssmenu {
+		margin-top: 20px !important;
+		margin-bottom: 15px !important;
+	}
+	.menu_btn {
+		margin-top: 0px !important;
+	}
+	#dailyAttendanceListTblForm .right-align {
+		margin-left: 0px !important;
+	}
+	.dailyAtten_title {
+		margin-top: 130px !important;
+	}
+	.att_title_admin {
+		margin-top: 45px !important;
+	}
+	.att_title_other {
+		margin-top: 0px !important;
+	}
+}
+
+@media ( max-width :800px) {
+	#cssmenu {
+		margin-top: 20px !important;
+		margin-bottom: 15px !important;
+	}
+	#dailyAttendanceListTblForm .right-align {
+		margin-left: 0px !important;
+	}
+	.dailyAtten_title {
+		margin-top: 110px !important;
+	}
+	.att_title_admin {
+		margin-top: 45px !important;
+	}
+	.att_title_other {
+		margin-top: 0px !important;
+	}
+}
+
+@media ( max-width :768px) {
+	.menu_btn {
+		margin-top: 0px !important;
+	}
+	#cssmenu li {
+		margin-bottom: 15px !important;
+	}
+	#cssmenu {
+		margin-top: -15px !important;
+		margin-bottom: 15px !important;
+	}
+	#dailyAttendanceListTblForm .right-align {
+		margin-left: 0px !important;
+	}
+	.confirm-form .control-label {
+		margin-bottom: 8px !important;
+		margin-top: 8px !important;
+	}
+	.att_title_admin {
+		margin-top: 45px !important;
+	}
+	.att_summarry {
+		margin-top: 10px !important;
+	}
+	.title_other {
+		margin-top: -150px !important;
+	}
+}
+
+@media ( min-width : 765px) and (max-width: 767px) {
+	#cssmenu {
+		margin-top: -150px !important;
+		margin-bottom: 15px !important;
+	}
+}
+
+@media ( max-width :765px) {
+	#cssmenu {
+		margin-top: -160px !important;
+	}
+	.att_title_admin {
+		margin-top: 45px !important;
+	}
+	.daily_att_title_admin {
+		margin-top: 145px !important;
+	}
+	.title_other {
+		margin-top: -150px !important;
+	}
+}
+
+@media ( max-width :700px) {
+	#cssmenu {
+		margin-top: -140px !important;
+	}
+}
+
+@media ( max-width :680px) {
+	#cssmenu {
+		margin-top: -100px !important;
+	}
+	/*attendance edit  */
+	.form-horizontal .form-group {
+		padding: 5px;
+	}
+	.att_title_admin {
+		margin-top: 45px !important;
+	}
+	.daily_att_title_admin {
+		margin-top: 140px !important;
+	}
+	.title_other {
+		margin-top: -130px !important;
+	}
+}
+
+@media ( max-width :640px) {
+	.menu_btn {
+		margin-top: 0px !important;
+	}
+	#cssmenu li {
+		margin-bottom: 15px !important;
+	}
+	#cssmenu {
+		margin-top: -85px !important;
+	}
+	.confirm-form .control-label, .control-label {
+		margin-bottom: 5px !important;
+		margin-top: 5px !important;
+	}
+	#dailyAttendanceListTblForm .right-align {
+		margin-left: 0px !important;
+	}
+	#cssmenu>ul>li {
+		float: none !important;
+	}
+	/*attendance edit  */
+	.breaktime-border {
+		padding: 5px;
+	}
+	.att_title_admin {
+		margin-top: 45px !important;
+	}
+	.daily_att_title_admin {
+		margin-top: 80px !important;
+	}
+	.title_other {
+		margin-top: -80px !important;
+	}
+}
+
+@media ( max-width :480px) {
+	.menu_btn {
+		margin-top: 0px !important;
+	}
+	#cssmenu li {
+		margin-bottom: 15px !important;
+	}
+	.dailyAtten_title {
+		margin-top: 0px !important;
+	}
+	.confirm-form .control-label, .control-label {
+		margin-bottom: 5px !important;
+		margin-top: 5px !important;
+	}
+	#dailyAttendanceListTblForm .right-align {
+		margin-left: 0px !important;
+	}
+	#cssmenu {
+		margin-top: -65px !important;
+	}
+	#cssmenu>ul>li {
+		float: none !important;
+	}
+	/*attendance edit  */
+	.breaktime-border {
+		padding: 5px;
+	}
+	h3.att_title1 {
+		font-size: 1.4em;
+	}
+	.title_other {
+		margin-top: -50px !important;
+	}
+}
+
+@media ( max-width :450px) {
+	#cssmenu {
+		margin-top: -15px !important;
+	}
+	.title_other {
+		margin-top: -30px !important;
+	}
+}
+
+@media ( max-width :320px) {
+	.menu_btn {
+		margin-top: 0px !important;
+	}
+	#cssmenu	li {
+		margin-bottom: 15px !important;
+	}
+	.dailyAtten_title {
+		margin-top: 10px !important;
+	}
+	.confirm-form .control-label, .control-label {
+		margin-bottom: 5px !important;
+		margin-top: 5px !important;
+	}
+	#dailyAttendanceListTblForm .right-align {
+		margin-left: 0px !important;
+	}
+	#cssmenu>ul>li {
+		float: none !important;
+	}
+	/*attendance edit  */
+	.breaktime-border {
+		padding: 5px;
+	}
+	h3.att_title1 {
+		font-size: 1.3em;
+	}
+	.title_other {
+		margin-top: -50px !important;
+	}
+}
+
+@media ( max-width :300px) {
+	.title_other {
+		margin-top: 50px !important;
+	}
+}

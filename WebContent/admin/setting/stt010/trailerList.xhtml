@@ -1,0 +1,102 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<f:metadata>
+				<f:viewAction action="#{TrailerListBean.showMessage}" />
+			</f:metadata>
+			<div class="card card-w-title">
+				<h:form id="frmTailerList">
+					<div>
+						<p:messages id="messages" globalOnly="true" autoUpdate="true" closable="true" style="word-break:break-all;" />
+						<p:growl for="messages" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['TRAILER_LIST_TITLE']}</h1>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
+							<p:commandButton id="addNew" value="#{label['ADD_NEW_LABEL']}" action="trailerInput" immediate="true" icon="ui-icon-add" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:dataTable id="trailerList" lazy="true" widgetVar="trailerListWV" var="trailer" value="#{TrailerListBean.trailerListLazyDataModel}" rows="10" paginator="true"
+								paginatorAlwaysVisible="#{TrailerListBean.paginatorVisible}" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="10,20,50,100" rowIndexVar="index" first="#{TrailerListBean.firstRowCount}" filteredValue="#{TrailerListBean.filterTrailerList}"
+								globalFilterFunction="#{TrailerListBean.globalFilterFunction}">
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Search:" />
+										<p:inputText id="globalFilter" onkeyup="PF('trailerListWV').filter()" style="width:150px" placeholder="Enter keyword" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="30">
+									<h:outputText value="#{index+1}" />
+								</p:column>
+								<p:column headerText="#{label['TRAILER_ID']}" sortBy="#{trailer.trailerCode}" width="120" filterBy="#{trailer.trailerCode}" filterMatchMode="contains">
+									<h:outputText value="#{trailer.trailerCode}" />
+								</p:column>
+								<p:column headerText="#{label['TRAILER_CODE_LABEL']}" sortBy="#{trailer.barcodeId}" width="120" filterBy="#{trailer.barcodeId}" filterMatchMode="contains">
+									<p:commandLink id="openDialogLink" value="#{trailer.barcodeId}" oncomplete="PF('dlg').show();" update="dlgDetail" />
+									<p:dialog id="dlgDetail" widgetVar="dlg" header="#{trailer.trailerCode} / #{trailer.licenseNo}" resizable="true" modal="true" closeOnEscape="true" fitViewport="true">
+										<p:barcode value="#{trailer.barcodeId}" format="svg"  type="code39" width="300" height="150" />
+									</p:dialog>
+								</p:column>
+								<p:column headerText="#{label['TRAILER_TYPE']}" sortBy="#{trailer.trailerType}" width="120" filterBy="#{trailer.trailerType}" filterMatchMode="contains">
+									<h:outputText value="#{trailer.trailerType}" />
+								</p:column>
+								<p:column headerText="#{label['TRAILER_LICENSE_NO']}" sortBy="#{trailer.licenseNo}" width="120" filterBy="#{trailer.licenseNo}" filterMatchMode="contains">
+									<h:outputText value="#{trailer.licenseNo}" />
+								</p:column>
+								<p:column headerText="#{label['DESCRIPTION_LABEL']}" sortBy="#{trailer.description}" width="200" filterBy="#{trailer.description}" filterMatchMode="contains">
+									<h:outputText value="#{trailer.description}" />
+								</p:column>
+								<p:column headerText="#{label['PHOTO_LABEL']}" sortBy="#{trailer.photoName}" width="100" filterBy="#{trailer.photoName}" filterMatchMode="contains" style="text-align:center">
+									<p:commandLink id="openPhotoDialog" value="#{TrailerListBean.changePhotoLabel(trailer)}" oncomplete="PF('dlgPhotos').show();" update="dlgDetailPhotos" action="#{TrailerListBean.showPicture(trailer)}"  disabled="#{trailer.checkPhoto}"/>
+									<p:dialog id="dlgDetailPhotos" widgetVar="dlgPhotos" header="#{trailer.trailerCode}" resizable="true" modal="true" dynamic="true" draggable="true" closeOnEscape="true" position="458,157" positionType="absolute" fitViewport="true">
+										<p:galleria value="#{TrailerListBean.images}" var="ctfImage" autoPlay="false">
+											<p:graphicImage stream="false" value="#{ctfImage}" styleClass="content" style="width:auto;height:inherit;"/>
+										</p:galleria>
+									</p:dialog>
+								</p:column>
+								<p:column headerText="#{label['DISABLED_LABEL']}" style="text-align:center;" width="100" sortBy="#{trailer.disabled}" filterBy="#{trailer.disabled}" filterMatchMode="equals">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('trailerListWV').filter()">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemValue="" itemLabel="" />
+											<f:selectItem itemValue="false" itemLabel="#{label['ENABLE_LABEL']}" />
+											<f:selectItem itemValue="true" itemLabel="#{label['DISABLE_LABEL']}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<p:commandLink action="#{TrailerListBean.disabledTrailer(trailer)}" immediate="true" update="trailerList">
+										<p:confirm header="Confirmation" message="#{label[(trailer.disabled?'MSG_TO_ENABLED':'MSG_TO_DISABLED')]}" />
+										<h:outputText class="fa fa-fw #{trailer.disabled  ? 'fa-toggle-on fa-flip-horizontal red' : 'fa-toggle-on green'} fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="#{label['EDIT_LABEL']}" style="text-align:center;" width="30">
+									<p:commandLink id="btnEdit" action="#{TrailerListBean.editTrailer(trailer)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-edit fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column headerText="#{label['DELETE_LABEL']}" style="text-align:center;" width="30">
+									<p:commandLink id="btnDelete" action="#{TrailerListBean.deleteConfirmTrailer(trailer)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-trash fa-lg" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closable="false" closeOnEscape="true">
+						<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+						<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+					</p:confirmDialog>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

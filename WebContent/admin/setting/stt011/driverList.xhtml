@@ -1,0 +1,180 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<f:metadata>
+				<f:viewAction action="#{DriverListBean.showMessage}" />
+			</f:metadata>
+			<div class="card card-w-title">
+				<h:form id="driverListForm">
+					<div>
+						<p:messages id="messages" globalOnly="true" autoUpdate="#{DriverListBean.checkAutoUpdate}" closable="true" style="word-break:break-all;" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['DRIVER_LIST_TITLE']}</h1>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
+							<p:commandButton id="addNew" class="ui-corner-left" value="#{label['ADD_NEW_LABEL']}" action="driverInput" immediate="true" icon="ui-icon-add" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:remoteCommand name="onload" oncomplete="synchronizeRowsHeight();" autoRun="true" />
+							<p:dataTable id="driverTable" widgetVar="driverListWV" var="driver" value="#{DriverListBean.driverList}" rows="10" paginator="true"
+								paginatorAlwaysVisible="#{DriverListBean.paginatorVisible}" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="10,20,50,100" rowIndexVar="index" filteredValue="#{DriverListBean.filterDriverList}" globalFilterFunction="#{DriverListBean.globalFilterFunction}"
+								first="#{DriverListBean.firstRowCount}" rowStyleClass="#{driver.checkExpireDate gt 0 ? 'licenseColor' : null}" scrollable="true" scrollWidth="100%" frozenColumns="3">
+								<p:ajax event="sort" listener="#{DriverListBean.changeAutoUpdate}" oncomplete="synchronizeRowsHeight();" />
+								<p:ajax event="page" listener="#{DriverListBean.changeAutoUpdate}" oncomplete="synchronizeRowsHeight();" />
+								<p:ajax event="filter" listener="#{DriverListBean.changeAutoUpdate}" oncomplete="synchronizeRowsHeight();" />
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Search:" />
+										<p:inputText id="globalFilter" onkeyup="PF('driverListWV').filter()" style="width:150px" placeholder="Enter keyword" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column styleClass="align-right" headerText="#{label['SERIAL_NO_LABEL']}" width="10">
+									<h:outputText value="#{index+1}" />
+								</p:column>
+								<p:column headerText="#{label['DRIVER_TYPE_LABEL']}" sortBy="#{driver.typeLabel}" width="120" filterBy="#{driver.typeLabel}" filterMatchMode="contains">
+									<h:outputText value="#{driver.typeLabel}" />
+								</p:column>
+								<p:column headerText="#{label['DRIVER_STAFFID_LABEL']}" sortBy="#{driver.staffId}" width="120" filterBy="#{driver.staffId}" filterMatchMode="contains">
+									<h:outputText value="#{driver.staffId}" />
+								</p:column>
+								<p:column headerText="#{label['DRIVER_CODE_LABEL']}" sortBy="#{driver.barcodeId}" width="120" filterBy="#{driver.barcodeId}" filterMatchMode="contains">
+									<p:commandLink id="openDialogLink" value="#{driver.barcodeId}" oncomplete="PF('dlg').show();" update="dlgDetail" />
+									<p:dialog id="dlgDetail" widgetVar="dlg" header="#{driver.driverName} / #{driver.staffId}" resizable="true" modal="true" closeOnEscape="true" fitViewport="true">
+										<p:barcode value="#{driver.barcodeId}" format="svg" type="code39" width="300" height="150" />
+									</p:dialog>
+								</p:column>
+								<p:column headerText="#{label['DRIVER_NAME_LABEL']}" sortBy="#{driver.driverName}" width="120" filterBy="#{driver.driverName}" filterMatchMode="contains">
+									<h:outputText value="#{driver.driverName}" />
+								</p:column>
+								<p:column headerText="#{label['PHONE_NO_LABEL']}" sortBy="#{driver.phList}" width="200" filterBy="#{driver.phList}" filterMatchMode="contains">
+									<h:outputText value="#{driver.phList}" />
+								</p:column>
+								<p:column headerText="#{label['DRIVER_JOIN_DATE_LABEL']}" sortBy="#{driver.joinDate}" width="100" filterBy="#{driver.joinDate}" filterMatchMode="contains"
+									style="text-align:center">
+									<h:outputText value="#{driver.joinDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['DRIVER_LICENSE_TYPE_LABEL']}" sortBy="#{driver.licenseType}" width="120" filterBy="#{driver.licenseType}" filterMatchMode="contains">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('driverListWV').filter()" styleClass="custom-filter">
+											<f:selectItem itemLabel="" itemValue="" />
+											<f:selectItem itemLabel="A" itemValue="A" />
+											<f:selectItem itemLabel="B" itemValue="B" />
+											<f:selectItem itemLabel="C" itemValue="C" />
+											<f:selectItem itemLabel="D" itemValue="D" />
+											<f:selectItem itemLabel="E" itemValue="E" />
+											<f:selectItems value="#{driver.licenseType}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<h:outputText value="#{driver.licenseType}" />
+								</p:column>
+								<p:column headerText="#{label['DRIVER_LICENSE_NO_LABEL']}" sortBy="#{driver.licenseNo}" width="100" filterBy="#{driver.licenseNo}" filterMatchMode="contains">
+									<h:outputText value="#{driver.licenseNo}" />
+								</p:column>
+								<p:column headerText="#{label['DRIVER_LICENSE_EXPIRE_DATE_LABEL']}" sortBy="#{driver.licenseExpireDate}" width="160" filterBy="#{driver.licenseExpireDate}"
+									filterMatchMode="contains" style="text-align:center">
+									<h:outputText value="#{driver.licenseExpireDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+									</h:outputText>
+								</p:column>
+								<p:column headerText="#{label['DRIVER_STATUS_LABEL']}" sortBy="#{driver.status}" width="80" filterBy="#{driver.status}" filterMatchMode="contains" rendered="false">
+									<h:outputText value="#{driver.status}" />
+								</p:column>
+								<p:column headerText="#{label['DISABLED_LABEL']}" style="text-align:center;" width="80" sortBy="#{driver.disabled}" filterBy="#{driver.disabled}" filterMatchMode="equals">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('driverListWV').filter()" styleClass="custom-filter">
+											<f:converter converterId="javax.faces.Boolean" />
+											<f:selectItem itemLabel="" itemValue="" />
+											<f:selectItem itemLabel="#{label['DISABLE_LABEL']}" itemValue="true" />
+											<f:selectItem itemLabel="#{label['ENABLE_LABEL']}" itemValue="false" />
+										</p:selectOneMenu>
+									</f:facet>
+									<p:commandLink id="cmlDisabled" action="#{DriverListBean.disabledDriver(driver)}" immediate="true" update="driverTable" oncomplete="synchronizeRowsHeight();">
+										<p:confirm header="#{label['CONFIRMATION']}" message="#{label[(driver.disabled?'MSG_TO_ENABLED':'MSG_TO_DISABLED')]}" />
+										<h:outputText class="fa fa-fw #{driver.disabled ? 'fa-toggle-on fa-flip-horizontal red' : 'fa-toggle-on green'} fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column style="text-align:center;" width="45" headerText="#{label['EDIT_LABEL']}">
+									<p:commandLink id="edit" action="#{DriverListBean.editDriver(driver)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-edit fa-lg" />
+									</p:commandLink>
+								</p:column>
+								<p:column style="text-align:center;" width="45" headerText="#{label['DELETE_LABEL']}">
+									<p:commandLink id="delete" action="#{DriverListBean.deleteConfirmDriver(driver)}" immediate="true">
+										<h:outputText class="fa fa-fw fa-trash fa-lg" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+						</div>
+					</div>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closable="false" closeOnEscape="true">
+						<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+						<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+					</p:confirmDialog>
+					<h:outputScript target="body">
+					
+					//<![CDATA[
+
+    
+    
+     function synchronizeRowsHeight() {
+    
+    
+    	//var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+    	var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    	//window.alert("isChrome " + isChrome);
+    	
+    
+        var $leftRows = $('.ui-datatable-frozenlayout-left').find('tr');
+        var $rightRows = $('.ui-datatable-frozenlayout-right').find('tr');
+
+        $leftRows.each(function (index) {
+        
+        	var $leftRow = $(this);
+        	var $leftHeight = $leftRow.innerHeight();
+        	var $rightRow = $rightRows.eq(index);
+        	var $rightHeight = $rightRow.innerHeight();
+
+			if(isChrome) {
+				if ($rightHeight > $leftHeight) {
+                	$leftRow.innerHeight($rightHeight);
+                	var diff = $rightHeight - $leftRow.innerHeight();
+                	
+                	if (diff != 0)
+                       $leftRow.innerHeight($rightHeight + diff);
+                       
+         		} else if ($rightHeight < $leftHeight) {
+                	$rightRow.innerHeight($leftHeight);
+                	var diff = $leftHeight - $rightRow.innerHeight();
+                	if (diff != 0)
+                       $rightRow.innerHeight($leftHeight + diff);
+         		}
+			}else {
+	            if ($rightHeight > $leftHeight) {
+	                $leftRow.innerHeight($rightRow.outerHeight());
+	            } else {
+	                $rightRow.innerHeight($leftRow.outerHeight());
+	            }
+            }
+        })
+   $(window).trigger('resize');
+}
+
+// ]]>
+					</h:outputScript>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

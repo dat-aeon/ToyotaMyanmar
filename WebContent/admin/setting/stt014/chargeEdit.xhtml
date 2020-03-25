@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions" template="/templates/template.xhtml">
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{ChargesEditBean.redirect}" />
+		</f:metadata>
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<h1>#{label['CHARGE_EDIT_TITLE']}</h1>
+						<h:form id="frmChargeEdit">
+							<div>
+								<p:messages id="msg" globalOnly="true" closable="true" />
+							</div>
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-6 ui-lg-4" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel id="lblTitle" for="txtTitle" value="#{label['Charge_Title_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="txtTitle" value="#{ChargesEditBean.chargesDto.title}" label="#{label['Charge_Title_LABEL']}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="50" message="{0} #{label['LENGTH_MSG']} 50" />
+									</p:inputText>
+									<p:message id="msgChargeTitle" for="txtTitle" />
+								</h:panelGroup>
+								<p:outputLabel id="lblUnitPrice" for="txtUnitPrice" value="#{label['Charge_UnitPrice_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputNumber id="txtUnitPrice" value="#{ChargesEditBean.chargesDto.unitPrice}" label="#{label['Charge_UnitPrice_LABEL']}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="50" message="{0} #{label['LENGTH_MSG']} 50" />
+									</p:inputNumber>
+									<p:message id="msgUnitPrice" for="txtUnitPrice" />
+								</h:panelGroup>
+								<p:outputLabel id="lblCurrency" for="rdoCurrency" value="#{label['Charge_Currency_LABEL']}" columns="2" layout="responsive" />
+								<h:panelGroup columns="2" style="margin-bottom:10px" cellpadding="5">
+									<p:selectOneRadio id="rdoCurrency" value="#{ChargesEditBean.chargesDto.currency}" required="true" columns="2" layout="responsive">
+										<f:selectItem itemValue="MMK" itemLabel="MMK" />
+										<f:selectItem itemValue="USD" itemLabel="USD" />
+									</p:selectOneRadio>
+									<p:message id="msgCurrency" for="rdoCurrency" />
+								</h:panelGroup>
+								<p:outputLabel id="lblDisabled" for="rdoDisabled" value="#{label['DISABLED_LABEL']}" columns="2" layout="responsive" />
+								<h:panelGroup columns="2" style="margin-bottom:10px" cellpadding="5">
+									<p:selectOneRadio id="rdoDisabled" value="#{ChargesEditBean.chargesDto.disabled}" columns="2" layout="responsive">
+										<f:selectItem itemValue="false" itemLabel="#{label['ENABLE_LABEL']}" />
+										<f:selectItem itemValue="true" itemLabel="#{label['DISABLE_LABEL']}" />
+									</p:selectOneRadio>
+								</h:panelGroup>
+							</p:panelGrid>
+							<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<div />
+								<p:commandButton id="btnEdit" value="#{label['UPDATE_LABEL']}" update="frmChargeEdit" action="#{ChargesEditBean.updateCharges}" icon="ui-icon-launch">
+									<p:confirm header="Confirmation" message="Are you sure to update?" />
+								</p:commandButton>
+								<p:commandButton id="btnCancel" value="#{label['CANCEL_LABEL']}" immediate="true" action="chargeList" icon="ui-icon-close" />
+							</p:panelGrid>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+			<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

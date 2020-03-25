@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="new_test" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6a169b39-79fe-4c7c-830f-0e8ec680cd52">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="javaBeanCollection"/>
+	<subDataset name="itemDataSetList" uuid="1de51147-27bc-4f65-b213-a5ade785251a">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<parameter name="currency" class="java.lang.String"/>
+		<parameter name="subTotal" class="java.math.BigDecimal"/>
+		<parameter name="taxAmount" class="java.math.BigDecimal"/>
+		<parameter name="grandTotal" class="java.math.BigDecimal"/>
+		<parameter name="remark1" class="java.lang.String"/>
+		<parameter name="remark2" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="description" class="java.lang.String"/>
+		<field name="unit" class="java.lang.Integer"/>
+		<field name="unitPrice" class="java.math.BigDecimal"/>
+		<field name="amount" class="java.math.BigDecimal"/>
+	</subDataset>
+	<parameter name="invoiceNo" class="java.lang.String"/>
+	<parameter name="date" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="date" class="java.util.Date">
+		<fieldDescription><![CDATA[date]]></fieldDescription>
+	</field>
+	<field name="taxIncluded" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[taxIncluded]]></fieldDescription>
+	</field>
+	<field name="invoiceVehicleSearchList" class="java.util.List">
+		<fieldDescription><![CDATA[invoiceVehicleSearchList]]></fieldDescription>
+	</field>
+	<field name="grandTotal" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[grandTotal]]></fieldDescription>
+	</field>
+	<field name="contactName" class="java.lang.String">
+		<fieldDescription><![CDATA[contactName]]></fieldDescription>
+	</field>
+	<field name="dealerId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[dealerId]]></fieldDescription>
+	</field>
+	<field name="subject" class="java.lang.String">
+		<fieldDescription><![CDATA[subject]]></fieldDescription>
+	</field>
+	<field name="taxPercentage" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[taxPercentage]]></fieldDescription>
+	</field>
+	<field name="approvedBy" class="java.lang.String">
+		<fieldDescription><![CDATA[approvedBy]]></fieldDescription>
+	</field>
+	<field name="subTotal" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[subTotal]]></fieldDescription>
+	</field>
+	<field name="type" class="java.lang.Integer">
+		<fieldDescription><![CDATA[type]]></fieldDescription>
+	</field>
+	<field name="paymentDueDate" class="java.util.Date">
+		<fieldDescription><![CDATA[paymentDueDate]]></fieldDescription>
+	</field>
+	<field name="preparedBy" class="java.lang.String">
+		<fieldDescription><![CDATA[preparedBy]]></fieldDescription>
+	</field>
+	<field name="bankAccountList" class="java.util.List">
+		<fieldDescription><![CDATA[bankAccountList]]></fieldDescription>
+	</field>
+	<field name="customerDealerName" class="java.lang.String">
+		<fieldDescription><![CDATA[customerDealerName]]></fieldDescription>
+	</field>
+	<field name="currency" class="java.lang.String">
+		<fieldDescription><![CDATA[currency]]></fieldDescription>
+	</field>
+	<field name="itemList" class="java.util.List">
+		<fieldDescription><![CDATA[itemList]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[id]]></fieldDescription>
+	</field>
+	<field name="invoiceNo" class="java.lang.String">
+		<fieldDescription><![CDATA[invoiceNo]]></fieldDescription>
+	</field>
+	<field name="remark1" class="java.lang.String">
+		<fieldDescription><![CDATA[remark1]]></fieldDescription>
+	</field>
+	<field name="taxAmount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[taxAmount]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="remark3" class="java.lang.String">
+		<fieldDescription><![CDATA[remark3]]></fieldDescription>
+	</field>
+	<field name="remark2" class="java.lang.String">
+		<fieldDescription><![CDATA[remark2]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="45" splitType="Stretch">
+			<subreport>
+				<reportElement x="12" y="4" width="530" height="36" uuid="6276d20d-ac91-436d-b2c0-41b8e4117183"/>
+				<subreportParameter name="invoiceNo">
+					<subreportParameterExpression><![CDATA[$F{invoiceNo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{itemList})]]></dataSourceExpression>
+				<subreportExpression><![CDATA["D:/toyota_dev_env/workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp1/wtpwebapps/ToyotaMyanmar/report-template/item_sub_report.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="45">
+			<textField>
+				<reportElement x="172" y="0" width="100" height="17" uuid="22d01a9b-603a-42fd-9e77-1ef6915fe8ae"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="272" y="0" width="100" height="17" uuid="79646cb1-43c3-42d9-8994-4e0114bf45c8"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

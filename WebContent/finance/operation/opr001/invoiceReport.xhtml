@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="breadcrumb">
+	</ui:define>
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<f:metadata>
+			</f:metadata>
+			<div class="card card-w-title">
+				<div class="ui-g">
+					<div class="ui-g-12" style="height: 1220px;">
+						<p:media value="#{InvoiceJasperBean.exporterOutputPath}" width="100%" height="100%"  player="pdf">
+						</p:media>
+					</div>
+					<h:form id="frmInvoiceJasper">
+						<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-6 ui-lg-5,ui-g-12 ui-md-6 ui-lg-5" layout="grid" styleClass="ui-panelgrid-blank form-group"
+							style="border:0px none; background-color:transparent;">
+							<p:commandButton id="btnBack" value="#{label['BACK_LABEL']}" action="invoiceList" immediate="true" icon="ui-icon-arrow-left" style="width:110px;" />
+							<p:commandButton ajax="false" id="btnDownload" value="#{label['DOWNLOAD_LABEL']}" action="invoiceReport" immediate="true" icon="ui-icon-close" style="width:110px;"
+								actionListener="#{InvoiceJasperBean.pdfDownload}">
+								<p:fileDownload value="#{InvoiceJasperBean.sourceFilePath}"></p:fileDownload>
+							</p:commandButton>
+						</p:panelGrid>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

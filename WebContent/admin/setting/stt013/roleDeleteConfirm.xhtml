@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/templates/template.xhtml">
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{RoleDeleteConfirmBean.redirect}" />
+		</f:metadata>
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<h1>#{label['ROLE_DELETE_CONFIRM_TITLE']}</h1>
+						<h:form id="frmRoleDeleteConfirm">
+							<div>
+								<p:messages id="msg" globalOnly="true" closable="true" />
+							</div>
+							<p:panelGrid columns="2" columnClasses="uui-g-12 ui-md-3 ui-lg-2,ui-g-12 ui-md-6 ui-lg-4" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<p:outputLabel id="lblRoleName" for="txtRoleName" value="#{label['ROLE_NAME']}" />
+								<h:outputText id="txtRoleName" styleClass="custom-value-style" value="#{RoleDeleteConfirmBean.roleDto.roleName}" />
+								<p:outputLabel id="lblDescription" for="txtDescription" value="#{label['ROLE_DESCRIPTION']}" />
+								<h:outputText id="txtDescription" styleClass="custom-value-style" style="word-break:break-all" value="#{RoleDeleteConfirmBean.roleDto.description}" />
+							</p:panelGrid>
+							<p:panelGrid columns="3" columnClasses="ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2, ui-g-12 ui-md-3 ui-lg-2" layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+								<div />
+								<p:commandButton id="btnConfirm" value="#{label['SUBMIT_LABEL']}" action="#{RoleDeleteConfirmBean.deleteConfirmRole}" update="frmRoleDeleteConfirm"
+									icon="ui-icon-launch" />
+								<p:commandButton id="btnBack" value="#{label['CANCEL_LABEL']}" action="userInfoList" immediate="true" icon="ui-icon-close" />
+							</p:panelGrid>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

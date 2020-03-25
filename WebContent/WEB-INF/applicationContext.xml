@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:faces="http://www.springframework.org/schema/faces"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/security http://www.springframework.org/schema/integration/security/spring-integration-security-2.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/faces http://www.springframework.org/schema/faces/spring-faces-2.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+
+	<context:annotation-config/>    
+	<context:component-scan base-package="com.mttl.vlms"/>
+	<mybatis:scan base-package="com.mttl.vlms.mapper" />
+	<mybatis:scan base-package="com.mttl.vlms.*.mapper" />
+	<mybatis:scan base-package="com.mttl.vlms.*.selectmapper" />
+	<mybatis:scan base-package="com.mttl.vlms.*.*.mapper" />
+	
+	<aop:aspectj-autoproxy />
+	<bean id="loggingAspect" class="com.mttl.vlms.common.LoggingAspect"/>
+	<util:properties id="APP_CONFIG" location="classpath:APP_CONFIG.properties"/>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>MESSAGES</value>
+				<value>LANGUAGES</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Data Source -->
+	<context:property-placeholder location="classpath:jdbc_config.properties" />
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		  p:driverClassName="${jdbc.driverClassName}"
+		  p:url="${jdbc.databaseurl}"
+		  p:username="${jdbc.username}"
+		  p:password="${jdbc.password}" />
+		  
+	<!--  define conversion service -->
+	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean"/>
+	
+	<bean class="org.mybatis.spring.transaction.SpringManagedTransactionFactory" id="springManagedTransactionFactory"/>
+	
+	<!-- define the SqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" p:configLocation="classpath:mybatis-config.xml">
+		<property name="dataSource" ref="dataSource" />
+		<property name="transactionFactory" ref="springManagedTransactionFactory" />
+	</bean>
+
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+
+	<!-- scan for mappers and let them be autowired -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="mapper" />
+	</bean>
+
+</beans>

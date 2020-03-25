@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<f:view locale="#{LocaleBean.locale}" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+	<h:head>
+		<!-- Bootstrap Core CSS -->
+		<link href="${facesContext.externalContext.requestContextPath}/css/bootstrap.css" rel='stylesheet' type='text/css' />
+		<link href="${facesContext.externalContext.requestContextPath}/css/reset.css" rel="stylesheet" type="text/css" />
+		<link href="${facesContext.externalContext.requestContextPath}/css/style.css" rel="stylesheet" type="text/css" />
+		<link href="${facesContext.externalContext.requestContextPath}/css/custom.css" rel="stylesheet" />
+		<link href="${facesContext.externalContext.requestContextPath}/css/print.css" rel="stylesheet" type="text/css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
+		<style type="text/css">
+table.noneBorderGrid tr {
+	border: none;
+}
+
+table.noneBorderGrid td {
+	border: none;
+}
+
+.ui-state-error {
+	border: 1px solid #8F8F8F;
+}
+
+.rowWarnning {
+	background-color: #FF9933 !important;
+	background-image: none !important;
+	color: #000000 !important;
+}
+
+div.ui-message-error {
+	margin-left: 0px;
+	width: 250px;
+}
+
+.ui-wizard-step-title {
+	font-size: 12px;
+}
+</style>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Toyota Myanmar</title>
+	</h:head>
+	<h:body>
+		<table width="100%">
+			<tr>
+				<td valign="top" align="left" width="100%">
+					<ui:insert name="viewContent" />
+				</td>
+			</tr>
+		</table>
+	</h:body>
+</f:view>

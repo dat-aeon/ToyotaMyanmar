@@ -1,0 +1,153 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions"
+	template="/templates/template.xhtml">
+	<ui:define name="content">
+		<div class="ui-fluid">
+			<div class="card card-w-title">
+				<h:form id="driverInputForm">
+					<div>
+						<p:messages id="messages" globalOnly="true" autoUpdate="true" />
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<h1>#{label['DRIVER_INPUT_TITLE']}</h1>
+							<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="2" columnClasses="ui-grid-col-2, ui-grid-col-4"
+								layout="grid">
+								<p:outputLabel for="type" value="#{label['DRIVER_TYPE_LABEL']}" />
+								<h:panelGroup>
+									<p:selectOneRadio id="type" value="#{DriverInputBean.driverDto.type}" required="true" layout="responsive" columns="2">
+										<p:ajax event="change" listener="#{DriverInputBean.dirverTypeChange()}" update="driverInputForm:staffId,driverInputForm:barcodeId"></p:ajax>
+										<f:selectItems value="#{DriverInputBean.driverTypeMap.entrySet()}" var="driverType" itemValue="#{driverType.key}" itemLabel="#{driverType.value}" />
+									</p:selectOneRadio>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="typeMsg" for="type" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel for="staffId" value="#{label['DRIVER_STAFFID_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="staffId" value="#{DriverInputBean.driverDto.staffId}" required="true" label="#{label['DRIVER_STAFFID_LABEL']}"
+										readonly="#{DriverInputBean.driverDto.type eq 1}">
+										<p:ajax event="change" update="driverInputForm:barcodeId"></p:ajax>
+										<o:validator validatorId="javax.faces.Length" maximum="50" message="{0} #{label['LENGTH_MSG']} 50" />
+									</p:inputText>
+									<p:message id="staffIdMsg" for="staffId" />
+								</h:panelGroup>
+								<p:outputLabel for="barcodeId" value="#{label['DRIVER_CODE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="barcodeId" value="HR#{DriverInputBean.driverDto.staffId}" required="true" label="#{label['DRIVER_CODE_LABEL']}" readonly="true">
+										<o:validator validatorId="javax.faces.Length" maximum="50" message="{0} #{label['LENGTH_MSG']} 50" />
+									</p:inputText>
+									<p:message id="barcodeIdMsg" for="barcodeId" />
+								</h:panelGroup>
+								<p:outputLabel for="driverName" value="#{label['DRIVER_NAME_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="driverName" value="#{DriverInputBean.driverDto.driverName}" required="true" label="#{label['DRIVER_NAME_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="75" message="{0} #{label['LENGTH_MSG']} 75" />
+									</p:inputText>
+									<p:message id="driverNameMsg" for="driverName" />
+								</h:panelGroup>
+								<p:outputLabel for="gender" value="#{label['GENDER_LABEL']}" />
+								<h:panelGroup>
+									<p:selectOneRadio id="gender" value="#{DriverInputBean.driverDto.gender}" required="true" layout="responsive" columns="2">
+										<f:selectItems value="#{DriverInputBean.genderTypeMap.entrySet()}" var="genderType" itemValue="#{genderType.key}" itemLabel="#{genderType.value}" />
+									</p:selectOneRadio>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="genderMsg" for="gender" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel for="nrcNo" value="#{label['DRIVER_NRC_NO_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="nrcNo" value="#{DriverInputBean.driverDto.nrcNo}" required="true" label="#{label['DRIVER_NRC_NO_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="30" message="{0} #{label['LENGTH_MSG']} 30" />
+									</p:inputText>
+									<p:message id="nrcNoMsg" for="nrcNo" />
+								</h:panelGroup>
+								<p:outputLabel for="dateOfBirth" value="#{label['DRIVER_DATE_OF_BIRTH_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="dateOfBirth" value="#{DriverInputBean.driverDto.dateOfBirth}" readonlyInput="true" yearRange="-60:+0" pattern="dd/MM/yyyy" effect="blind" navigator="true"
+										required="true" />
+									<p:message id="dateOfBirthMsg" for="dateOfBirth" />
+								</h:panelGroup>
+								<p:outputLabel for="joinDate" value="#{label['DRIVER_JOIN_DATE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="joinDate" value="#{DriverInputBean.driverDto.joinDate}" readonlyInput="true" pattern="dd/MM/yyyy" effect="blind" navigator="true" />
+								</h:panelGroup>
+								<p:outputLabel for="basicSalary" value="#{label['DRIVER_BASIC_SALARY_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputNumber id="basicSalary" value="#{DriverInputBean.driverDto.basicSalary}" required="true">
+										<o:validator validatorId="javax.faces.Length" minimum="1" maximum="50" message="{0} #{label['LENGTH_MSG']} 50" />
+									</p:inputNumber>
+									<p:message id="basicSalaryMsg" for="basicSalary" />
+								</h:panelGroup>
+								<p:outputLabel for="slmLicenseType" value="#{label['DRIVER_LICENSE_TYPE_LABEL']}" />
+								<h:panelGroup>
+									<p:selectOneMenu id="slmLicenseType" value="#{DriverInputBean.driverDto.licenseType}" required="true">
+										<f:selectItem itemLabel="Select One" itemValue="" />
+										<f:selectItem itemLabel="A" itemValue="A" />
+										<f:selectItem itemLabel="B" itemValue="B" />
+										<f:selectItem itemLabel="C" itemValue="C" />
+										<f:selectItem itemLabel="D" itemValue="D" />
+										<f:selectItem itemLabel="E" itemValue="E" />
+									</p:selectOneMenu>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="licenseTypeMsg" for="slmLicenseType" />
+									</h:panelGroup>
+								</h:panelGroup>
+								<p:outputLabel for="licenseNo" value="#{label['DRIVER_LICENSE_NO_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="licenseNo" value="#{DriverInputBean.driverDto.licenseNo}" required="true" label="#{label['DRIVER_LICENSE_NO_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="15" message="{0} #{label['LENGTH_MSG']} 15" />
+									</p:inputText>
+									<p:message id="licenseNoMsg" for="licenseNo" />
+								</h:panelGroup>
+								<p:outputLabel for="licenseExpireDate" value="#{label['DRIVER_LICENSE_EXPIRE_DATE_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:calendar id="licenseExpireDate" value="#{DriverInputBean.driverDto.licenseExpireDate}" pattern="dd/MM/yyyy" effect="blind" navigator="true" />
+								</h:panelGroup>
+								<p:outputLabel id="lblPhoneNo" for="chpPhoneNo" value="#{label['PHONE_NO_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:chips id="chpPhoneNo" value="#{DriverInputBean.driverDto.phoneNoList}" max="5" required="true">
+										<p:keyFilter regEx="/[\d+]/" />
+										<o:validator validatorId="javax.faces.Length" maximum="80" message="{0} #{label['LENGTH_MSG']} 80" />
+									</p:chips>
+									<p:message id="msgPhoneNo" for="chpPhoneNo" />
+								</h:panelGroup>
+								<p:outputLabel for="address" value="#{label['ADDRESS_LABEL']}" />
+								<h:panelGroup styleClass="md-inputfield">
+									<p:inputText id="address" value="#{DriverInputBean.driverDto.address}" required="true" label="#{label['ADDRESS_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="255" message="{0} #{label['LENGTH_MSG']} 255" />
+									</p:inputText>
+									<p:message id="addressMsg" for="address" />
+								</h:panelGroup>
+								<p:outputLabel for="status" value="#{label['DRIVER_STATUS_LABEL']}" rendered="false" />
+								<h:panelGroup styleClass="md-inputfield" rendered="false">
+									<p:inputText id="status" value="#{DriverInputBean.driverDto.status}" required="true" label="#{label['DRIVER_STATUS_LABEL']}">
+										<o:validator validatorId="javax.faces.Length" maximum="10" message="{0} #{label['LENGTH_MSG']} 10" />
+									</p:inputText>
+									<p:message id="statusMsg" for="status" />
+								</h:panelGroup>
+								<p:outputLabel for="stateDivisionInfo" value="#{label['DRIVER_DIVISION_LABEL']}" />
+								<h:panelGroup>
+									<p:selectOneMenu id="stateDivisionInfo" label="#{label['DRIVER_DIVISION_LABEL']}" converter="omnifaces.SelectItemsIndexConverter" required="true"
+										value="#{DriverInputBean.driverDto.division}">
+										<f:selectItem itemLabel="#{label['DIVISION_SELECT_LABEL']}" itemValue="#{null}" />
+										<f:selectItems value="#{DriverInputBean.stateDivisionList}" var="stateDivisionInfo" itemLabel="#{stateDivisionInfo.stateName}" itemValue="#{stateDivisionInfo.getId()}" />
+									</p:selectOneMenu>
+									<h:panelGroup styleClass="md-inputfield">
+										<p:message id="divisionMsg" for="stateDivisionInfo" />
+									</h:panelGroup>
+								</h:panelGroup>
+							</p:panelGrid>
+							<p:panelGrid styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;" columns="3"
+								columnClasses="ui-g-12 ui-md-2 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2,ui-g-12 ui-md-3 ui-lg-2" layout="grid">
+								<div />
+								<p:commandButton id="submit" value="#{label['SUBMIT_LABEL']}" action="#{DriverInputBean.inputDriver}" update="driverInputForm" icon="ui-icon-launch" />
+								<p:commandButton id="cancel" value="#{label['CANCEL_LABEL']}" action="driverList" immediate="true" icon="ui-icon-close" />
+							</p:panelGrid>
+						</div>
+					</div>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
